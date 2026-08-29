@@ -1,0 +1,8 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "greeting": "Halo, Dunia!",
+  "description": "Fondasi MVP minimal dibangun dengan Next.js, Paraglide JS, dan Turso.",
+  "language_switcher": "Ganti Bahasa",
+  "english": "Inggris",
+  "indonesian": "Indonesia"
+}
