@@ -2,8 +2,14 @@ import { NextResponse, type NextRequest } from "next/server";
 import { paraglideMiddleware } from "@/paraglide/server.js";
 
 export async function proxy(request: NextRequest) {
-  return await paraglideMiddleware(request, async () => {
-    return NextResponse.next();
+  return await paraglideMiddleware(request, async ({ locale }) => {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-language-tag", locale);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   });
 }
 
