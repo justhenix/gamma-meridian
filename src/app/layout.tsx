@@ -19,6 +19,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Meridian | Tax Consulting & Advisory",
   description: "Elite tax consulting and financial advisory firm.",
+  appleWebApp: {
+    title: "Meridian",
+  },
 };
 
 export default async function RootLayout({
