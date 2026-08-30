@@ -60,8 +60,8 @@ const contextualRiskRules: Array<{
 import { matchConversationalIntent } from "./safeResponse";
 import { evaluateGuardrails } from "./guardrails";
 
-const humanRequestPattern =
-  /\b(?:(?:speak|talk|connect|chat|communicate)\s+(?:with|to)|hubungkan\s+dengan|bicara\s+dengan|sambungkan\s+ke|transfer\s+to|switch\s+to)\s+(?:a\s+|an\s+)?(?:human|person|agent|consultant|expert|specialist|advisor|konsultan|ahli|manusia|staf|staff)\b|\b(?:talk|speak)\s+to\s+someone\b|\b(?:i\s+want|need|prefer)\s+(?:to\s+speak\s+with|to\s+talk\s+to|a)\s+(?:human|expert|consultant|person)\b|\b(?:minta|butuh|ingin)\s+(?:bicara|konsultasi|terhubung)\s+dengan\s+(?:manusia|ahli|konsultan)\b/i;
+export const humanRequestPattern =
+  /\b(?:(?:speak|talk|connect|chat|communicate|ask|contact|reach|consult)\s*(?:with|to)?\s*(?:a\s+|an\s+)?(?:human|person|agent|consultant|expert|specialist|advisor|partner|lawyer|konsultan|ahli|manusia|staf|staff|orang))\b|\b(?:talk|speak|ask|consult)\s+to\s+someone\b|\b(?:i\s+)?(?:want|need|prefer|require|like)\s+(?:to\s+)?(?:speak|talk|ask|chat|consult|contact|connect)?\s*(?:with|to)?\s*(?:a\s+|an\s+)?(?:human|expert|consultant|person|advisor|specialist|partner|ahli|konsultan|manusia)\b|\b(?:human|expert|consultant|person|real\s+person|live\s+agent)\s+(?:now|please|pls|help)\b|\b(?:can|may|could)\s+(?:i|we)\s+(?:speak|talk|ask|chat|connect|consult)\s+(?:with|to)?\s*(?:a\s+|an\s+)?(?:human|expert|consultant|person|partner|ahli|konsultan|manusia)\b|\b(?:minta|butuh|ingin|mau|bisa)\s+(?:bicara|tanya|konsultasi|terhubung|kontak|hubungi)\s*(?:dengan|ke|sama)?\s*(?:manusia|ahli|konsultan|orang|staf)\b/i;
 
 const riskInputSchema = z.object({
   question: z.string().trim().min(1).max(20000),

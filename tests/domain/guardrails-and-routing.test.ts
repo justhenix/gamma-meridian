@@ -185,3 +185,48 @@ test("validateAiResult: validates flash_advisory output without requiring citati
   assert.deepEqual(validation.contract?.citations, []);
   assert.ok(validation.contract?.answer.includes("**PT PMA Overview:**"));
 });
+
+test("classifyRisk: humanRequestPattern detects conversational requests for an expert or consultant", async () => {
+  const { classifyRisk } = await import("../../src/server/domain/ai/classifyRisk");
+  const testPhrases = [
+    "can i ask to expert",
+    "I need to ask expert now.",
+    "can i talk to an expert",
+    "i need an expert",
+    "connect to expert",
+    "talk to human please",
+    "bisa bicara dengan konsultan",
+    "bisa tanya ke ahli sekarang",
+    "minta terhubung dengan ahli",
+    "i want to speak to someone",
+  ];
+
+  for (const phrase of testPhrases) {
+    const risk = classifyRisk({
+      question: phrase,
+      jurisdiction: "ID",
+      taxTopics: ["general_tax_business"],
+      safeTopicAllowlist: ["general_tax_business"],
+      requiredFactsAvailable: true,
+    });
+    assert.equal(
+      risk.needsHuman,
+      true,
+      `Expected phrase "${phrase}" to trigger needsHuman`,
+    );
+    assert.ok(
+      risk.reasonCodes.includes("user_requested_human"),
+      `Expected phrase "${phrase}" to include user_requested_human in reasonCodes`,
+    );
+  }
+
+  // Ensure non-escalation business questions with the word 'person' do NOT trigger
+  const foreignPersonRisk = classifyRisk({
+    question: "Can a foreign person hold shares in a local Indonesian company?",
+    jurisdiction: "ID",
+    taxTopics: ["general_tax_business"],
+    safeTopicAllowlist: ["general_tax_business"],
+    requiredFactsAvailable: true,
+  });
+  assert.equal(foreignPersonRisk.reasonCodes.includes("user_requested_human"), false);
+});

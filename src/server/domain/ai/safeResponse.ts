@@ -3,7 +3,18 @@ import "server-only";
 export function humanRecommendationMessage(
   locale: "id" | "en",
   expertEscalationFree: boolean,
+  isExplicitUserRequest = false,
 ): string {
+  if (isExplicitUserRequest) {
+    const direct = locale === "id"
+      ? "Tentu, saya akan menghubungkan Anda dengan konsultan pajak dan hukum Meridian. Silakan konfirmasi di bawah ini agar konsultan kami dapat bergabung langsung dalam konsultasi ini."
+      : "I will connect you directly with a Meridian tax and legal expert. Please confirm below to bring a senior consultant into this consultation.";
+    if (!expertEscalationFree) return direct;
+    return `${direct}\n\n${locale === "id"
+      ? "Seorang ahli dapat bergabung dalam percakapan ini tanpa biaya tambahan."
+      : "An expert can join this conversation at no additional cost."}`;
+  }
+
   const base = locale === "id"
     ? "Kasus ini bergantung pada fakta tambahan dan interpretasi profesional. Saya menyarankan agar ahli Meridian bergabung dalam percakapan ini sehingga Anda tidak perlu menjelaskan ulang dari awal."
     : "This looks like a case where the correct treatment depends on additional facts and professional interpretation. I recommend bringing a Meridian expert into this conversation so you do not need to explain everything again.";

@@ -374,6 +374,7 @@ export class AnswerCaseQuestionService {
     if (!claimed.created) return this.replay(claimed.run);
 
     if (!risk.canAttemptAiAnswer) {
+      const isExplicitHumanRequest = risk.reasonCodes.includes("user_requested_human");
       const contract = safetyContract({
         classification: risk.classification,
         reasonCodes: risk.reasonCodes,
@@ -381,6 +382,7 @@ export class AnswerCaseQuestionService {
         answer: humanRecommendationMessage(
           userMessage.language,
           this.runtimeConfig.expertEscalationFree,
+          isExplicitHumanRequest,
         ),
       });
       return this.persistWithheld(actor, claimed.run, contract, "escalated", null);
