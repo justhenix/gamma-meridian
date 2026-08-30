@@ -8,6 +8,7 @@ import { ArrowLeft, Check, ChevronDown, Globe, ShieldCheck } from "lucide-react"
 import * as m from "@/paraglide/messages.js";
 import { EmailVerificationPanel } from "@/components/auth/email-verification-panel";
 import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
+import { localizeHref } from "@/paraglide/runtime.js";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-amber-400 selection:text-slate-900">
       <header className="w-full border-b border-border bg-card/95 backdrop-blur-xs">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex flex-col group">
+          <Link href={localizeHref("/", { locale: currentLocale })} className="flex flex-col group">
             <span suppressHydrationWarning className="font-heading font-bold text-lg tracking-tight text-foreground leading-none">
               {t(m.brand_name)}
             </span>
@@ -74,7 +75,7 @@ export default function LoginPage() {
             </div>
 
             <Link
-              href="/"
+              href={localizeHref("/", { locale: currentLocale })}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 font-medium"
             >
               <ArrowLeft className="size-3.5" />
@@ -101,7 +102,7 @@ export default function LoginPage() {
           <EmailVerificationPanel
             purpose="consultations"
             isEnglish={currentLocale === "en"}
-            onVerified={() => router.replace("/consultations")}
+            onVerified={() => router.replace(localizeHref("/consultations", { locale: currentLocale }))}
           />
 
           <div className="text-center">

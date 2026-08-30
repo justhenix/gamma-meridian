@@ -23,7 +23,7 @@ export function Footer() {
           {/* Client Navigation */}
           <div className="md:col-span-2 space-y-3">
             <h4 suppressHydrationWarning className="font-heading font-semibold text-xs text-foreground">
-              Navigation
+              {t(m.footer_nav_title)}
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
@@ -57,7 +57,7 @@ export function Footer() {
           {/* Practice Areas */}
           <div className="md:col-span-3 space-y-3">
             <h4 suppressHydrationWarning className="font-heading font-semibold text-xs text-foreground">
-              {t(m.nav_practice_areas)}
+              {t(m.footer_practice_title)}
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
@@ -83,7 +83,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Jakarta Advisory Office & Confidential Desk */}
+          {/* Surakarta Advisory Office & Confidential Desk */}
           <div className="md:col-span-3 space-y-4">
             <div>
               <h4 suppressHydrationWarning className="font-heading font-semibold text-xs text-foreground mb-1">
@@ -99,7 +99,7 @@ export function Footer() {
                 {t(m.footer_contact_title)}
               </h4>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                Email:{" "}
+                <span suppressHydrationWarning>{t(m.footer_contact_email_label)}</span>{" "}
                 <a
                   href={`mailto:${t(m.footer_contact_email)}`}
                   suppressHydrationWarning
@@ -109,7 +109,7 @@ export function Footer() {
                 </a>
               </p>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                Tel:{" "}
+                <span suppressHydrationWarning>{t(m.footer_contact_tel_label)}</span>{" "}
                 <a
                   href={`tel:${t(m.footer_contact_phone)}`}
                   suppressHydrationWarning

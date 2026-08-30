@@ -6,13 +6,18 @@ import { Globe, ChevronDown, Check } from "lucide-react";
 import * as m from "@/paraglide/messages.js";
 import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
 import { Button } from "@/components/ui/button";
+import { getClientNavigation } from "@/lib/navigation/client-navigation";
+import { localizeHref } from "@/paraglide/runtime.js";
 
 export function Navbar() {
   const { locale: currentLocale, setLocale: changeLocale } = useAppLocale();
   const t = useLocalizedMessage();
   const [scrolled, setScrolled] = React.useState(false);
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
+
+  const clientNavigation = getClientNavigation(isAuthenticated);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +44,24 @@ export function Navbar() {
     };
   }, []);
 
+  React.useEffect(() => {
+    const controller = new AbortController();
+
+    void fetch("/api/auth/session", {
+      cache: "no-store",
+      signal: controller.signal,
+    })
+      .then((response) => {
+        setIsAuthenticated(response.ok);
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setIsAuthenticated(false);
+      });
+
+    return () => controller.abort();
+  }, []);
+
   const handleSelectLocale = (target: "id" | "en") => {
     changeLocale(target);
     setLangMenuOpen(false);
@@ -55,14 +78,14 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Wordmark */}
-        <a href="#" className="flex flex-col group">
+        <Link href={localizeHref("/", { locale: currentLocale })} className="flex flex-col group">
           <span suppressHydrationWarning className="font-heading font-bold text-lg tracking-tight text-foreground leading-none">
             {t(m.brand_name)}
           </span>
           <span suppressHydrationWarning className="text-xs font-medium text-muted-foreground mt-0.5">
             {t(m.brand_tagline)}
           </span>
-        </a>
+        </Link>
 
         {/* Client-Facing Navigation Links: Our Insights | Services | Industries | Client Stories | About Us */}
         <nav className="hidden md:flex items-center gap-7">
@@ -105,8 +128,8 @@ export function Navbar() {
 
         {/* Right Action & KPMG-Style Language Switcher */}
         <div className="flex items-center gap-4 sm:gap-6">
-          <Link href="/consultations" className="hidden sm:inline text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-            My Consultations
+          <Link href={localizeHref(clientNavigation.consultationsHref, { locale: currentLocale })} className="hidden sm:inline text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+            {t(m.nav_my_consultations)}
           </Link>
           {/* Language Dropdown */}
           <div className="relative" ref={menuRef}>
@@ -167,11 +190,13 @@ export function Navbar() {
           </div>
 
           {/* Primary Consultation CTA */}
-          <a href="#consultation" className="hidden sm:inline-flex">
+          <Link href={localizeHref(clientNavigation.primaryHref, { locale: currentLocale })} className="hidden sm:inline-flex">
             <Button variant="accent" size="sm" className="cursor-pointer font-semibold text-xs" suppressHydrationWarning>
-              {t(m.nav_consultation)}
+              {clientNavigation.primaryAction === "new-consultation"
+                ? t(m.nav_new_consultation)
+                : t(m.nav_ai_assistant)}
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     </header>

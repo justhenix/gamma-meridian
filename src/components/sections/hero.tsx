@@ -2,11 +2,14 @@
 
 import * as React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import * as m from "@/paraglide/messages.js";
-import { useLocalizedMessage } from "@/components/locale-provider";
+import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
 import { Button } from "@/components/ui/button";
+import { localizeHref } from "@/paraglide/runtime.js";
 
 export function Hero() {
+  const { locale } = useAppLocale();
   const t = useLocalizedMessage();
 
   return (
@@ -18,7 +21,7 @@ export function Hero() {
           alt="Meridian Tax Advisory Boardroom Meeting"
           fill
           priority
-          sizes="100vw"
+          unoptimized
           className="object-cover object-[85%_center] md:object-[right_center] select-none"
         />
         {/* KPMG Style Gradient Overlay: Solid on left for typography, smoothly fading to reveal the boardroom team */}
@@ -62,7 +65,7 @@ export function Hero() {
 
           {/* Action CTAs */}
           <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-            <a href="#consultation">
+            <Link href={localizeHref("/assistant", { locale })}>
               <Button
                 variant="accent"
                 size="lg"
@@ -71,7 +74,7 @@ export function Hero() {
               >
                 {t(m.hero_cta_primary)}
               </Button>
-            </a>
+            </Link>
             <a href="#practice-areas">
               <Button
                 variant="outline"

@@ -3,7 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 
-import { EmailVerificationPanel } from "@/components/auth/email-verification-panel";
+import { ConsultationsAccessGate } from "@/components/consultations/consultations-access-gate";
+import { buttonVariants } from "@/components/ui/button";
+import { useAppLocale } from "@/components/locale-provider";
+import { localizeHref } from "@/paraglide/runtime.js";
 
 interface ConsultationListItem {
   caseId: string;
@@ -14,6 +17,8 @@ interface ConsultationListItem {
 }
 
 export function ConsultationsList() {
+  const { locale } = useAppLocale();
+  const isEnglish = locale === "en";
   const [consultations, setConsultations] = React.useState<ConsultationListItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [needsVerification, setNeedsVerification] = React.useState(false);
@@ -46,32 +51,73 @@ export function ConsultationsList() {
   }, [load]);
 
   if (needsVerification) {
-    return <EmailVerificationPanel purpose="consultations" onVerified={load} />;
+    return <ConsultationsAccessGate locale={locale} onVerified={load} />;
   }
-  if (loading) return <p className="text-sm text-muted-foreground">Loading consultations…</p>;
-  if (error) return <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">{error}</div>;
-  if (consultations.length === 0) {
-    return <div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">No consultations are linked to this account yet.</div>;
+  if (loading) {
+    return <main className="min-h-screen bg-background px-4 py-10 text-foreground sm:px-6"><div className="mx-auto max-w-3xl"><p className="text-sm text-muted-foreground">{isEnglish ? "Loading consultations…" : "Memuat konsultasi…"}</p></div></main>;
   }
 
-  return (
+  const content = error ? (
+    <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">{error}</div>
+  ) : consultations.length === 0 ? (
+    <div className="rounded-lg border border-border bg-card p-6">
+      <h2 className="font-heading text-base font-semibold text-foreground">
+        {isEnglish ? "No consultations yet" : "Belum ada konsultasi"}
+      </h2>
+      <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        {isEnglish
+          ? "Start with Meridian Assistant. If your question needs expert review, the same conversation will continue with our team."
+          : "Mulai dari Asisten Meridian. Jika pertanyaan Anda memerlukan tinjauan ahli, percakapan yang sama akan dilanjutkan bersama tim kami."}
+      </p>
+      <Link
+        href={localizeHref("/assistant", { locale })}
+        className={buttonVariants({ variant: "accent", size: "sm", className: "mt-4" })}
+      >
+        {isEnglish ? "Start a consultation" : "Mulai konsultasi"}
+      </Link>
+    </div>
+  ) : (
     <div className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
       {consultations.map((consultation) => (
         <Link
           key={consultation.caseId}
-          href={`/consultations/${consultation.caseId}`}
+          href={localizeHref(`/consultations/${consultation.caseId}`, { locale })}
           className="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-muted/40"
         >
           <div className="min-w-0">
-            <div className="text-xs font-semibold text-muted-foreground">{consultation.caseReference}</div>
+            <div className="text-[13px] font-semibold text-muted-foreground">{consultation.caseReference}</div>
             <div className="mt-1 truncate text-sm font-semibold text-foreground">{consultation.title}</div>
-            <div className="mt-1 text-xs text-muted-foreground">Updated {new Date(consultation.updatedAt).toLocaleString()}</div>
+            <div className="mt-1 text-[13px] text-muted-foreground">
+              {isEnglish ? "Updated " : "Diperbarui "}
+              {new Date(consultation.updatedAt).toLocaleString(locale === "id" ? "id-ID" : "en-US")}
+            </div>
           </div>
-          <span className="shrink-0 rounded-full border border-border bg-muted/50 px-2.5 py-1 text-xs font-semibold text-foreground">
+          <span className="shrink-0 rounded-full border border-border bg-muted/50 px-2.5 py-1 text-[13px] font-semibold text-foreground">
             {consultation.clientStatus}
           </span>
         </Link>
       ))}
     </div>
+  );
+
+  return (
+    <main className="min-h-screen bg-background px-4 py-10 text-foreground sm:px-6">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
+          <div>
+            <h1 className="font-heading text-2xl font-bold">{isEnglish ? "My Consultations" : "Konsultasi Saya"}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {isEnglish
+                ? "Continue from the same consultation history shared with Meridian."
+                : "Lanjutkan dari riwayat konsultasi yang sama bersama Meridian."}
+            </p>
+          </div>
+          <Link href={localizeHref("/", { locale })} className="text-[13px] font-semibold text-muted-foreground hover:text-foreground">
+            {isEnglish ? "Back to Meridian" : "Kembali ke Meridian"}
+          </Link>
+        </div>
+        {content}
+      </div>
+    </main>
   );
 }

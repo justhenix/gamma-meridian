@@ -4,6 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 
 import { EmailVerificationPanel } from "@/components/auth/email-verification-panel";
+import { useAppLocale } from "@/components/locale-provider";
+import { localizeHref } from "@/paraglide/runtime.js";
 
 interface ConsultationDetail {
   caseId: string;
@@ -23,6 +25,8 @@ interface ConsultationDetail {
 }
 
 export function ConsultationThread({ caseId }: { caseId: string }) {
+  const { locale } = useAppLocale();
+  const isEnglish = locale === "en";
   const [detail, setDetail] = React.useState<ConsultationDetail | null>(null);
   const [needsVerification, setNeedsVerification] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -50,16 +54,18 @@ export function ConsultationThread({ caseId }: { caseId: string }) {
   }, [load]);
 
   if (needsVerification) {
-    return <EmailVerificationPanel purpose="consultations" onVerified={load} />;
+    return <EmailVerificationPanel purpose="consultations" isEnglish={isEnglish} onVerified={load} />;
   }
   if (error) return <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">{error}</div>;
-  if (!detail) return <p className="text-sm text-muted-foreground">Loading consultation…</p>;
+  if (!detail) return <p className="text-sm text-muted-foreground">{isEnglish ? "Loading consultation…" : "Memuat konsultasi…"}</p>;
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <Link href="/consultations" className="text-xs font-semibold text-muted-foreground hover:text-foreground">← My Consultations</Link>
+          <Link href={localizeHref("/consultations", { locale })} className="text-xs font-semibold text-muted-foreground hover:text-foreground">
+            {isEnglish ? "← My Consultations" : "← Konsultasi Saya"}
+          </Link>
           <div className="mt-3 text-xs font-semibold text-muted-foreground">{detail.caseReference}</div>
           <h1 className="mt-1 font-heading text-xl font-bold text-foreground">{detail.title}</h1>
         </div>
@@ -69,12 +75,12 @@ export function ConsultationThread({ caseId }: { caseId: string }) {
       <div className="space-y-3">
         {detail.messages.map((message) => {
           const label = message.sender === "staff"
-            ? message.authorName ?? "Meridian Expert"
+            ? message.authorName ?? (isEnglish ? "Meridian Expert" : "Konsultan Meridian")
             : message.sender === "ai"
-              ? "Meridian Assistant"
+              ? (isEnglish ? "Meridian Assistant" : "Asisten Meridian")
               : message.sender === "client"
-                ? "You"
-                : "Consultation update";
+                ? (isEnglish ? "You" : "Anda")
+                : (isEnglish ? "System" : "Sistem");
           return (
             <div key={message.id} className={`rounded-lg border p-4 ${message.sender === "staff" ? "border-amber-200 bg-amber-50/50 dark:border-amber-900 dark:bg-amber-950/20" : "border-border bg-card"}`}>
               <div className="flex items-center justify-between gap-3 text-xs">
