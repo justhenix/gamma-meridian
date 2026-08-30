@@ -13,10 +13,22 @@
     "decision": "APPROVED",
     "why": "Primary implementing regulation for general VAT and luxury-goods VAT concepts.",
     "statusNotes": "JDIH Kemenkeu lists no amending or revoking instrument and records that it revoked PP 1/2012 and PP 9/2021.",
-    "relationships": ["Revokes PP 1 TAHUN 2012", "Revokes PP 9 TAHUN 2021"],
-    "topics": ["tax.vat", "tax.general", "tax.corporate_income"],
+    "relationships": [
+      "Revokes PP 1 TAHUN 2012",
+      "Revokes PP 9 TAHUN 2021"
+    ],
+    "topics": [
+      "tax.vat",
+      "tax.general",
+      "tax.corporate_income"
+    ],
     "artifacts": [
-      {"filename": "pp-44-2022.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/6f040fee-fdad-43dc-9a3e-55ccc638828b/44TAHUN2022PP.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pp-44-2022.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/6f040fee-fdad-43dc-9a3e-55ccc638828b/44TAHUN2022PP.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -33,10 +45,24 @@
     "decision": "APPROVED",
     "why": "Current core procedure for PPh 21/26 withholding on employment, services, and personal activities.",
     "statusNotes": "JDIH Kemenkeu records no amending or revoking instrument and lists four predecessor regulations revoked from 1 January 2024.",
-    "relationships": ["Revokes 250/PMK.03/2008", "Revokes 252/PMK.03/2008", "Revokes 102/PMK.010/2016", "Revokes 262/PMK.03/2010"],
-    "topics": ["tax.withholding", "tax.income", "tax.general"],
+    "relationships": [
+      "Revokes 250/PMK.03/2008",
+      "Revokes 252/PMK.03/2008",
+      "Revokes 102/PMK.010/2016",
+      "Revokes 262/PMK.03/2010"
+    ],
+    "topics": [
+      "tax.withholding",
+      "tax.income",
+      "tax.general"
+    ],
     "artifacts": [
-      {"filename": "pmk-168-2023.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/e60a82e0-b218-40f5-9d18-b924aa1e11ce/2023pmkeuangan168.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pmk-168-2023.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/e60a82e0-b218-40f5-9d18-b924aa1e11ce/2023pmkeuangan168.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -53,10 +79,23 @@
     "decision": "APPROVED",
     "why": "Authoritative transfer-pricing, MAP, and APA framework needed for high-risk routing and consultant evidence.",
     "statusNotes": "JDIH Kemenkeu records no later amendment and lists three predecessor PMKs revoked.",
-    "relationships": ["Revokes 213/PMK.03/2016", "Revokes 49/PMK.03/2019", "Revokes 22/PMK.03/2020"],
-    "topics": ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
+    "relationships": [
+      "Revokes 213/PMK.03/2016",
+      "Revokes 49/PMK.03/2019",
+      "Revokes 22/PMK.03/2020"
+    ],
+    "topics": [
+      "tax.transfer_pricing",
+      "tax.cross_border",
+      "tax.corporate_income"
+    ],
     "artifacts": [
-      {"filename": "pmk-172-2023.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/b0b74668-cf4d-456b-bb23-be5e1aeac2cb/2023pmkeuangan172.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pmk-172-2023.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/b0b74668-cf4d-456b-bb23-be5e1aeac2cb/2023pmkeuangan172.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -73,10 +112,22 @@
     "decision": "APPROVED",
     "why": "Current procedure for treaty benefits, Form DGT, residence evidence, beneficial ownership, and anti-abuse checks.",
     "statusNotes": "JDIH Kemenkeu records no amendment history as of retrieval.",
-    "relationships": ["Implements PP 55 TAHUN 2022 Pasal 50 ayat (2)"],
-    "topics": ["tax.cross_border", "tax.foreign_taxpayer", "tax.permanent_establishment", "tax.withholding"],
+    "relationships": [
+      "Implements PP 55 TAHUN 2022 Pasal 50 ayat (2)"
+    ],
+    "topics": [
+      "tax.cross_border",
+      "tax.foreign_taxpayer",
+      "tax.permanent_establishment",
+      "tax.withholding"
+    ],
     "artifacts": [
-      {"filename": "pmk-112-2025.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/8830a44a-12f5-4717-84c0-fed0e6239bdf/2025pmkeuangan112.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pmk-112-2025.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/8830a44a-12f5-4717-84c0-fed0e6239bdf/2025pmkeuangan112.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -93,11 +144,29 @@
     "decision": "APPROVED",
     "why": "Current operational guidance for NPWP, PKP, registration documents, and Coretax submission channels.",
     "statusNotes": "JDIH Kemenkeu records no amendment history. Both main text and official annex are included.",
-    "relationships": ["Implements PMK 81 TAHUN 2024", "Replaces PER-04/PJ/2020, PER-08/PJ/2019, and PER-27/PJ/2021 as stated in the instrument"],
-    "topics": ["tax.registration", "tax.vat", "tax.general", "tax.corporate_income"],
+    "relationships": [
+      "Implements PMK 81 TAHUN 2024",
+      "Replaces PER-04/PJ/2020, PER-08/PJ/2019, and PER-27/PJ/2021 as stated in the instrument"
+    ],
+    "topics": [
+      "tax.registration",
+      "tax.vat",
+      "tax.general",
+      "tax.corporate_income"
+    ],
     "artifacts": [
-      {"filename": "per-7-pj-2025.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/09e80404-0ce8-48b1-8938-31530ada8701/PER-7%20PJ%202025.pdf", "format": "pdf", "ingestText": true},
-      {"filename": "per-7-pj-2025-lampiran.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/2df88590-f6b2-4e89-9a28-98f6d4084876/Lampiran%20PER-7%20PJ%202025.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "per-7-pj-2025.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/09e80404-0ce8-48b1-8938-31530ada8701/PER-7%20PJ%202025.pdf",
+        "format": "pdf",
+        "ingestText": true
+      },
+      {
+        "filename": "per-7-pj-2025-lampiran.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/2df88590-f6b2-4e89-9a28-98f6d4084876/Lampiran%20PER-7%20PJ%202025.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -114,10 +183,23 @@
     "decision": "APPROVED",
     "why": "Specific primary source for foreign-person and foreign-company permanent-establishment indicators.",
     "statusNotes": "JDIH Kemenkeu records zero amendment events and no revocation as of retrieval. Questions remain hard-risk and must escalate.",
-    "relationships": ["Related to UU 6 TAHUN 2023", "Related to PMK 112 TAHUN 2025"],
-    "topics": ["tax.permanent_establishment", "tax.foreign_taxpayer", "tax.cross_border", "tax.registration"],
+    "relationships": [
+      "Related to UU 6 TAHUN 2023",
+      "Related to PMK 112 TAHUN 2025"
+    ],
+    "topics": [
+      "tax.permanent_establishment",
+      "tax.foreign_taxpayer",
+      "tax.cross_border",
+      "tax.registration"
+    ],
     "artifacts": [
-      {"filename": "pmk-35-2019.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2019/35~PMK.03~2019Per.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pmk-35-2019.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2019/35~PMK.03~2019Per.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -134,10 +216,22 @@
     "decision": "APPROVED",
     "why": "Current national framework for risk-based licensing and OSS after replacing PP 5/2021.",
     "statusNotes": "BPK records PP 28/2025 as current and PP 5/2021 as revoked. Sector annexes are not ingested in this MVP; sector/KBLI-specific questions must escalate.",
-    "relationships": ["Revokes PP 5 TAHUN 2021"],
-    "topics": ["business.licensing", "business.oss", "business.company_setup", "business.foreign_investment"],
+    "relationships": [
+      "Revokes PP 5 TAHUN 2021"
+    ],
+    "topics": [
+      "business.licensing",
+      "business.oss",
+      "business.company_setup",
+      "business.foreign_investment"
+    ],
     "artifacts": [
-      {"filename": "pp-28-2025.pdf", "url": "https://peraturan.bpk.go.id/Download/381375/PP%20Nomor%2028%20Tahun%202025.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pp-28-2025.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/381375/PP%20Nomor%2028%20Tahun%202025.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -154,10 +248,25 @@
     "decision": "APPROVED",
     "why": "Current detailed OSS and investment-facility procedure implementing PP 28/2025.",
     "statusNotes": "BPK records the instrument as current and its express revocation of BKPM Regulations 3, 4, and 5 of 2021.",
-    "relationships": ["Implements PP 28 TAHUN 2025", "Revokes BKPM 3 TAHUN 2021", "Revokes BKPM 4 TAHUN 2021", "Revokes BKPM 5 TAHUN 2021"],
-    "topics": ["business.licensing", "business.oss", "business.foreign_investment", "business.company_setup"],
+    "relationships": [
+      "Implements PP 28 TAHUN 2025",
+      "Revokes BKPM 3 TAHUN 2021",
+      "Revokes BKPM 4 TAHUN 2021",
+      "Revokes BKPM 5 TAHUN 2021"
+    ],
+    "topics": [
+      "business.licensing",
+      "business.oss",
+      "business.foreign_investment",
+      "business.company_setup"
+    ],
     "artifacts": [
-      {"filename": "permeninves-bkpm-5-2025.pdf", "url": "https://peraturan.bpk.go.id/Download/394633/005%20th%202025.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "permeninves-bkpm-5-2025.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/394633/005%20th%202025.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -174,11 +283,26 @@
     "decision": "APPROVED",
     "why": "Current company-capital and individual-company registration rules for common setup questions.",
     "statusNotes": "DJPP records the instrument as current. Both body and official explanation are included.",
-    "relationships": ["Revokes PP 29 TAHUN 2016"],
-    "topics": ["business.company_setup", "business.licensing"],
+    "relationships": [
+      "Revokes PP 29 TAHUN 2016"
+    ],
+    "topics": [
+      "business.company_setup",
+      "business.licensing"
+    ],
     "artifacts": [
-      {"filename": "pp-8-2021-batang-tubuh.pdf", "url": "https://www.peraturan.go.id/files/pp8-2021bt.pdf", "format": "pdf", "ingestText": true},
-      {"filename": "pp-8-2021-penjelasan.pdf", "url": "https://www.peraturan.go.id/files/pp8-2021pjl.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pp-8-2021-batang-tubuh.pdf",
+        "url": "https://www.peraturan.go.id/files/pp8-2021bt.pdf",
+        "format": "pdf",
+        "ingestText": true
+      },
+      {
+        "filename": "pp-8-2021-penjelasan.pdf",
+        "url": "https://www.peraturan.go.id/files/pp8-2021pjl.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -195,10 +319,25 @@
     "decision": "NEEDS_REVIEW",
     "why": "Central HPP framework spanning KUP, PPh, and PPN, but unsafe as a standalone current consolidation.",
     "statusNotes": "BPK records amendment by UU 6/2023 and constitutional-court qualifications. Keep pending until the tax chapters are consolidated and professionally checked.",
-    "relationships": ["Amended by UU 6 TAHUN 2023", "Affected by Putusan MK 83/PUU-XXI/2023"],
-    "topics": ["tax.general", "tax.registration", "tax.corporate_income", "tax.withholding", "tax.vat", "tax.foreign_taxpayer"],
+    "relationships": [
+      "Amended by UU 6 TAHUN 2023",
+      "Affected by Putusan MK 83/PUU-XXI/2023"
+    ],
+    "topics": [
+      "tax.general",
+      "tax.registration",
+      "tax.corporate_income",
+      "tax.withholding",
+      "tax.vat",
+      "tax.foreign_taxpayer"
+    ],
     "artifacts": [
-      {"filename": "uu-7-2021-hpp.pdf", "url": "https://peraturan.bpk.go.id/Download/178620/UU%20Nomor%207%20Tahun%202021.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "uu-7-2021-hpp.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/178620/UU%20Nomor%207%20Tahun%202021.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -215,10 +354,23 @@
     "decision": "NEEDS_REVIEW",
     "why": "Broad corporate, SME, foreign-taxpayer, and PPh framework, but now amended.",
     "statusNotes": "JDIH Kemenkeu records a latest amendment by PP 20/2026. Keep pending until consolidated.",
-    "relationships": ["Amended by PP 20 TAHUN 2026"],
-    "topics": ["tax.income", "tax.corporate_income", "tax.foreign_taxpayer", "tax.cross_border", "tax.withholding"],
+    "relationships": [
+      "Amended by PP 20 TAHUN 2026"
+    ],
+    "topics": [
+      "tax.income",
+      "tax.corporate_income",
+      "tax.foreign_taxpayer",
+      "tax.cross_border",
+      "tax.withholding"
+    ],
     "artifacts": [
-      {"filename": "pp-55-2022.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/cab6ec99-3dbc-47c6-adbf-ea5f0f7117d6/55TAHUN2022PP.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pp-55-2022.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/cab6ec99-3dbc-47c6-adbf-ea5f0f7117d6/55TAHUN2022PP.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -235,10 +387,20 @@
     "decision": "NEEDS_REVIEW",
     "why": "Latest PPh amendment needed to build a current PP 55/2022 consolidation.",
     "statusNotes": "Current amendment instrument; kept pending because it must be applied to the full base text before general retrieval.",
-    "relationships": ["Amends PP 55 TAHUN 2022"],
-    "topics": ["tax.income", "tax.corporate_income"],
+    "relationships": [
+      "Amends PP 55 TAHUN 2022"
+    ],
+    "topics": [
+      "tax.income",
+      "tax.corporate_income"
+    ],
     "artifacts": [
-      {"filename": "pp-20-2026.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/d057ff82-50e7-4127-b66b-f704a36f071d/2026pp020.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pp-20-2026.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/d057ff82-50e7-4127-b66b-f704a36f071d/2026pp020.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -255,10 +417,24 @@
     "decision": "NEEDS_REVIEW",
     "why": "Coretax administration framework covering registration, payment, filing, and many operational procedures.",
     "statusNotes": "JDIH records four amendments through PMK 1/2026. This base text is excluded pending a verified consolidation.",
-    "relationships": ["Amended four times; latest by PMK 1 TAHUN 2026", "Also affected by PMK 53 and PMK 54 TAHUN 2025"],
-    "topics": ["tax.general", "tax.registration", "tax.vat", "tax.withholding", "tax.corporate_income"],
+    "relationships": [
+      "Amended four times; latest by PMK 1 TAHUN 2026",
+      "Also affected by PMK 53 and PMK 54 TAHUN 2025"
+    ],
+    "topics": [
+      "tax.general",
+      "tax.registration",
+      "tax.vat",
+      "tax.withholding",
+      "tax.corporate_income"
+    ],
     "artifacts": [
-      {"filename": "pmk-81-2024.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/637047be-3dba-4347-aba1-98fa7fd5ab3f/2024pmkeuangan081.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pmk-81-2024.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/637047be-3dba-4347-aba1-98fa7fd5ab3f/2024pmkeuangan081.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -275,10 +451,22 @@
     "decision": "NEEDS_REVIEW",
     "why": "Latest Coretax amendment needed for a current administration consolidation.",
     "statusNotes": "Current amendment but not safe independently from PMK 81/2024 and intervening amendments.",
-    "relationships": ["Fourth amendment to PMK 81 TAHUN 2024", "Amends PMK 53 and PMK 54 TAHUN 2025"],
-    "topics": ["tax.general", "tax.registration", "tax.corporate_income"],
+    "relationships": [
+      "Fourth amendment to PMK 81 TAHUN 2024",
+      "Amends PMK 53 and PMK 54 TAHUN 2025"
+    ],
+    "topics": [
+      "tax.general",
+      "tax.registration",
+      "tax.corporate_income"
+    ],
     "artifacts": [
-      {"filename": "pmk-1-2026.pdf", "url": "https://jdih.kemenkeu.go.id/api/download/b5f99bff-f689-4e4f-ae3a-7c6a9a4cfe8a/2026pmkeuangan001.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "pmk-1-2026.pdf",
+        "url": "https://jdih.kemenkeu.go.id/api/download/b5f99bff-f689-4e4f-ae3a-7c6a9a4cfe8a/2026pmkeuangan001.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -295,11 +483,27 @@
     "decision": "NEEDS_REVIEW",
     "why": "Primary investment-field eligibility framework for PT PMA and foreign-investment questions.",
     "statusNotes": "BPK records amendment by Perpres 49/2021. Main text is normalized; the official annex ZIP is preserved raw but not parsed in this pass.",
-    "relationships": ["Amended by PERPRES 49 TAHUN 2021"],
-    "topics": ["business.foreign_investment", "business.company_setup", "business.licensing"],
+    "relationships": [
+      "Amended by PERPRES 49 TAHUN 2021"
+    ],
+    "topics": [
+      "business.foreign_investment",
+      "business.company_setup",
+      "business.licensing"
+    ],
     "artifacts": [
-      {"filename": "perpres-10-2021.pdf", "url": "https://peraturan.bpk.go.id/Download/154474/Perpres%20Nomor%2010%20Tahun%202021.pdf", "format": "pdf", "ingestText": true},
-      {"filename": "perpres-10-2021-lampiran.zip", "url": "https://peraturan.bpk.go.id/Download/154475/Perpres%20Nomor%2010%20Tahun%202021%20-%20Lampiran.zip", "format": "zip", "ingestText": false}
+      {
+        "filename": "perpres-10-2021.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/154474/Perpres%20Nomor%2010%20Tahun%202021.pdf",
+        "format": "pdf",
+        "ingestText": true
+      },
+      {
+        "filename": "perpres-10-2021-lampiran.zip",
+        "url": "https://peraturan.bpk.go.id/Download/154475/Perpres%20Nomor%2010%20Tahun%202021%20-%20Lampiran.zip",
+        "format": "zip",
+        "ingestText": false
+      }
     ]
   },
   {
@@ -316,13 +520,39 @@
     "decision": "NEEDS_REVIEW",
     "why": "Current amendment to investment-field conditions and annexes.",
     "statusNotes": "All three official amendment annexes are included, but the pair remains excluded until consolidated with Perpres 10/2021.",
-    "relationships": ["Amends PERPRES 10 TAHUN 2021"],
-    "topics": ["business.foreign_investment", "business.company_setup", "business.licensing"],
+    "relationships": [
+      "Amends PERPRES 10 TAHUN 2021"
+    ],
+    "topics": [
+      "business.foreign_investment",
+      "business.company_setup",
+      "business.licensing"
+    ],
     "artifacts": [
-      {"filename": "perpres-49-2021.pdf", "url": "https://peraturan.bpk.go.id/Download/161562/Perpres%20Nomor%2049%20Tahun%202021.pdf", "format": "pdf", "ingestText": true},
-      {"filename": "perpres-49-2021-lampiran-i.pdf", "url": "https://peraturan.bpk.go.id/Download/161563/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20I.pdf", "format": "pdf", "ingestText": true},
-      {"filename": "perpres-49-2021-lampiran-ii.pdf", "url": "https://peraturan.bpk.go.id/Download/161564/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20II.pdf", "format": "pdf", "ingestText": true},
-      {"filename": "perpres-49-2021-lampiran-iii.pdf", "url": "https://peraturan.bpk.go.id/Download/161565/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20III.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "perpres-49-2021.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/161562/Perpres%20Nomor%2049%20Tahun%202021.pdf",
+        "format": "pdf",
+        "ingestText": true
+      },
+      {
+        "filename": "perpres-49-2021-lampiran-i.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/161563/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20I.pdf",
+        "format": "pdf",
+        "ingestText": true
+      },
+      {
+        "filename": "perpres-49-2021-lampiran-ii.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/161564/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20II.pdf",
+        "format": "pdf",
+        "ingestText": true
+      },
+      {
+        "filename": "perpres-49-2021-lampiran-iii.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/161565/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20III.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -339,10 +569,21 @@
     "decision": "NEEDS_REVIEW",
     "why": "Foundational investment law for domestic and foreign investment rights, duties, and forms.",
     "statusNotes": "DJPP records the law as current but amended by the Cipta Kerja instrument now enacted as UU 6/2023. Keep pending until consolidated.",
-    "relationships": ["Amended by PERPU 2 TAHUN 2022 enacted as UU 6 TAHUN 2023"],
-    "topics": ["business.foreign_investment", "business.company_setup", "business.licensing"],
+    "relationships": [
+      "Amended by PERPU 2 TAHUN 2022 enacted as UU 6 TAHUN 2023"
+    ],
+    "topics": [
+      "business.foreign_investment",
+      "business.company_setup",
+      "business.licensing"
+    ],
     "artifacts": [
-      {"filename": "uu-25-2007.pdf", "url": "https://www.peraturan.go.id/files/uu25-2007.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "uu-25-2007.pdf",
+        "url": "https://www.peraturan.go.id/files/uu25-2007.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -359,10 +600,20 @@
     "decision": "NEEDS_REVIEW",
     "why": "Foundational company law for Indonesian PT formation, governance, capital, and corporate actions.",
     "statusNotes": "DJPP records the law as current but amended by the Cipta Kerja instrument now enacted as UU 6/2023. Keep pending until consolidated.",
-    "relationships": ["Amended by PERPU 2 TAHUN 2022 enacted as UU 6 TAHUN 2023"],
-    "topics": ["business.company_setup", "business.foreign_investment"],
+    "relationships": [
+      "Amended by PERPU 2 TAHUN 2022 enacted as UU 6 TAHUN 2023"
+    ],
+    "topics": [
+      "business.company_setup",
+      "business.foreign_investment"
+    ],
     "artifacts": [
-      {"filename": "uu-40-2007.pdf", "url": "https://www.peraturan.go.id/files/uu40-2007.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "uu-40-2007.pdf",
+        "url": "https://www.peraturan.go.id/files/uu40-2007.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
   },
   {
@@ -379,10 +630,147 @@
     "decision": "NEEDS_REVIEW",
     "why": "Carries the current Cipta Kerja amendments affecting tax, company, investment, and licensing statutes.",
     "statusNotes": "BPK records multiple later sector amendments and constitutional-court qualifications. It is retained as source material but excluded from AI retrieval pending topic-specific consolidation.",
-    "relationships": ["Enacts PERPU 2 TAHUN 2022", "Revokes UU 11 TAHUN 2020", "Subsequently affected by multiple sector laws and Constitutional Court decisions"],
-    "topics": ["tax.general", "tax.corporate_income", "business.company_setup", "business.foreign_investment", "business.licensing", "business.oss"],
+    "relationships": [
+      "Enacts PERPU 2 TAHUN 2022",
+      "Revokes UU 11 TAHUN 2020",
+      "Subsequently affected by multiple sector laws and Constitutional Court decisions"
+    ],
+    "topics": [
+      "tax.general",
+      "tax.corporate_income",
+      "business.company_setup",
+      "business.foreign_investment",
+      "business.licensing",
+      "business.oss"
+    ],
     "artifacts": [
-      {"filename": "uu-6-2023.pdf", "url": "https://peraturan.bpk.go.id/Download/302681/UU%20Nomor%206%20Tahun%202023.pdf", "format": "pdf", "ingestText": true}
+      {
+        "filename": "uu-6-2023.pdf",
+        "url": "https://peraturan.bpk.go.id/Download/302681/UU%20Nomor%206%20Tahun%202023.pdf",
+        "format": "pdf",
+        "ingestText": true
+      }
     ]
+  },
+  {
+    "key": "pp-55-2022-consolidated-pph",
+    "identifier": "PP 55 TAHUN 2022 jo. PP 20 TAHUN 2026",
+    "title": "Penyesuaian Pengaturan di Bidang Pajak Penghasilan (Konsolidasi PP 55/2022 dan PP 20/2026)",
+    "authority": "Indonesia, Pemerintah Pusat",
+    "sourceType": "peraturan_pemerintah_konsolidasi",
+    "canonicalUrl": "https://jdih.kemenkeu.go.id/dok/pp-55-tahun-2022-konsolidasi",
+    "versionLabel": "consolidated-pp55-2022-pp20-2026",
+    "publicationDate": "2026-04-22",
+    "effectiveFrom": "2026-04-22",
+    "effectiveTo": null,
+    "decision": "APPROVED",
+    "why": "Authoritative consolidated PPh framework covering corporate income tax, dividend exemption, and SME 0.5% final PPh.",
+    "statusNotes": "Consolidated text of PP 55/2022 with PP 20/2026 amendments.",
+    "relationships": [
+      "Consolidates PP 55 TAHUN 2022 and PP 20 TAHUN 2026"
+    ],
+    "topics": [
+      "tax.income",
+      "tax.corporate_income",
+      "tax.withholding"
+    ],
+    "artifacts": []
+  },
+  {
+    "key": "se-05-pj-2022-sp2dk-supervision",
+    "identifier": "SE-05/PJ/2022",
+    "title": "Pengawasan Kepatuhan Wajib Pajak",
+    "authority": "Direktorat Jenderal Pajak",
+    "sourceType": "surat_edaran_direktur_jenderal_pajak",
+    "canonicalUrl": "https://jdih.kemenkeu.go.id/dok/se-05-pj-2022",
+    "versionLabel": "official-2022-02-10",
+    "publicationDate": "2022-02-10",
+    "effectiveFrom": "2022-02-10",
+    "effectiveTo": null,
+    "decision": "APPROVED",
+    "why": "Official tax authority procedural guidelines for SP2DK issuance, 14-day reply window, and audit escalation.",
+    "statusNotes": "Current operational supervision guidelines issued by Directorate General of Taxes.",
+    "relationships": [
+      "Implements UU KUP Pasal 12 and PP 50 TAHUN 2022"
+    ],
+    "topics": [
+      "tax.audit",
+      "tax.general",
+      "tax.registration"
+    ],
+    "artifacts": []
+  },
+  {
+    "key": "pmk-81-2024-consolidated-coretax",
+    "identifier": "PMK 81 TAHUN 2024 jo. PMK 1 TAHUN 2026",
+    "title": "Ketentuan Perpajakan dalam Rangka Pelaksanaan Sistem Inti Administrasi Perpajakan (Konsolidasi)",
+    "authority": "Kementerian Keuangan",
+    "sourceType": "peraturan_menteri_keuangan_konsolidasi",
+    "canonicalUrl": "https://jdih.kemenkeu.go.id/dok/pmk-81-tahun-2024-konsolidasi",
+    "versionLabel": "consolidated-pmk81-2024-pmk1-2026",
+    "publicationDate": "2026-01-22",
+    "effectiveFrom": "2026-01-22",
+    "effectiveTo": null,
+    "decision": "APPROVED",
+    "why": "Consolidated administrative rules for Coretax tax system, taxpayer portal, registration, and representative powers.",
+    "statusNotes": "Consolidated text of PMK 81/2024 with 4th amendment PMK 1/2026.",
+    "relationships": [
+      "Consolidates PMK 81 TAHUN 2024 and PMK 1 TAHUN 2026"
+    ],
+    "topics": [
+      "tax.general",
+      "tax.registration",
+      "tax.vat",
+      "tax.withholding",
+      "tax.corporate_income"
+    ],
+    "artifacts": []
+  },
+  {
+    "key": "uu-40-2007-consolidated-company-law",
+    "identifier": "UU 40 TAHUN 2007 jo. UU 6 TAHUN 2023",
+    "title": "Perseroan Terbatas (Konsolidasi Undang-Undang Cipta Kerja)",
+    "authority": "Indonesia, Pemerintah Pusat",
+    "sourceType": "undang_undang_konsolidasi",
+    "canonicalUrl": "https://www.peraturan.go.id/id/uu-no-40-tahun-2007-konsolidasi",
+    "versionLabel": "consolidated-uu40-2007-uu6-2023",
+    "publicationDate": "2023-03-31",
+    "effectiveFrom": "2023-03-31",
+    "effectiveTo": null,
+    "decision": "APPROVED",
+    "why": "Authoritative corporate legal framework for PT establishment, capital, director liabilities, and PT Perorangan.",
+    "statusNotes": "Consolidated text of UU 40/2007 with UU 6/2023 Cipta Kerja amendments.",
+    "relationships": [
+      "Consolidates UU 40 TAHUN 2007 with UU 6 TAHUN 2023"
+    ],
+    "topics": [
+      "business.company_setup",
+      "business.foreign_investment"
+    ],
+    "artifacts": []
+  },
+  {
+    "key": "perpres-10-2021-consolidated-investment",
+    "identifier": "PERPRES 10 TAHUN 2021 jo. PERPRES 49 TAHUN 2021",
+    "title": "Bidang Usaha Penanaman Modal (Daftar Positif Investasi Konsolidasi)",
+    "authority": "Indonesia, Pemerintah Pusat",
+    "sourceType": "peraturan_presiden_konsolidasi",
+    "canonicalUrl": "https://peraturan.bpk.go.id/Details/161806-konsolidasi",
+    "versionLabel": "consolidated-perpres10-2021-perpres49-2021",
+    "publicationDate": "2021-05-25",
+    "effectiveFrom": "2021-05-25",
+    "effectiveTo": null,
+    "decision": "APPROVED",
+    "why": "Authoritative Positive Investment List with priority sectors, MSME partnerships, and foreign equity conditions.",
+    "statusNotes": "Consolidated text of Perpres 10/2021 with Perpres 49/2021 amendments.",
+    "relationships": [
+      "Consolidates PERPRES 10 TAHUN 2021 and PERPRES 49 TAHUN 2021"
+    ],
+    "topics": [
+      "business.foreign_investment",
+      "business.company_setup",
+      "business.licensing"
+    ],
+    "artifacts": []
   }
 ]

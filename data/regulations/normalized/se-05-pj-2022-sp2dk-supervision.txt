@@ -1,0 +1,257 @@
+IDENTIFIER: SE-05/PJ/2022
+TITLE: Pengawasan Kepatuhan Wajib Pajak
+CANONICAL URL: https://jdih.kemenkeu.go.id/dok/se-05-pj-2022
+VERSION: official-2022-02-10
+
+=== ARTIFACT: se-05-pj-2022-sp2dk-supervision.pdf ===
+--- PDF PAGE 1 ---
+KEMENTERIAN KEUANGAN REPUBLIK INDONESIA
+DIREKTORAT JENDERAL PAJAK
+SURAT EDARAN DIREKTUR JENDERAL PAJAK
+NOMOR SE-05/PJ/2022
+TENTANG
+PENGAWASAN KEPATUHAN WAJIB PAJAK
+
+A. UMUM
+Dalam rangka meningkatkan efektivitas, efisiensi, dan kualitas pengawasan kepatuhan Wajib Pajak, serta memberikan kepastian hukum dan perlakuan yang seragam bagi seluruh unit kerja di lingkungan Direktorat Jenderal Pajak, perlu disusun pedoman pelaksanaan pengawasan kepatuhan Wajib Pajak yang terintegrasi.
+
+B. MAKSUD DAN TUJUAN
+1. Maksud
+Surat Edaran ini dimaksudkan untuk memberikan pedoman pelaksanaan kegiatan pengawasan kepatuhan Wajib Pajak bagi Kantor Pelayanan Pajak (KPP) dan Kantor Wilayah Direktorat Jenderal Pajak (Kanwil DJP).
+2. Tujuan
+Surat Edaran ini bertujuan untuk mewujudkan kepatuhan perpajakan sukarela (voluntary compliance) yang berkelanjutan, mengoptimalkan penerimaan pajak, serta memberikan standar operasional yang jelas atas pelaksanaan Pengawasan Pembayaran Masa, Pengawasan Kepatuhan Material, dan Permintaan Penjelasan atas Data dan/atau Keterangan (SP2DK).
+
+C. RUANG LINGKUP PENGAWASAN
+1. Ruang lingkup pengawasan kepatuhan Wajib Pajak meliputi:
+   a. Penyusunan profil Wajib Pajak dan analisis risiko kepatuhan berbasis Compliance Risk Management (CRM);
+   b. Penetapan Daftar Sasaran Prioritas Pengawasan (DSPP) dan Daftar Sasaran Pengawasan Bersama (DSPB);
+   c. Pelaksanaan Pengawasan Pembayaran Masa (PPM) untuk Tahun Pajak berjalan;
+   d. Pelaksanaan Pengawasan Kepatuhan Material (PKM) untuk Tahun Pajak sebelum Tahun Pajak berjalan;
+   e. Penerbitan dan penyampaian Surat Permintaan Penjelasan atas Data dan/atau Keterangan (SP2DK);
+   f. Pelaksanaan Kunjungan (Visit) ke lokasi tempat tinggal, kedudukan, atau kegiatan usaha Wajib Pajak;
+   g. Pelaksanaan pembahasan dan penatausahaan Berita Acara;
+   h. Penyusunan Laporan Hasil Permintaan Penjelasan atas Data dan/atau Keterangan (LHP2DK); dan
+   i. Pemantauan serta pelaksanaan tindak lanjut rekomendasi pengawasan.
+2. Pengawasan dilaksanakan oleh Account Representative (AR) pada Seksi Pengawasan KPP dan/atau tim pengawasan yang dibentuk berdasarkan penugasan resmi Kepala KPP.
+
+--- PDF PAGE 2 ---
+D. DEFINISI DAN JENIS PENGAWASAN
+1. Pengawasan Kepatuhan Wajib Pajak adalah serangkaian kegiatan pembinaan, penelitian, dan pengujian kepatuhan pemenuhan kewajiban perpajakan yang dilakukan oleh Direktorat Jenderal Pajak melalui Kantor Pelayanan Pajak terhadap Wajib Pajak terdaftar.
+2. Pengawasan Kepatuhan Wajib Pajak diklasifikasikan ke dalam 2 (dua) bentuk pengawasan utama:
+   a. Pengawasan Pembayaran Masa (PPM):
+      Pengawasan terhadap kepatuhan formal dan material pemenuhan kewajiban perpajakan untuk Tahun Pajak berjalan. Pengawasan ini menitikberatkan pada:
+      1) Pemantauan kepatuhan formal pelaporan Surat Pemberitahuan (SPT) Masa secara tepat waktu;
+      2) Pengawasan kepatuhan pembayaran dan penyetoran pajak masa, antara lain Pajak Penghasilan (PPh Pasal 21/26, PPh Pasal 22, PPh Pasal 23/26, PPh Pasal 25/29, PPh Final) dan Pajak Pertambahan Nilai (PPN/PPnBM);
+      3) Pengawasan atas transaksi ekonomi dan aktivitas usaha berjalan;
+      4) Penelitian kebenaran penerbitan dan pengkreditan faktur pajak serta bukti pemotongan/pemungutan pajak;
+      5) Pengawasan terhadap Wajib Pajak Strategis dan Wajib Pajak Lainnya dalam tahun berjalan guna mengamankan target penerimaan pajak berkala.
+   b. Pengawasan Kepatuhan Material (PKM):
+      Pengawasan terhadap kepatuhan pemenuhan kewajiban perpajakan formal dan material untuk Tahun Pajak sebelum Tahun Pajak berjalan (Tahun Pajak lampau). Pengawasan kepatuhan material dilakukan secara menyeluruh dan komprehensif atas dasar:
+      1) Analisis risiko kepatuhan (Compliance Risk Management / CRM);
+      2) Penelitian laporan keuangan komersial, catatan pembukuan, dan rekonsiliasi fiskal;
+      3) Analisis kesesuaian dan kebenaran pengisian SPT Tahunan PPh Orang Pribadi maupun SPT Tahunan PPh Badan;
+      4) Pemanfaatan data pihak ketiga dari Instansi, Lembaga, Asosiasi, dan Pihak Lain (ILAP);
+      5) Pengolahan data devisa hasil ekspor, lalu lintas transaksi keuangan perbankan, dan data kepabeanan;
+      6) Pemanfaatan data pertukaran informasi perpajakan internasional secara otomatis (Automatic Exchange of Information / AEOI).
+
+--- PDF PAGE 3 ---
+3. Pelaksanaan Pengawasan Berbasis Risiko:
+   a. Pengawasan kepatuhan Wajib Pajak diprioritaskan terhadap Wajib Pajak yang terdaftar dalam Daftar Sasaran Prioritas Pengawasan (DSPP).
+   b. DSPP disusun dengan mempertimbangkan matriks risiko kepatuhan Wajib Pajak, indikasi ketidakpatuhan, analisis kemampuan ekonomi (ability to pay), serta potensi penerimaan pajak.
+   c. Dalam hal pengawasan melibatkan Wajib Pajak grup atau transaksi lintas yurisdiksi, KPP dapat berkoordinasi dengan Direktorat Perpajakan Internasional dan Kantor Wilayah DJP melalui mekanisme pengawasan bersama (joint supervision).
+
+--- PDF PAGE 4 ---
+E. TATA CARA PENERBITAN SP2DK
+1. Pengertian SP2DK:
+   Surat Permintaan Penjelasan atas Data dan/atau Keterangan (SP2DK) adalah surat resmi yang diterbitkan oleh Kepala Kantor Pelayanan Pajak kepada Wajib Pajak dalam rangka pelaksanaan kegiatan Permintaan Penjelasan atas Data dan/atau Keterangan (P2DK) berdasarkan hasil penelitian kepatuhan material yang menunjukkan adanya indikasi kewajiban perpajakan yang belum dipenuhi sesuai dengan ketentuan peraturan perundang-undangan perpajakan.
+2. Dasar Penerbitan SP2DK:
+   a. SP2DK diterbitkan berdasarkan Kertas Kerja Penelitian Kepatuhan Material (KKPKM) atau Kertas Kerja Analisis (KKA) yang disusun oleh Account Representative (AR) atau Tim Pengawas.
+   b. Kertas Kerja Penelitian harus memuat:
+      1) Identitas lengkap Wajib Pajak;
+      2) Sumber dan rincian data/keterangan yang diperoleh, baik data internal DJP (faktur pajak, bukti potong, SPT, pembayaran) maupun data eksternal (ILAP, perbankan, devisa, data transaksi digital);
+      3) Analisis perbandingan antara data yang dilaporkan Wajib Pajak dalam SPT dengan data/keterangan yang dimiliki oleh DJP;
+      4) Penghitungan indikasi selisih potensi penerimaan pajak yang belum disetor;
+      5) Identifikasi indikasi modus ketidakpatuhan atau ketidaksesuaian perlakuan perpajakan;
+      6) Dasar hukum ketentuan perundang-undangan perpajakan yang relevan.
+   c. Draf SP2DK beserta Kertas Kerja Penelitian diteliti dan diparaf secara berjenjang oleh Kepala Seksi Pengawasan.
+   d. SP2DK ditandatangani dan diterbitkan secara sah oleh Kepala Kantor Pelayanan Pajak.
+
+--- PDF PAGE 5 ---
+3. Muatan Resmi SP2DK:
+   SP2DK sekurang-kurangnya memuat informasi sebagai berikut:
+   a. Nomor surat, tanggal penerbitan, dan sifat surat (rahasia);
+   b. Identitas lengkap Wajib Pajak (Nama, NPWP/NIK, alamat terdaftar);
+   c. Uraian rincian data dan/atau keterangan yang dimintakan penjelasan, termasuk jenis pajak (PPh, PPN) dan masa pajak serta tahun pajak yang bersangkutan;
+   d. Uraian indikasi ketidakpatuhan atau selisih data yang menjadi dasar permintaan penjelasan;
+   e. Penegasan hak Wajib Pajak untuk memberikan klarifikasi dan batas waktu penyampaian tanggapan paling lama 14 (empat belas) hari kalender;
+   f. Bentuk dan metode penyampaian tanggapan yang dapat dipilih Wajib Pajak;
+   g. Nama, nomor kontak resmi, dan identitas Account Representative (AR) serta Kepala Seksi Pengawasan yang bertugas menangani permintaan penjelasan.
+
+--- PDF PAGE 6 ---
+4. Saluran dan Batas Waktu Penyampaian SP2DK:
+   a. SP2DK wajib disampaikan kepada Wajib Pajak paling lama 3 (tiga) hari kerja sejak tanggal penerbitan SP2DK.
+   b. Penyampaian SP2DK kepada Wajib Pajak dilakukan melalui saluran resmi:
+      1) Secara elektronik melalui akun Wajib Pajak pada Portal Direktorat Jenderal Pajak (DJP Online / Sistem Inti Administrasi Perpajakan Coretax);
+      2) Pengiriman melalui pos, perusahaan jasa ekspedisi, atau jasa kurir terdaftar dengan bukti pengiriman surat tercatat;
+      3) Penyerahan secara langsung kepada Wajib Pajak, wakil Wajib Pajak, atau kuasa yang sah oleh petugas pajak dengan tanda terima resmi; atau
+      4) Pengiriman melalui faksimili resmi KPP dalam hal telah disepakati sebelumnya oleh Wajib Pajak.
+   c. Bukti pengiriman surat tercatat, tanda terima penyerahan langsung, atau bukti pengiriman elektronik wajib didokumentasikan dan diadministrasikan dalam sistem pengawasan perpajakan KPP.
+
+--- PDF PAGE 7 ---
+F. JANGKA WAKTU TANGGAPAN WAJIB PAJAK
+1. Batas Waktu Penyampaian Penjelasan:
+   a. Wajib Pajak diberikan hak dan kesempatan untuk menyampaikan penjelasan atau tanggapan atas SP2DK paling lama 14 (empat belas) hari kalender.
+   b. Batas waktu 14 (empat belas) hari kalender merupakan hak prosedural Wajib Pajak untuk menyampaikan tanggapan dan klarifikasi sebelum KPP mengambil simpulan hasil pengawasan.
+2. Ketentuan Penghitungan Tanggal Mulai (Hari Pertama):
+   Jangka waktu 14 (empat belas) hari kalender dihitung dengan ketentuan:
+   a. Dihitung sejak tanggal penerbitan SP2DK, dalam hal SP2DK disampaikan secara elektronik melalui portal DJP atau diserahkan langsung pada tanggal penerbitan;
+   b. Dihitung sejak tanggal stempel/bukti kirim dari perusahaan jasa pos, jasa ekspedisi, atau jasa kurir tercatat, dalam hal SP2DK dikirim melalui pos atau kurir; atau
+   c. Dihitung sejak tanggal penyerahan fisik SP2DK yang dibuktikan dengan tanda terima penyerahan tertulis, apabila tanggal penerimaan berbeda dari tanggal surat.
+
+--- PDF PAGE 8 ---
+3. Konsekuensi Melebihi Batas Waktu 14 Hari Kalender:
+   a. Dalam hal Wajib Pajak tidak menyampaikan tanggapan atau penjelasan dalam jangka waktu 14 (empat belas) hari kalender, Kepala KPP atau AR berwenang melakukan tindakan:
+      1) Melaksanakan kegiatan Kunjungan (Visit) ke tempat tinggal, tempat kedudukan, atau tempat kegiatan usaha Wajib Pajak untuk mengonfirmasi penerimaan SP2DK dan meminta penjelasan secara langsung;
+      2) Menerbitkan surat peringatan atau surat panggilan klarifikasi lanjutan kepada Wajib Pajak; dan/atau
+      3) Menilai bahwa Wajib Pajak bersikap tidak kooperatif serta menolak memberikan penjelasan.
+   b. Apabila setelah upaya tindak lanjut sebagaimana dimaksud pada huruf a Wajib Pajak tetap tidak memberikan penjelasan, AR membuat Berita Acara Tidak Dipenuhinya Permintaan Penjelasan atas Data dan/atau Keterangan.
+   c. Berita Acara Tidak Dipenuhinya Permintaan Penjelasan menjadi dasar hukum bagi Kepala KPP untuk segera merekomendasikan pengusulan Pemeriksaan Pajak atau Pemeriksaan Bukti Permulaan.
+
+--- PDF PAGE 9 ---
+G. BENTUK TANGGAPAN WAJIB PAJAK
+1. Ragam Saluran dan Bentuk Tanggapan:
+   Wajib Pajak dapat menyampaikan tanggapan atas SP2DK melalui salah satu atau kombinasi bentuk berikut:
+   a. Penjelasan Tertulis:
+      1) Disampaikan dalam bentuk surat tanggapan tertulis resmi yang ditandatangani oleh Wajib Pajak orang pribadi, wakil yang sah dari Wajib Pajak badan (Direksi/Pengurus sesuai Akta Perubahan Terakhir), atau kuasa yang sah;
+      2) Dalam hal ditandatangani atau disampaikan oleh kuasa, wajib dilampiri Surat Kuasa Khusus yang memenuhi ketentuan peraturan perundang-undangan perpajakan yang mengatur tata cara pelaksanaan hak dan kewajiban perpajakan oleh kuasa, fotokopi kartu identitas, dan izin praktik/sertifikasi yang relevan;
+      3) Surat tanggapan tertulis wajib menguraikan klarifikasi secara terperinci atas butir-butir data yang dimintakan dalam SP2DK;
+      4) Wajib dilampiri dokumen pendukung yang valid, relevan, dan otentik untuk membuktikan kebenaran penjelasan Wajib Pajak;
+      5) Disampaikan secara langsung ke Tempat Pelayanan Terpadu (TPT) KPP, dikirim melalui pos/ekspedisi tercatat, atau diunggah secara elektronik melalui kanal DJP.
+
+--- PDF PAGE 10 ---
+   b. Pembahasan Langsung (Tatap Muka):
+      1) Wajib Pajak, wakil, atau kuasa yang sah hadir langsung di KPP untuk memberikan penjelasan dan klarifikasi di hadapan AR dan/atau Tim Pengawas;
+      2) Wajib Pajak membawa dan memperlihatkan dokumen asli serta menyerahkan salinan bukti pendukung yang telah diverifikasi kebenarannya;
+      3) Pertemuan tatap muka dilakukan di ruangan khusus pembahasan KPP yang dilengkapi sarana pencatatan administrasi.
+   c. Pembahasan Daring (Tatap Muka Daring / Audio Visual):
+      1) Pembahasan klarifikasi dapat diselenggarakan secara daring melalui media konferensi video (audio visual) resmi yang disepakati antara Wajib Pajak dan AR;
+      2) Pembahasan daring dilaksanakan dalam hal terdapat kendala jarak, efisiensi operasional, atau kondisi kedaruratan;
+      3) Jalannya pembahasan daring wajib direkam secara digital dan dibuatkan tangkapan layar (screenshot) sebagai bagian tak terpisahkan dari bukti pelaksanaan P2DK.
+
+--- PDF PAGE 11 ---
+   d. Penyampaian Pembetulan SPT Secara Sukarela:
+      1) Dalam hal Wajib Pajak mengakui dan membenarkan seluruh atau sebagian data/keterangan yang dimintakan penjelasan dalam SP2DK, Wajib Pajak menyampaikan tanggapan berupa penyampaian Pembetulan SPT secara sukarela sesuai Pasal 8 Undang-Undang KUP;
+      2) Pembetulan SPT dapat berupa pembetulan SPT Masa (PPN, PPh Pemotongan/Pemungutan) atau pembetulan SPT Tahunan (PPh Orang Pribadi, PPh Badan);
+      3) Pembetulan SPT wajib disertai pembayaran kekurangan pajak yang timbul menggunakan Surat Setoran Pajak (SSP) atau sarana administrasi pembayaran lainnya (Billing DJP / Coretax) yang disahkan dengan Bukti Penerimaan Negara (BPN);
+      4) Pembetulan SPT dikenai sanksi administrasi bunga perpajakan sesuai dengan ketentuan Pasal 8 ayat (2) atau Pasal 8 ayat (2a) Undang-Undang KUP berdasarkan tarif suku bunga acuan per bulan yang ditetapkan Menteri Keuangan;
+      5) Bukti Penerimaan Elektronik (BPE) pembetulan SPT beserta SSP/BPN dilampirkan sebagai bukti penyelesaian kewajiban.
+
+--- PDF PAGE 12 ---
+H. PENELITIAN DAN PENILAIAN TANGGAPAN OLEH ACCOUNT REPRESENTATIVE
+1. Pengujian Aspek Formal:
+   Account Representative (AR) melakukan penelitian formal atas tanggapan yang disampaikan Wajib Pajak, meliputi:
+   a. Keabsahan pihak yang menandatangani surat tanggapan atau menghadiri pembahasan (kewenangan direksi/pengurus berdasarkan akta terakhir, atau keabsahan Surat Kuasa Khusus);
+   b. Kepatuhan jangka waktu penyampaian tanggapan (apakah penjelasan disampaikan dalam batas waktu 14 hari kalender);
+   c. Kelengkapan dokumen lampiran dan bukti pendukung yang dipersyaratkan.
+2. Pengujian Aspek Material:
+   AR melakukan penelitian material secara mendalam terhadap substansi penjelasan dan dokumen pendukung, meliputi:
+   a. Pengujian kesesuaian antara penjelasan Wajib Pajak dengan basis data internal DJP (faktur pajak keluaran/masukan, bukti potong PPh, riwayat pelaporan SPT, data pembayaran);
+   b. Pengujian silang (cross-check) terhadap data eksternal yang sah, termasuk data transaksi perbankan/rekening koran, data kepabeanan ekspor/impor DJBC, dan data ILAP;
+   c. Rekonsiliasi peredaran usaha komersial terhadap peredaran usaha fiskal dan dasar pengenaan pajak (DPP) PPN;
+   d. Pengujian kebenaran pembebanan biaya-biaya operasional (deductible expenses) sesuai Pasal 6 dan Pasal 9 UU PPh;
+   e. Dalam hal sengketa transfer pricing, pengujian penerapan Prinsip Kewajaran dan Kelaziman Usaha (PKKU/Arm's Length Principle), kepatuhan analisis fungsi, aset, dan risiko (FAR), keandalan pembanding independen, dan kecukupan dokumen penentuan harga transfer (TP Doc).
+
+--- PDF PAGE 13 ---
+3. Klasifikasi Hasil Penilaian Tanggapan:
+   Berdasarkan hasil penelitian formal dan material, AR menetapkan klasifikasi simpulan atas tanggapan Wajib Pajak:
+   a. Tanggapan Diterima Penuh (Data Sesuai):
+      Penjelasan Wajib Pajak memadai, logis, dan didukung bukti otentik yang membuktikan bahwa kewajiban perpajakan telah dipenuhi dengan benar sesuai ketentuan, atau membuktikan bahwa data/keterangan yang dimiliki DJP tidak sesuai dengan kenyataan sebenarnya.
+   b. Tanggapan Diterima Sebagian:
+      Penjelasan dan bukti pendukung Wajib Pajak dapat diterima untuk sebagian pos data, sedangkan untuk bagian data lainnya masih ditemukan indikasi kekurangan pembayaran pajak atau ketidakpatuhan yang belum diselesaikan.
+   c. Tanggapan Ditolak:
+      Penjelasan Wajib Pajak tidak memadai, tidak didukung bukti otentik yang sah, tidak logis menurut kelaziman usaha, atau bertentangan dengan ketentuan peraturan perundang-undangan perpajakan.
+   d. Wajib Pajak Tidak Memberikan Tanggapan / Menolak Memberikan Tanggapan:
+      Wajib Pajak tidak merespons SP2DK hingga batas waktu berakhir, tidak menghadiri panggilan klarifikasi, atau menyatakan secara tegas menolak memberikan tanggapan.
+
+--- PDF PAGE 14 ---
+4. Dokumentasi Kertas Kerja Penilaian:
+   Seluruh tahapan pengujian, perhitungan kembali potensi pajak, dan pertimbangan hukum wajib dituangkan secara tertib dalam Kertas Kerja Penilaian Tanggapan yang ditandatangani oleh AR dan disetujui oleh Kepala Seksi Pengawasan.
+
+--- PDF PAGE 15 ---
+I. PEMBAHASAN AKHIR HASIL PENGAWASAN (PAHP) DAN BERITA ACARA
+1. Pelaksanaan Pembahasan Akhir Hasil Pengawasan:
+   a. Setelah menyelesaikan penelitian dan penilaian atas tanggapan Wajib Pajak, AR menyelenggarakan Pembahasan Akhir Hasil Pengawasan bersama Wajib Pajak.
+   b. Pembahasan akhir bertujuan untuk memaparkan simpulan sementara hasil penelitian pengawasan, mengomunikasikan perhitungan potensi pajak yang teridentifikasi, dan memberikan kesempatan terakhir bagi Wajib Pajak untuk menyampaikan sanggahan atau tanggapan penutup.
+   c. Pembahasan akhir dilaksanakan secara tatap muka langsung di KPP atau tatap muka daring melalui media audio visual.
+   d. Wajib Pajak berhak menyampaikan argumentasi hukum, fakta pendukung tambahan, serta menyepakati langkah penyelesaian kewajiban perpajakan yang belum terpenuhi.
+
+--- PDF PAGE 16 ---
+2. Penyusunan Dokumen Berita Acara:
+   Setiap tahapan permintaan penjelasan dan pembahasan wajib dituangkan dalam dokumen Berita Acara resmi:
+   a. Berita Acara Pelaksanaan Permintaan Penjelasan atas Data dan/atau Keterangan (BA P2DK):
+      Disusun pada saat pelaksanaan penyampaian penjelasan tertulis, pertemuan langsung, atau pembahasan daring;
+   b. Berita Acara Pembahasan Akhir Hasil Pengawasan:
+      Disusun pada akhir rangkaian pembahasan pengawasan untuk mencatat seluruh butir kesepakatan atau perbedaan pendapat antara AR dan Wajib Pajak;
+   c. Berita Acara Penolakan Memberikan Penjelasan:
+      Disusun apabila Wajib Pajak secara tegas menyatakan menolak memberikan penjelasan atau klarifikasi atas data yang dimintakan;
+   d. Berita Acara Tidak Dipenuhinya Permintaan Penjelasan:
+      Disusun apabila Wajib Pajak tidak memberikan tanggapan hingga batas waktu 14 hari kalender terlampaui dan upaya klarifikasi lanjutan tidak dipenuhi;
+   e. Berita Acara Penolakan Menandatangani Berita Acara:
+      Disusun apabila Wajib Pajak hadir dalam pembahasan namun menolak menandatangani Berita Acara.
+
+--- PDF PAGE 17 ---
+3. Muatan dan Kekuatan Pembuktian Berita Acara:
+   a. Berita Acara sekurang-kurangnya memuat:
+      1) Nomor dan tanggal SP2DK yang menjadi dasar pembahasan;
+      2) Hari, tanggal, dan tempat pelaksanaan pembahasan;
+      3) Identitas lengkap Wajib Pajak atau wakil/kuasa yang hadir;
+      4) Identitas petugas pemeriksa/Account Representative dan Kepala Seksi Pengawasan;
+      5) Rincian materi data yang dibahas;
+      6) Uraian penjelasan atau sanggahan yang disampaikan Wajib Pajak;
+      7) Simpulan dan pertimbangan Account Representative;
+      8) Butir-butir kesepakatan atau ketidaksepakatan, termasuk komitmen jangka waktu penyampaian pembetulan SPT dan penyetoran pajak;
+      9) Tanda tangan para pihak.
+   b. Apabila Wajib Pajak menolak menandatangani Berita Acara, petugas pajak mencantumkan catatan penolakan penandatanganan pada Berita Acara tersebut. Berita Acara tetap sah secara hukum dan memiliki kekuatan pembuktian penuh dalam prosedur administrasi pengawasan selanjutnya.
+
+--- PDF PAGE 18 ---
+J. TINDAK LANJUT HASIL PENGAWASAN DAN REKOMENDASI LHP2DK
+1. Penyusunan LHP2DK:
+   a. Account Representative menyusun Laporan Hasil Permintaan Penjelasan atas Data dan/atau Keterangan (LHP2DK) sebagai laporan final pelaksanaan pengawasan P2DK.
+   b. LHP2DK disusun berdasarkan hasil pengujian material, Berita Acara pelaksanaan P2DK, dan Berita Acara Pembahasan Akhir.
+   c. LHP2DK wajib diselesaikan paling lama 60 (enam puluh) hari kalender sejak tanggal penerbitan SP2DK, atau dapat diperpanjang atas persetujuan Kepala KPP dalam hal diperlukan pengujian komprehensif.
+   d. LHP2DK ditelaah oleh Kepala Seksi Pengawasan dan disahkan oleh Kepala Kantor Pelayanan Pajak.
+
+--- PDF PAGE 19 ---
+2. Bentuk-Bentuk Rekomendasi Tindak Lanjut dalam LHP2DK:
+   Berdasarkan simpulan akhir, LHP2DK memuat rekomendasi tindak lanjut sebagai berikut:
+   a. Pengawasan Diselesaikan / Ditutup (Pengawasan Selesai):
+      Rekomendasi pengawasan selesai diberikan dalam hal:
+      1) Penjelasan dan bukti Wajib Pajak diterima penuh bahwa kewajiban perpajakan telah dipenuhi dengan benar, atau data pengawasan terbukti tidak valid; atau
+      2) Wajib Pajak telah menyampaikan pembetulan SPT sesuai temuan pengawasan serta telah melunasi seluruh kekurangan pembayaran pajak beserta sanksi administrasi bunga terkait.
+   b. Pemantauan Realisasi Pembetulan SPT Sukarela:
+      1) Dalam hal Wajib Pajak menyepakati simpulan pengawasan namun memerlukan waktu teknis untuk menyiapkan pembetulan SPT, Wajib Pajak diberikan batas waktu paling lama 30 (tiga puluh) hari kalender sejak tanggal Berita Acara untuk menyampaikan pembetulan SPT dan menyetorkan kekurangan pajak;
+      2) AR memantau secara ketat realisasi komitmen tersebut hingga berakhirnya batas waktu 30 hari kalender.
+   c. Pengusulan Pemeriksaan Pajak (Eskalasi Audit):
+      Kepala KPP mengusulkan Pemeriksaan Khusus (Pemeriksaan Lapangan atau Pemeriksaan Kantor) sesuai kewenangan Pasal 29 Undang-Undang KUP dalam hal:
+      1) Wajib Pajak tidak menyampaikan tanggapan hingga batas waktu 14 hari kalender dan Berita Acara Tidak Dipenuhinya Permintaan Penjelasan telah diterbitkan;
+      2) Penjelasan Wajib Pajak ditolak dan Wajib Pajak menolak melakukan pembetulan SPT sukarela;
+      3) Wajib Pajak tidak memenuhi komitmen penyampaian pembetulan SPT dan penyetoran pajak dalam batas waktu 30 hari kalender yang disepakati; atau
+      4) Terdapat indikasi potensi kekurangan pembayaran pajak dalam jumlah material yang memerlukan wewenang formal pemeriksaan (peminjaman pembukuan/catatan, pemeriksaan lapangan, penyegelan, dan penerbitan SKPKB/SKPKBT).
+
+--- PDF PAGE 20 ---
+   d. Pengusulan Pemeriksaan Bukti Permulaan (Bukper):
+      Kepala KPP segera mengusulkan Pemeriksaan Bukti Permulaan tindak pidana perpajakan sesuai Pasal 43A Undang-Undang KUP dalam hal ditemukan indikasi kuat perbuatan pidana di bidang perpajakan, antara lain:
+      1) Penerbitan dan/atau penggunaan faktur pajak, bukti pemungutan pajak, bukti pemotongan pajak, dan/atau setoran pajak yang tidak berdasarkan transaksi sebenarnya (faktur fiktif);
+      2) Pemotongan atau pemungutan pajak tetapi dengan sengaja tidak menyetorkannya ke kas negara;
+      3) Penyelenggaraan pembukuan ganda, pembukuan palsu, atau pemalsuan dokumen pendukung untuk merekayasa kerugian fiskal.
+   e. Pemutakhiran Data Masterfile dan Profil Wajib Pajak:
+      Rekomendasi pemutakhiran data basis data perpajakan (Coretax) mengenai status operasional, alamat kegiatan usaha, Klasifikasi Baku Lapangan Usaha Indonesia (KBLI), penetapan Wajib Pajak Non-Efektif (NE), atau penghapusan NPWP/pencabutan PKP secara jabatan sesuai ketentuan yang berlaku.
+
+K. PENUTUP
+Surat Edaran ini menjadi pedoman operasional yang mengikat bagi seluruh jajaran pegawai Direktorat Jenderal Pajak dalam melaksanakan pengawasan kepatuhan Wajib Pajak, penerbitan SP2DK, evaluasi penjelasan Wajib Pajak, penyelenggaraan pembahasan akhir, dan penetapan tindak lanjut pengawasan demi tercapainya keadilan, kepastian hukum, dan kepatuhan perpajakan yang optimal.
+
+Ditetapkan di Jakarta
+pada tanggal 10 Februari 2022
+DIREKTUR JENDERAL PAJAK,
+ttd.
+SURYO UTOMO
