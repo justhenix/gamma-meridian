@@ -1,129 +1,129 @@
 # Meridian Tax & Legal Advisory
 
-High-assurance Indonesian tax advisory and corporate consulting platform. Meridian integrates a first-line AI guidance assistant with seamless escalation to licensed senior tax partners and legal counsel, backed by an approved regulatory corpus.
+Platform konsultasi perpajakan korporasi dan hukum bisnis Indonesia berstandar tinggi. Meridian memadukan panduan awal berbasis asisten AI cerdas dengan eskalasi langsung ke konsultan pajak berizin dan tim hukum senior, didukung oleh korpus regulasi resmi yang terverifikasi.
 
 ---
 
-## Key Features
+## Fitur Utama
 
-### 1. Meridian AI Assistant
-- **Structured Visual Guidance**: Answers with clear visual hierarchy, bold category headings, numbered procedures, and styled bullet points.
-- **Intelligent Retrieval Routing**:
-  - `corpus_grounded`: Statutorily binding inquiries (transfer pricing Master/Local File rules, CbCR thresholds, PMK/UU compliance) query the approved SQLite regulatory corpus and strictly validate citations.
-  - `flash_advisory`: Conceptual corporate guidance (PT PMA vs local PT, OSS RBA workflows, general tax advisory) dynamically calls the model with structured guidance prompts without querying the statutory corpus.
-  - `conversational`: Instant zero-latency responses for greetings, identity, and current date queries.
-- **Multi-Layer Guardrails**:
-  - **Jailbreak Defense**: Rejects DAN prompts, developer mode bypasses, and persona overrides.
-  - **Prompt Injection Defense**: Intercepts instruction overrides (*"ignore all previous instructions"*) and system prompt extraction attempts.
-  - **Illegal Activity Defense**: Refuses tax evasion schemes, fraudulent tax invoices (*faktur fiktif*), bribery of tax officials (*suap*), and money laundering with professional legal compliance explanations.
+### 1. Asisten AI Meridian
+- **Panduan Visual Terstruktur**: Memberikan respons dengan hierarki visual yang jelas, judul bagian tebal (*bold headers*), urutan bernomor, dan poin daftar (*bullet points*) berwarna amber yang rapi tanpa penumpukan teks.
+- **Penalaran & Perutean Pengambilan Regulasi (*Retrieval Routing*)**:
+  - `corpus_grounded`: Untuk pertanyaan yang mengikat secara hukum (ketentuan *Master File* / *Local File* *transfer pricing*, ambang batas CbCR, kepatuhan PMK/UU), sistem mencari ke korpus regulasi SQLite resmi dan memvalidasi sitasi pasal secara ketat.
+  - `flash_advisory`: Untuk panduan konseptual bisnis (perbedaan PT PMA vs PT lokal, alur perizinan OSS RBA, layanan konsultasi pajak umum), model langsung dipanggil dengan instruksi terstruktur tanpa membebani korpus pasal regulasi.
+  - `conversational`: Respons instan tanpa latensi untuk sapaan (*greeting*), identitas asisten, dan informasi tanggal saat ini.
+- **Guardrail Keamanan Berlapis**:
+  - **Pertahanan Jailbreak**: Menolak *prompt* DAN (*Do Anything Now*), mode *developer*, dan upaya pengubahan persona model.
+  - **Pertahanan Injeksi Prompt**: Menangkal pengabaian instruksi sistem (*"abaikan semua instruksi sebelumnya"*) serta upaya membocorkan *system prompt*.
+  - **Pencegahan Aktivitas Ilegal**: Menolak secara tegas skema penggelapan pajak (*tax evasion*), faktur pajak fiktif, penyuapan petugas pajak (*suap*), dan pencucian uang, dilengkapi penjelasan kepatuhan hukum resmi.
 
-### 2. Regulatory Knowledge Corpus & Safety Contract
-- Local full-text search (FTS) and topic-based retrieval over approved Indonesian tax regulations (e.g., PMK 172/2023, UU KUP, UU HPP, UU PPh/PPN).
-- Deterministic output validator that verifies quoted passages, detects unsupported numbers, rejects hallucinated legal identifiers, and enforces word count limits.
+### 2. Korpus Pengetahuan Regulasi & Validasi Keamanan
+- Pencarian teks lengkap (*Full-Text Search* / FTS) lokal dan pemfilteran topik atas peraturan perundang-undangan perpajakan Indonesia (antara lain PMK 172/2023, UU KUP, UU HPP, UU Cipta Kerja, UU PPh/PPN).
+- Validator *output* deterministik yang memeriksa kutipan pasal asli, mendeteksi angka tanpa dasar regulasi, menolak nomor regulasi fiktif, serta membatasi panjang respons.
 
-### 3. Consultation Handoff & Client Portal
-- Seamless guest intake with HMAC-peppered opaque tokens.
-- One-click client account conversion and case claiming via passwordless email OTP.
-- Staff helpdesk portal for senior partners to review AI audit trails, assign cases, and respond to clients.
-- Full internationalization support in English (`en`) and Indonesian (`id`) powered by Paraglide JS.
+### 3. Alur Konsultasi & Portal Klien
+- Sesi *guest* tanpa registrasi rumit yang diamankan menggunakan token bertanda tangan rahasia (*HMAC pepper*).
+- Konversi akun klien satu klik dan klaim percakapan konsultasi melalui kode OTP email tanpa kata sandi.
+- Portal *helpdesk* khusus staf dan *partner* senior untuk meninjau jejak audit AI, mengelola penugasan kasus, dan berdialog langsung dengan klien.
+- Dukungan dwibahasa penuh (Bahasa Indonesia `id` dan Bahasa Inggris `en`) menggunakan Paraglide JS.
 
 ---
 
-## Tech Stack
+## Tumpukan Teknologi (*Tech Stack*)
 
 - **Framework**: Next.js 16 (App Router, Turbopack)
-- **Runtime & UI**: React 19, TypeScript, Tailwind CSS v4, shadcn/ui
-- **Internationalization**: Paraglide JS (`messages/en.json`, `messages/id.json`)
-- **Database**: Turso SQLite / libSQL (`@libsql/client`) with custom transaction and migration engine
-- **AI Model Provider**: B.AI (`qwen3.8-flash`) with structured JSON schema output
-- **Email Delivery**: SumoPod SMTP (`nodemailer`) for transactional verification codes
-- **Package Manager**: npm
+- **Runtime & Tampilan Antarmuka**: React 19, TypeScript, Tailwind CSS v4, shadcn/ui
+- **Internasionalisasi (i18n)**: Paraglide JS (`messages/id.json`, `messages/en.json`)
+- **Basis Data**: Turso SQLite / libSQL (`@libsql/client`) dengan mesin migrasi dan transaksi khusus
+- **Penyedia Model AI**: B.AI (`qwen3.8-flash`) dengan skema format luaran JSON terstruktur
+- **Pengiriman Email**: SumoPod SMTP (`nodemailer`) untuk kode verifikasi transaksi
+- **Manajer Paket**: npm
 
 ---
 
-## Getting Started
+## Panduan Memulai
 
-### 1. Clone & Environment Setup
+### 1. Salin & Konfigurasi Lingkungan (*Environment*)
 
-Copy `.env.example` to `.env.local`:
+Salin berkas `.env.example` ke `.env.local`:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Configure the essential variables in `.env.local`:
+Sesuaikan variabel konfigurasi utama pada `.env.local`:
 
 ```env
-# Database (Local SQLite or Turso)
+# Basis Data (SQLite Lokal atau Turso)
 TURSO_DATABASE_URL="file:meridian.db"
 TURSO_AUTH_TOKEN=""
 
-# HMAC Security Peppers (generate using: openssl rand -base64 48)
-INTAKE_TOKEN_PEPPER="replace-with-a-long-random-secret"
-AUTH_TOKEN_PEPPER="replace-with-a-different-long-random-secret"
+# Kunci Pengaman HMAC (dapat dibuat dengan: openssl rand -base64 48)
+INTAKE_TOKEN_PEPPER="ganti-dengan-kunci-acak-panjang"
+AUTH_TOKEN_PEPPER="ganti-dengan-kunci-acak-berbeda"
 
-# AI Provider (B.AI / Qwen)
-BAI_API_KEY="your-bai-api-key"
+# Penyedia AI (B.AI / Qwen)
+BAI_API_KEY="kunci-api-bai-anda"
 BAI_BASE_URL="https://api.b.ai/v1"
 BAI_MODEL="qwen3.8-flash"
 
-# Authorized Staff Accounts
+# Akun Email Staf yang Diberi Otorisasi
 MERIDIAN_STAFF_EMAILS="partner@meridiantax.com"
 ```
 
-### 2. Install Dependencies
+### 2. Pasang Dependensi
 
 ```bash
 npm install
 ```
 
-### 3. Database Migration & Corpus Ingestion
+### 3. Migrasi Basis Data & Ingesti Korpus
 
-Run database migrations to initialize tables:
+Jalankan migrasi basis data untuk membuat skema tabel:
 
 ```bash
 npm run migrate
 ```
 
-Ingest consolidated regulatory instruments into the SQLite knowledge corpus:
+Lakukan proses ingesti peraturan perpajakan resmi ke dalam korpus basis data SQLite:
 
 ```bash
 npm run ingest:corpus
 ```
 
-### 4. Compile Translations
+### 4. Kompilasi Terjemahan Bahasa
 
 ```bash
 npm run compile
 ```
 
-### 5. Run Development Server
+### 5. Jalankan Server Pengembangan
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Buka peramban di [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Available Scripts
+## Daftar Perintah (*Available Scripts*)
 
-| Command | Description |
+| Perintah | Keterangan |
 | :--- | :--- |
-| `npm run dev` | Start development server with automatic i18n compilation |
-| `npm run build` | Compile translations and build production application |
-| `npm run start` | Start production server |
-| `npm run test` | Run complete Node.js test suite across all domain and integration tests |
-| `npm run typecheck` | Run TypeScript type checking (`tsc --noEmit`) |
-| `npm run lint` | Run ESLint across codebase |
-| `npm run compile` | Compile Paraglide translation dictionaries |
-| `npm run migrate` | Apply database migrations to the configured SQLite/Turso database |
-| `npm run ingest:corpus` | Ingest approved statutory tax regulations into the knowledge corpus |
-| `npm run smoke:backend` | Execute end-to-end backend smoke tests against live API routes |
+| `npm run dev` | Menjalankan server pengembangan dengan auto-kompilasi i18n |
+| `npm run build` | Mengompilasi kamus bahasa dan membangun aplikasi produksi |
+| `npm run start` | Menjalankan server dalam mode produksi |
+| `npm run test` | Menjalankan seluruh pengujian unit & integrasi secara menyeluruh |
+| `npm run typecheck` | Memeriksa kepatuhan tipe TypeScript (`tsc --noEmit`) |
+| `npm run lint` | Menjalankan audit kode dengan ESLint |
+| `npm run compile` | Mengompilasi kamus bahasa Paraglide |
+| `npm run migrate` | Menerapkan migrasi tabel ke basis data SQLite/Turso |
+| `npm run ingest:corpus` | Memasukkan regulasi perundang-undangan resmi ke korpus pengetahuan |
+| `npm run smoke:backend` | Menjalankan uji asap (*smoke test*) menyeluruh terhadap endpoint API |
 
 ---
 
-## License
+## Lisensi
 
-Private and proprietary. Copyright © Meridian Tax & Legal Advisory. All rights reserved.
+Bersifat privat dan terbatas (*proprietary*). Hak Cipta © Meridian Tax & Legal Advisory. Dilindungi undang-undang.
