@@ -3,7 +3,7 @@ import { CasesDal } from "@/server/dal/cases";
 import { getDatabaseClient } from "@/server/db/client";
 import {
   jsonResponse,
-  requireDevelopmentActor,
+  resolveBackendActor,
   routeError,
 } from "../../../_lib/backend";
 
@@ -14,7 +14,7 @@ export async function GET(
   context: { params: Promise<{ caseId: string }> },
 ) {
   try {
-    const actor = requireDevelopmentActor(request);
+    const actor = await resolveBackendActor(request);
     const { caseId } = await context.params;
     const result = await new CasesDal(
       getDatabaseClient(),

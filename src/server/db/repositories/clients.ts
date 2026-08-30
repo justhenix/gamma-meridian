@@ -140,4 +140,28 @@ export class ClientsRepository {
     });
     return result.rows[0] ? mapClientMember(result.rows[0]) : null;
   }
+
+  async findReusableAccountForUser(input: {
+    userId: string;
+    accountType: ClientAccountType;
+    displayName: string;
+  }): Promise<ClientAccountRecord | null> {
+    const result = await this.database.execute({
+      sql: `
+        SELECT ca.id, ca.account_type, ca.legal_name, ca.display_name, ca.country_code,
+               ca.preferred_locale, ca.status, ca.created_by_user_id, ca.created_at, ca.updated_at
+        FROM client_accounts AS ca
+        JOIN client_account_members AS cam ON cam.client_account_id = ca.id
+        WHERE cam.user_id = ?
+          AND cam.status = 'active'
+          AND ca.status = 'active'
+          AND ca.account_type = ?
+          AND lower(ca.display_name) = lower(?)
+        ORDER BY ca.created_at
+        LIMIT 1
+      `,
+      args: [input.userId, input.accountType, input.displayName.trim()],
+    });
+    return result.rows[0] ? mapClientAccount(result.rows[0]) : null;
+  }
 }

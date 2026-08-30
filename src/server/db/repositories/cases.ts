@@ -149,6 +149,82 @@ export class CasesRepository {
     return result.rows[0] ? mapCase(result.rows[0]) : null;
   }
 
+  async claimGuestCase(input: {
+    caseId: string;
+    userId: string;
+    clientAccountId: string;
+  }): Promise<CaseRecord> {
+    const result = await this.database.execute({
+      sql: `
+        UPDATE cases
+        SET client_account_id = ?, created_by_user_id = ?, updated_at = ?
+        WHERE id = ?
+          AND client_account_id IS NULL
+          AND created_by_user_id IS NULL
+      `,
+      args: [input.clientAccountId, input.userId, nowIso(), input.caseId],
+    });
+    const record = await this.findCaseById(input.caseId);
+    if (!record) throw new Error("Claimed case disappeared");
+    if (
+      result.rowsAffected === 0 &&
+      (record.clientAccountId !== input.clientAccountId || record.createdByUserId !== input.userId)
+    ) {
+      throw new Error("Case is already claimed by another identity");
+    }
+    return record;
+  }
+
+  async listClientCasesForUser(userId: string): Promise<CaseRecord[]> {
+    const result = await this.database.execute({
+      sql: `
+        SELECT c.*
+        FROM cases AS c
+        JOIN case_members AS cm ON cm.case_id = c.id
+        WHERE cm.user_id = ?
+          AND cm.removed_at IS NULL
+          AND cm.case_role IN ('client_owner', 'client_collaborator')
+        ORDER BY c.updated_at DESC, c.id DESC
+      `,
+      args: [userId],
+    });
+    return result.rows.map(mapCase);
+  }
+
+  async listStaffCasesForUser(userId: string): Promise<CaseRecord[]> {
+    const result = await this.database.execute({
+      sql: `
+        SELECT DISTINCT c.*
+        FROM cases AS c
+        LEFT JOIN case_members AS mine
+          ON mine.case_id = c.id
+         AND mine.user_id = ?
+         AND mine.removed_at IS NULL
+         AND mine.case_role IN ('lead_consultant', 'consultant', 'reviewer')
+        WHERE mine.id IS NOT NULL
+           OR (
+             EXISTS (
+               SELECT 1
+               FROM escalations AS escalation
+               WHERE escalation.case_id = c.id
+                 AND escalation.status = 'open'
+                 AND escalation.assigned_to_user_id IS NULL
+             )
+             AND NOT EXISTS (
+               SELECT 1
+               FROM case_members AS assigned
+               WHERE assigned.case_id = c.id
+                 AND assigned.removed_at IS NULL
+                 AND assigned.case_role IN ('lead_consultant', 'consultant', 'reviewer')
+             )
+           )
+        ORDER BY c.updated_at DESC, c.id DESC
+      `,
+      args: [userId],
+    });
+    return result.rows.map(mapCase);
+  }
+
   async upsertMember(input: UpsertCaseMemberInput): Promise<CaseMemberRecord> {
     const id = createId();
     const timestamp = nowIso();
@@ -190,6 +266,23 @@ export class CasesRepository {
         WHERE case_id = ? AND user_id = ? AND removed_at IS NULL
       `,
       args: [caseId, userId],
+    });
+    return result.rows[0] ? mapCaseMember(result.rows[0]) : null;
+  }
+
+  async findActiveStaffMembership(caseId: string): Promise<CaseMemberRecord | null> {
+    const result = await this.database.execute({
+      sql: `
+        SELECT id, case_id, user_id, case_role, added_by_user_id, reason,
+               created_at, removed_at
+        FROM case_members
+        WHERE case_id = ?
+          AND removed_at IS NULL
+          AND case_role IN ('lead_consultant', 'consultant', 'reviewer')
+        ORDER BY created_at, id
+        LIMIT 1
+      `,
+      args: [caseId],
     });
     return result.rows[0] ? mapCaseMember(result.rows[0]) : null;
   }

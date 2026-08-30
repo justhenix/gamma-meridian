@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Row } from "@libsql/client";
+import type { InStatement, Row } from "@libsql/client";
 import type { AiRunRecord, AiRunStatus } from "../../domain/ai/types";
 import type { RetrievedRegulatorySection } from "../../domain/regulations/types";
 import { createId, nowIso } from "../../domain/shared/ids";
@@ -65,7 +65,7 @@ export class AiRunsRepository {
     conversationId: string;
     triggerType: string;
     triggerId: string;
-    requestedByUserId: string;
+    requestedByUserId: string | null;
     provider: string;
     model: string;
     promptKey: string;
@@ -110,7 +110,34 @@ export class AiRunsRepository {
       ],
     });
     const run = result.rowsAffected === 1
-      ? await this.findById(id)
+      ? {
+          id,
+          caseId: input.caseId,
+          conversationId: input.conversationId,
+          purpose: "answer_case_question" as const,
+          triggerType: input.triggerType,
+          triggerId: input.triggerId,
+          requestedByUserId: input.requestedByUserId,
+          status: "running" as const,
+          provider: input.provider,
+          model: input.model,
+          providerRequestId: null,
+          promptKey: input.promptKey,
+          promptVersion: input.promptVersion,
+          rulesetVersion: input.rulesetVersion,
+          inputSnapshot: JSON.parse(input.inputSnapshotJson) as unknown,
+          inputSha256: input.inputSha256,
+          output: null,
+          outputSha256: null,
+          inputTokens: null,
+          outputTokens: null,
+          latencyMs: null,
+          errorCode: null,
+          idempotencyKey: input.idempotencyKey,
+          startedAt: timestamp,
+          completedAt: null,
+          createdAt: timestamp,
+        }
       : await this.findByIdempotency(input.conversationId, input.idempotencyKey);
     if (!run) throw new Error("Failed to claim or recover AI run");
     return { run, created: result.rowsAffected === 1 };
@@ -141,8 +168,7 @@ export class AiRunsRepository {
   }
 
   async attachSources(runId: string, sources: RetrievedRegulatorySection[]): Promise<void> {
-    for (const [index, source] of sources.entries()) {
-      await this.database.execute({
+    const statements: InStatement[] = sources.map((source, index) => ({
         sql: `
           INSERT INTO ai_run_sources (
             ai_run_id, source_section_id, context_ordinal, context_sha256,
@@ -157,7 +183,14 @@ export class AiRunsRepository {
           source.retrievalMethod,
           source.retrievalScore,
         ],
-      });
+      }));
+    if (statements.length === 0) return;
+    if (this.database.batch) {
+      await this.database.batch(statements);
+      return;
+    }
+    for (const statement of statements) {
+      await this.database.execute(statement);
     }
   }
 
@@ -179,7 +212,7 @@ export class AiRunsRepository {
     outputTokens?: number | null;
     latencyMs?: number | null;
     errorCode?: string | null;
-  }): Promise<AiRunRecord> {
+  }): Promise<void> {
     const result = await this.database.execute({
       sql: `
         UPDATE ai_runs
@@ -202,6 +235,5 @@ export class AiRunsRepository {
       ],
     });
     if (result.rowsAffected !== 1) throw new Error("AI run finalization conflict");
-    return (await this.findById(input.id))!;
   }
 }

@@ -25,6 +25,26 @@ async function main(): Promise<void> {
         status: "active",
         emailVerifiedAt: new Date().toISOString(),
       }));
+    const partner =
+      (await users.findByEmail("hendrik.prasetyo@meridiantax.com")) ??
+      (await users.create({
+        authSubject: "synthetic:development-partner",
+        email: "hendrik.prasetyo@meridiantax.com",
+        displayName: "Hendrik Prasetyo, BAP, S.H.",
+        globalRole: "admin",
+        status: "active",
+        emailVerifiedAt: new Date().toISOString(),
+      }));
+    const consultant =
+      (await users.findByEmail("maya.kusuma@meridiantax.com")) ??
+      (await users.create({
+        authSubject: "synthetic:development-consultant",
+        email: "maya.kusuma@meridiantax.com",
+        displayName: "Maya Kusuma, S.E., BKP",
+        globalRole: "consultant",
+        status: "active",
+        emailVerifiedAt: new Date().toISOString(),
+      }));
     const client =
       (await users.findByEmail("client@synthetic.meridian.test")) ??
       (await users.create({
@@ -64,7 +84,13 @@ async function main(): Promise<void> {
       invitedByUserId: client.id,
     });
 
-    console.log(JSON.stringify({ adminUserId: admin.id, clientUserId: client.id, clientAccountId: account.id }, null, 2));
+    console.log(JSON.stringify({
+      adminUserId: admin.id,
+      partnerUserId: partner.id,
+      consultantUserId: consultant.id,
+      clientUserId: client.id,
+      clientAccountId: account.id,
+    }, null, 2));
   } finally {
     database.close();
   }

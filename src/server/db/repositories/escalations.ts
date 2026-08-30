@@ -17,6 +17,8 @@ export interface EscalationRecord {
   handoffSummary: Record<string, JsonValue>;
   severity: "low" | "medium" | "high" | "critical";
   status: "open" | "assigned" | "resolved" | "cancelled";
+  assignedToUserId: string | null;
+  assignedAt: string | null;
   createdAt: string;
 }
 
@@ -32,13 +34,16 @@ function mapEscalation(row: Row): EscalationRecord {
     handoffSummary: parseJson<Record<string, JsonValue>>(row, "handoff_summary_json"),
     severity: requiredString(row, "severity") as EscalationRecord["severity"],
     status: requiredString(row, "status") as EscalationRecord["status"],
+    assignedToUserId: optionalString(row, "assigned_to_user_id"),
+    assignedAt: optionalString(row, "assigned_at"),
     createdAt: requiredString(row, "created_at"),
   };
 }
 
 const columns = `
   id, case_id, conversation_id, ai_run_id, trigger_type, reason_codes_json,
-  reason_text, handoff_summary_json, severity, status, created_at
+  reason_text, handoff_summary_json, severity, status, assigned_to_user_id,
+  assigned_at, created_at
 `;
 
 export class EscalationsRepository {
@@ -47,6 +52,14 @@ export class EscalationsRepository {
   async findActive(caseId: string): Promise<EscalationRecord | null> {
     const result = await this.database.execute({
       sql: `SELECT ${columns} FROM escalations WHERE case_id = ? AND status IN ('open', 'assigned') LIMIT 1`,
+      args: [caseId],
+    });
+    return result.rows[0] ? mapEscalation(result.rows[0]) : null;
+  }
+
+  async findLatestForCase(caseId: string): Promise<EscalationRecord | null> {
+    const result = await this.database.execute({
+      sql: `SELECT ${columns} FROM escalations WHERE case_id = ? ORDER BY created_at DESC, id DESC LIMIT 1`,
       args: [caseId],
     });
     return result.rows[0] ? mapEscalation(result.rows[0]) : null;
@@ -110,6 +123,40 @@ export class EscalationsRepository {
       ],
     });
     return (await this.findById(id))!;
+  }
+
+  async assignOpenToUser(caseId: string, userId: string): Promise<EscalationRecord | null> {
+    await this.database.execute({
+      sql: `
+        UPDATE escalations
+        SET status = 'assigned', assigned_to_user_id = ?, assigned_at = COALESCE(assigned_at, ?)
+        WHERE case_id = ?
+          AND status = 'open'
+          AND assigned_to_user_id IS NULL
+      `,
+      args: [userId, nowIso(), caseId],
+    });
+    return this.findActive(caseId);
+  }
+
+  async resolveAssignedForCase(input: {
+    caseId: string;
+    userId: string;
+    resolutionNote: string | null;
+  }): Promise<EscalationRecord | null> {
+    await this.database.execute({
+      sql: `
+        UPDATE escalations
+        SET status = 'resolved', resolved_by_user_id = ?,
+            resolution_code = 'human_review_completed', resolution_note = ?,
+            resolved_at = COALESCE(resolved_at, ?)
+        WHERE case_id = ?
+          AND status = 'assigned'
+          AND assigned_to_user_id = ?
+      `,
+      args: [input.userId, input.resolutionNote, nowIso(), input.caseId, input.userId],
+    });
+    return this.findLatestForCase(input.caseId);
   }
 
   async findById(id: string): Promise<EscalationRecord | null> {

@@ -107,6 +107,20 @@ export class IntakeRepository {
     return result.rows[0] ? mapSession(result.rows[0]) : null;
   }
 
+  async findSessionByGuestTokenHash(hash: string): Promise<IntakeSessionRecord | null> {
+    const result = await this.database.execute({
+      sql: `
+        SELECT id, owner_user_id, guest_token_hash, intake_schema_version, locale,
+               status, expires_at, submitted_at, row_version, created_at, updated_at
+        FROM intake_sessions
+        WHERE guest_token_hash = ?
+        LIMIT 1
+      `,
+      args: [hash],
+    });
+    return result.rows[0] ? mapSession(result.rows[0]) : null;
+  }
+
   async saveAnswer(input: SaveIntakeAnswerInput): Promise<IntakeAnswerRecord> {
     const existing = await this.findAnswer(input.intakeSessionId, input.questionKey);
     const id = existing?.id ?? createId();
@@ -191,5 +205,27 @@ export class IntakeRepository {
       args: [timestamp, timestamp, id, expectedVersion],
     });
     return result.rowsAffected === 1;
+  }
+
+  async claimSubmittedSession(id: string, userId: string): Promise<IntakeSessionRecord> {
+    const timestamp = nowIso();
+    const result = await this.database.execute({
+      sql: `
+        UPDATE intake_sessions
+        SET owner_user_id = ?, guest_token_hash = NULL, expires_at = NULL,
+            status = 'claimed', row_version = row_version + 1, updated_at = ?
+        WHERE id = ?
+          AND status = 'submitted'
+          AND owner_user_id IS NULL
+          AND guest_token_hash IS NOT NULL
+      `,
+      args: [userId, timestamp, id],
+    });
+    const session = await this.findSessionById(id);
+    if (!session) throw new Error("Claimed intake session disappeared");
+    if (result.rowsAffected === 0 && !(session.status === "claimed" && session.ownerUserId === userId)) {
+      throw new Error("Intake session cannot be claimed by this user");
+    }
+    return session;
   }
 }

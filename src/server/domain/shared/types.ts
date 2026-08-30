@@ -140,6 +140,7 @@ export interface MessageRecord {
   conversationId: string;
   authorType: "user" | "ai" | "system";
   authorUserId: string | null;
+  authorGuestSessionId: string | null;
   aiRunId: string | null;
   bodyMarkdown: string;
   language: Locale;

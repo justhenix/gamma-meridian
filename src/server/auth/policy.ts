@@ -30,6 +30,16 @@ export interface AuthorizedCaseActor {
   membership: CaseMemberRecord;
 }
 
+export interface AuthorizedGuestCaseActor {
+  actor: Extract<Actor, { kind: "guest" }>;
+  user: null;
+  caseRecord: CaseRecord;
+  membership: null;
+  guestSession: IntakeSessionRecord;
+}
+
+export type AuthorizedConversationActor = AuthorizedCaseActor | AuthorizedGuestCaseActor;
+
 export class AuthorizationPolicy {
   private readonly users: UsersRepository;
   private readonly clients: ClientsRepository;
@@ -123,11 +133,36 @@ export class AuthorizationPolicy {
     return { actor: actor as UserActor, user, caseRecord, membership };
   }
 
+  async requireGuestCaseAccess(
+    actor: Extract<Actor, { kind: "guest" }>,
+    caseId: string,
+  ): Promise<AuthorizedGuestCaseActor> {
+    const session = await this.requireIntakeAccess(actor, actor.intakeSessionId);
+    const caseRecord = await this.cases.findCaseById(caseId);
+    if (!caseRecord) throw new DomainError("NOT_FOUND", "Case was not found");
+    if (caseRecord.intakeSessionId !== session.id) {
+      throw new DomainError("FORBIDDEN", "The guest credential does not own this case");
+    }
+    return {
+      actor,
+      user: null,
+      caseRecord,
+      membership: null,
+      guestSession: session,
+    };
+  }
+
   async requireConversationAccess(
     actor: Actor,
     caseId: string,
     channel: ConversationChannel,
-  ): Promise<AuthorizedCaseActor> {
+  ): Promise<AuthorizedConversationActor> {
+    if (actor.kind === "guest") {
+      if (channel !== "client") {
+        throw new DomainError("FORBIDDEN", "Guest access is limited to the shared client conversation");
+      }
+      return this.requireGuestCaseAccess(actor, caseId);
+    }
     const access = await this.requireCaseAccess(actor, caseId);
     if (channel === "internal" && !staffCaseRoles.has(access.membership.caseRole)) {
       throw new DomainError("FORBIDDEN", "Internal conversations are staff-only");

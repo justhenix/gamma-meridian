@@ -19,7 +19,7 @@ export class ConversationsService {
     private readonly guestTokens: GuestTokenService,
   ) {}
 
-  async sendMessage(actor: Actor, input: unknown): Promise<MessageRecord> {
+  async sendMessage(actor: Actor, input: unknown): Promise<MessageRecord & { caseId: string }> {
     const data = parseInput(sendMessageSchema, input);
 
     return withWriteTransaction(this.database, async (transaction) => {
@@ -34,7 +34,7 @@ export class ConversationsService {
         throw new DomainError("INVALID_STATE", "Conversation is closed");
       }
 
-      const access = await policy.requireConversationAccess(
+      await policy.requireConversationAccess(
         actor,
         conversation.caseId,
         conversation.channel,
@@ -43,9 +43,12 @@ export class ConversationsService {
         conversation.id,
         data.clientRequestId,
       );
+      const authorUserId = actor.kind === "user" ? actor.userId : null;
+      const authorGuestSessionId = actor.kind === "guest" ? actor.intakeSessionId : null;
       if (existing) {
         if (
-          existing.authorUserId !== access.user.id ||
+          existing.authorUserId !== authorUserId ||
+          existing.authorGuestSessionId !== authorGuestSessionId ||
           existing.bodyMarkdown !== data.bodyMarkdown ||
           existing.language !== data.language
         ) {
@@ -54,13 +57,14 @@ export class ConversationsService {
             "Message idempotency key was already used with different content",
           );
         }
-        return existing;
+        return { ...existing, caseId: conversation.caseId };
       }
 
       const message = await conversations.createMessage({
         conversationId: conversation.id,
         authorType: "user",
-        authorUserId: access.user.id,
+        authorUserId,
+        authorGuestSessionId,
         bodyMarkdown: data.bodyMarkdown,
         language: data.language,
         clientRequestId: data.clientRequestId,
@@ -73,7 +77,7 @@ export class ConversationsService {
         changedFields: ["body_markdown", "language"],
         metadata: { channel: conversation.channel },
       });
-      return message;
+      return { ...message, caseId: conversation.caseId };
     });
   }
 }

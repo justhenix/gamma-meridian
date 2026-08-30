@@ -47,6 +47,7 @@ export class AuditRepository {
 
   async append(input: AppendAuditEventInput): Promise<AuditEventRecord> {
     const id = createId();
+    const createdAt = nowIso();
     await this.database.execute({
       sql: `
         INSERT INTO audit_events (
@@ -68,10 +69,24 @@ export class AuditRepository {
         input.reasonCode ?? null,
         JSON.stringify(input.changedFields ?? []),
         JSON.stringify(input.metadata ?? {}),
-        nowIso(),
+        createdAt,
       ],
     });
-    return (await this.findById(id))!;
+    return {
+      id,
+      caseId: input.caseId,
+      actorType: input.actorType,
+      actorUserId: input.actorUserId,
+      actorReferenceId: input.actorReferenceId,
+      eventType: input.eventType,
+      targetType: input.targetType,
+      targetId: input.targetId,
+      requestId: input.requestId,
+      reasonCode: input.reasonCode ?? null,
+      changedFields: input.changedFields ?? [],
+      metadata: input.metadata ?? {},
+      createdAt,
+    };
   }
 
   async findById(id: string): Promise<AuditEventRecord | null> {

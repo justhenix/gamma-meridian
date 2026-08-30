@@ -30,6 +30,7 @@ function mapMessage(row: Row): MessageRecord {
     conversationId: requiredString(row, "conversation_id"),
     authorType: requiredString(row, "author_type") as "user" | "ai" | "system",
     authorUserId: optionalString(row, "author_user_id"),
+    authorGuestSessionId: optionalString(row, "author_guest_session_id"),
     aiRunId: optionalString(row, "ai_run_id"),
     bodyMarkdown: requiredString(row, "body_markdown"),
     language: requiredString(row, "language") as Locale,
@@ -89,46 +90,57 @@ export class ConversationsRepository {
     conversationId: string;
     authorType: "user" | "ai" | "system";
     authorUserId: string | null;
+    authorGuestSessionId?: string | null;
     aiRunId?: string | null;
     bodyMarkdown: string;
     language: Locale;
     clientRequestId: string;
   }): Promise<MessageRecord> {
-    const existing = await this.findMessageByRequestId(
-      input.conversationId,
-      input.clientRequestId,
-    );
-    if (existing) {
-      return existing;
-    }
-
     const id = createId();
-    await this.database.execute({
+    const createdAt = nowIso();
+    const result = await this.database.execute({
       sql: `
-        INSERT INTO messages (
-          id, conversation_id, author_type, author_user_id, ai_run_id,
+        INSERT OR IGNORE INTO messages (
+          id, conversation_id, author_type, author_user_id, author_guest_session_id, ai_run_id,
           body_markdown, language, client_request_id, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         id,
         input.conversationId,
         input.authorType,
         input.authorUserId,
+        input.authorGuestSessionId ?? null,
         input.aiRunId ?? null,
         input.bodyMarkdown,
         input.language,
         input.clientRequestId,
-        nowIso(),
+        createdAt,
       ],
     });
-    return (await this.findMessageById(id))!;
+    if (result.rowsAffected !== 1) {
+      const existing = await this.findMessageByRequestId(input.conversationId, input.clientRequestId);
+      if (!existing) throw new Error("Failed to create or recover conversation message");
+      return existing;
+    }
+    return {
+      id,
+      conversationId: input.conversationId,
+      authorType: input.authorType,
+      authorUserId: input.authorUserId,
+      authorGuestSessionId: input.authorGuestSessionId ?? null,
+      aiRunId: input.aiRunId ?? null,
+      bodyMarkdown: input.bodyMarkdown,
+      language: input.language,
+      clientRequestId: input.clientRequestId,
+      createdAt,
+    };
   }
 
   async findMessageById(id: string): Promise<MessageRecord | null> {
     const result = await this.database.execute({
       sql: `
-        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+        SELECT id, conversation_id, author_type, author_user_id, author_guest_session_id, ai_run_id,
                body_markdown, language, client_request_id, created_at
         FROM messages
         WHERE id = ?
@@ -144,7 +156,7 @@ export class ConversationsRepository {
   ): Promise<MessageRecord | null> {
     const result = await this.database.execute({
       sql: `
-        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+        SELECT id, conversation_id, author_type, author_user_id, author_guest_session_id, ai_run_id,
                body_markdown, language, client_request_id, created_at
         FROM messages
         WHERE conversation_id = ? AND client_request_id = ?
@@ -157,7 +169,7 @@ export class ConversationsRepository {
   async findMessageByAiRun(aiRunId: string): Promise<MessageRecord | null> {
     const result = await this.database.execute({
       sql: `
-        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+        SELECT id, conversation_id, author_type, author_user_id, author_guest_session_id, ai_run_id,
                body_markdown, language, client_request_id, created_at
         FROM messages
         WHERE ai_run_id = ?
@@ -171,7 +183,7 @@ export class ConversationsRepository {
   async listMessages(conversationId: string): Promise<MessageRecord[]> {
     const result = await this.database.execute({
       sql: `
-        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+        SELECT id, conversation_id, author_type, author_user_id, author_guest_session_id, ai_run_id,
                body_markdown, language, client_request_id, created_at
         FROM messages
         WHERE conversation_id = ?

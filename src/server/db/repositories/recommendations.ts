@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Row } from "@libsql/client";
+import type { InStatement, Row } from "@libsql/client";
 import type { AiAnswerContract } from "../../domain/ai/contract";
 import type { RetrievedRegulatorySection } from "../../domain/regulations/types";
 import { createId, nowIso } from "../../domain/shared/ids";
@@ -78,9 +78,9 @@ export class RecommendationsRepository {
     });
 
     const sourceById = new Map(input.sources.map((source) => [source.id, source]));
-    for (const [index, citation] of input.content.citations.entries()) {
+    const citationStatements: InStatement[] = input.content.citations.map((citation, index) => {
       const source = sourceById.get(citation.sourceSectionId)!;
-      await this.database.execute({
+      return {
         sql: `
           INSERT INTO recommendation_citations (
             id, recommendation_version_id, source_section_id, claim_key,
@@ -99,9 +99,28 @@ export class RecommendationsRepository {
           timestamp,
           index,
         ],
-      });
+      };
+    });
+    if (citationStatements.length > 0) {
+      if (this.database.batch) {
+        await this.database.batch(citationStatements);
+      } else {
+        for (const statement of citationStatements) {
+          await this.database.execute(statement);
+        }
+      }
     }
-    return (await this.findById(id))!;
+    return {
+      id,
+      caseId: input.caseId,
+      conversationId: input.conversationId,
+      versionNumber,
+      aiRunId: input.aiRunId,
+      language: input.language,
+      content: input.content,
+      status: "published",
+      publishedAt: timestamp,
+    };
   }
 
   async findById(id: string): Promise<RecommendationRecord | null> {

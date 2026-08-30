@@ -2,6 +2,7 @@ import "server-only";
 
 import { z } from "zod";
 import { createSyntheticUserActor } from "@/server/auth/synthetic";
+import { resolveRequestActor } from "@/server/auth/request";
 import { DomainError, isDomainError } from "@/server/domain/shared/errors";
 
 const statusByCode: Record<DomainError["code"], number> = {
@@ -22,6 +23,15 @@ export function requireDevelopmentActor(request: Request) {
   }
   const userId = z.uuid().parse(request.headers.get("x-meridian-user-id"));
   return createSyntheticUserActor(userId);
+}
+
+export async function resolveBackendActor(request: Request) {
+  const actor = await resolveRequestActor(request);
+  if (actor.kind !== "anonymous") return actor;
+  if (request.headers.get("x-meridian-user-id")) {
+    return requireDevelopmentActor(request);
+  }
+  return actor;
 }
 
 export async function readJsonBody(request: Request): Promise<unknown> {

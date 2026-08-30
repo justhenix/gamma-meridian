@@ -6,7 +6,7 @@ import { EscalationsService } from "@/server/domain/escalations/escalateConversa
 import {
   jsonResponse,
   readJsonBody,
-  requireDevelopmentActor,
+  resolveBackendActor,
   routeError,
 } from "../../../../_lib/backend";
 
@@ -23,7 +23,7 @@ export async function POST(
   context: { params: Promise<{ conversationId: string }> },
 ) {
   try {
-    const actor = requireDevelopmentActor(request);
+    const actor = await resolveBackendActor(request);
     const { conversationId } = await context.params;
     const body = bodySchema.parse(await readJsonBody(request));
     const result = await new EscalationsService(

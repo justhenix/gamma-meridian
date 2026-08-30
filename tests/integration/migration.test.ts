@@ -18,6 +18,8 @@ test("numbered migrations create the human, regulatory, AI, and escalation table
       "ai_run_sources",
       "ai_runs",
       "audit_events",
+      "auth_sessions",
+      "auth_verification_challenges",
       "case_members",
       "cases",
       "client_account_members",

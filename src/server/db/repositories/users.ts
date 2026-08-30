@@ -91,4 +91,23 @@ export class UsersRepository {
     });
     return result.rows[0] ? mapUser(result.rows[0]) : null;
   }
+
+  async markEmailVerified(input: {
+    userId: string;
+    displayName: string;
+  }): Promise<UserRecord> {
+    const timestamp = nowIso();
+    await this.database.execute({
+      sql: `
+        UPDATE users
+        SET display_name = ?, email_verified_at = COALESCE(email_verified_at, ?),
+            status = 'active', updated_at = ?
+        WHERE id = ? AND global_role = 'client'
+      `,
+      args: [input.displayName.trim(), timestamp, timestamp, input.userId],
+    });
+    const user = await this.findById(input.userId);
+    if (!user) throw new Error("Verified user disappeared");
+    return user;
+  }
 }
