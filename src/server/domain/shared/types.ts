@@ -7,6 +7,7 @@ export type IntakeStatus = "draft" | "submitted" | "claimed" | "expired";
 export type DataClassification = "internal" | "confidential" | "restricted";
 export type CaseStatus =
   | "received"
+  | "human_review_required"
   | "consultant_working"
   | "waiting_for_client"
   | "resolved"
@@ -137,8 +138,9 @@ export interface ConversationRecord {
 export interface MessageRecord {
   id: string;
   conversationId: string;
-  authorType: "user" | "system";
+  authorType: "user" | "ai" | "system";
   authorUserId: string | null;
+  aiRunId: string | null;
   bodyMarkdown: string;
   language: Locale;
   clientRequestId: string;

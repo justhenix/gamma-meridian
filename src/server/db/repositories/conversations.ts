@@ -28,8 +28,9 @@ function mapMessage(row: Row): MessageRecord {
   return {
     id: requiredString(row, "id"),
     conversationId: requiredString(row, "conversation_id"),
-    authorType: requiredString(row, "author_type") as "user" | "system",
+    authorType: requiredString(row, "author_type") as "user" | "ai" | "system",
     authorUserId: optionalString(row, "author_user_id"),
+    aiRunId: optionalString(row, "ai_run_id"),
     bodyMarkdown: requiredString(row, "body_markdown"),
     language: requiredString(row, "language") as Locale,
     clientRequestId: requiredString(row, "client_request_id"),
@@ -86,8 +87,9 @@ export class ConversationsRepository {
 
   async createMessage(input: {
     conversationId: string;
-    authorType: "user" | "system";
+    authorType: "user" | "ai" | "system";
     authorUserId: string | null;
+    aiRunId?: string | null;
     bodyMarkdown: string;
     language: Locale;
     clientRequestId: string;
@@ -104,15 +106,16 @@ export class ConversationsRepository {
     await this.database.execute({
       sql: `
         INSERT INTO messages (
-          id, conversation_id, author_type, author_user_id, body_markdown,
-          language, client_request_id, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          id, conversation_id, author_type, author_user_id, ai_run_id,
+          body_markdown, language, client_request_id, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         id,
         input.conversationId,
         input.authorType,
         input.authorUserId,
+        input.aiRunId ?? null,
         input.bodyMarkdown,
         input.language,
         input.clientRequestId,
@@ -125,8 +128,8 @@ export class ConversationsRepository {
   async findMessageById(id: string): Promise<MessageRecord | null> {
     const result = await this.database.execute({
       sql: `
-        SELECT id, conversation_id, author_type, author_user_id, body_markdown,
-               language, client_request_id, created_at
+        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+               body_markdown, language, client_request_id, created_at
         FROM messages
         WHERE id = ?
       `,
@@ -141,8 +144,8 @@ export class ConversationsRepository {
   ): Promise<MessageRecord | null> {
     const result = await this.database.execute({
       sql: `
-        SELECT id, conversation_id, author_type, author_user_id, body_markdown,
-               language, client_request_id, created_at
+        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+               body_markdown, language, client_request_id, created_at
         FROM messages
         WHERE conversation_id = ? AND client_request_id = ?
       `,
@@ -151,11 +154,25 @@ export class ConversationsRepository {
     return result.rows[0] ? mapMessage(result.rows[0]) : null;
   }
 
+  async findMessageByAiRun(aiRunId: string): Promise<MessageRecord | null> {
+    const result = await this.database.execute({
+      sql: `
+        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+               body_markdown, language, client_request_id, created_at
+        FROM messages
+        WHERE ai_run_id = ?
+        LIMIT 1
+      `,
+      args: [aiRunId],
+    });
+    return result.rows[0] ? mapMessage(result.rows[0]) : null;
+  }
+
   async listMessages(conversationId: string): Promise<MessageRecord[]> {
     const result = await this.database.execute({
       sql: `
-        SELECT id, conversation_id, author_type, author_user_id, body_markdown,
-               language, client_request_id, created_at
+        SELECT id, conversation_id, author_type, author_user_id, ai_run_id,
+               body_markdown, language, client_request_id, created_at
         FROM messages
         WHERE conversation_id = ?
         ORDER BY created_at, id

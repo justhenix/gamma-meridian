@@ -1,0 +1,22 @@
+{
+  "officialIdentifier": "SYNTHETIC-DEV-001",
+  "title": "Synthetic Development Tax Administration Guidance — Not Law",
+  "authority": "Meridian Synthetic Test Authority",
+  "jurisdiction": "ID",
+  "sourceType": "synthetic_development",
+  "canonicalUrl": "https://example.invalid/meridian/synthetic-tax-guidance",
+  "versionLabel": "dev-v1",
+  "publicationDate": "2026-01-01",
+  "effectiveFrom": "2026-01-01",
+  "effectiveTo": null,
+  "retrievedAt": "2026-08-30T00:00:00.000Z",
+  "synthetic": true,
+  "sections": [
+    {
+      "heading": "Synthetic filing acknowledgement",
+      "locator": "Synthetic Section A",
+      "bodyText": "SYNTHETIC TEST CONTENT. This is not Indonesian law and must never be used in production. For deterministic development tests, a fictional filing acknowledgement is issued within 3 synthetic business days.",
+      "taxTopics": ["synthetic_safe_general"]
+    }
+  ]
+}

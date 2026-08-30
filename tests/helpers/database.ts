@@ -1,23 +1,20 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import type { TestContext } from "node:test";
 
 import type { Client } from "@libsql/client";
 
 import { createDatabaseClient } from "../../src/server/db/client";
+import { applyMigrations } from "../../src/server/db/migrations";
 import { DomainError, type DomainErrorCode } from "../../src/server/domain/shared/errors";
 
 export async function createTestDatabase(context: TestContext): Promise<Client> {
   const directory = await mkdtemp(join(tmpdir(), "meridian-test-"));
   const databasePath = join(directory, "meridian.db");
   const client = createDatabaseClient({ url: pathToFileURL(databasePath).href });
-  const migration = await readFile(
-    resolve(process.cwd(), "db/migrations/0001_human_case_workflow.sql"),
-    "utf8",
-  );
-  await client.executeMultiple(migration);
+  await applyMigrations(client);
 
   context.after(async () => {
     client.close();

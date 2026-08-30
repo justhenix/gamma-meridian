@@ -70,6 +70,7 @@ export const transitionCaseSchema = z.object({
   expectedVersion: z.number().int().positive(),
   toStatus: z.enum([
     "received",
+    "human_review_required",
     "consultant_working",
     "waiting_for_client",
     "resolved",

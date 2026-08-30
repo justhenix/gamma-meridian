@@ -24,10 +24,11 @@ import type {
 } from "../shared/types";
 
 const transitions: Record<CaseStatus, CaseStatus[]> = {
-  received: ["consultant_working"],
-  consultant_working: ["waiting_for_client", "resolved"],
-  waiting_for_client: ["consultant_working"],
-  resolved: ["closed", "consultant_working"],
+  received: ["human_review_required", "consultant_working"],
+  human_review_required: ["consultant_working"],
+  consultant_working: ["human_review_required", "waiting_for_client", "resolved"],
+  waiting_for_client: ["human_review_required", "consultant_working"],
+  resolved: ["human_review_required", "closed", "consultant_working"],
   closed: ["consultant_working"],
 };
 

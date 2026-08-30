@@ -78,4 +78,17 @@ export class UsersRepository {
     });
     return result.rows[0] ? mapUser(result.rows[0]) : null;
   }
+
+  async findByEmail(email: string): Promise<UserRecord | null> {
+    const result = await this.database.execute({
+      sql: `
+        SELECT id, auth_subject, email_normalized, display_name, global_role,
+               locale, status, email_verified_at, created_at, updated_at
+        FROM users
+        WHERE email_normalized = ?
+      `,
+      args: [email.trim().toLowerCase()],
+    });
+    return result.rows[0] ? mapUser(result.rows[0]) : null;
+  }
 }

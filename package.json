@@ -7,14 +7,20 @@
     "build": "npm run compile && next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:backend": "eslint src/server src/app/api scripts tests",
     "typecheck": "tsc --noEmit",
     "test": "node --expose-gc --conditions=react-server --import tsx --test --test-concurrency=1 \"tests/**/*.test.ts\"",
-    "compile": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations",
-    "postinstall": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations"
+    "migrate": "node --conditions=react-server --import tsx scripts/migrate.ts",
+    "ingest:regulation": "node --conditions=react-server --import tsx scripts/ingest-regulatory-source.ts",
+    "seed:development": "node --conditions=react-server --import tsx scripts/seed-development.ts",
+    "smoke:backend": "node --conditions=react-server --import tsx scripts/smoke-backend-api.ts",
+    "compile": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations --strategy url baseLocale",
+    "postinstall": "npm run compile"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@libsql/client": "^0.17.4",
+    "@next/env": "^16.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.35.0",

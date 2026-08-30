@@ -12,6 +12,7 @@ export async function createSubmittedClientCase(
   guestTokens: GuestTokenService,
   client: UserRecord,
   account: ClientAccountRecord,
+  taxTopics: string[] = ["corporate_income_tax"],
 ): Promise<SubmittedCaseDto> {
   submissionSequence += 1;
   const actor = createSyntheticUserActor(client.id);
@@ -34,6 +35,6 @@ export async function createSubmittedClientCase(
     clientAccountId: account.id,
     title: `Synthetic case ${submissionSequence}`,
     primaryJurisdiction: "ID",
-    taxTopics: ["corporate_income_tax"],
+    taxTopics,
   });
 }

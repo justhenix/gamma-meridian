@@ -15,7 +15,7 @@ import { idSchema } from "../validation/schemas";
 
 export interface MessageDto {
   id: string;
-  authorType: "user" | "system";
+  authorType: "user" | "ai" | "system";
   authorUserId: string | null;
   bodyMarkdown: string;
   language: Locale;

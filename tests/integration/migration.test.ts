@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { createTestDatabase } from "../helpers/database";
 
-test("initial migration creates only the selected domain tables", async (context) => {
+test("numbered migrations create the human, regulatory, AI, and escalation tables", async (context) => {
   const database = await createTestDatabase(context);
   const result = await database.execute(`
     SELECT name
@@ -15,15 +15,30 @@ test("initial migration creates only the selected domain tables", async (context
   assert.deepEqual(
     result.rows.map((row) => row.name),
     [
+      "ai_run_sources",
+      "ai_runs",
       "audit_events",
       "case_members",
       "cases",
       "client_account_members",
       "client_accounts",
       "conversations",
+      "escalations",
       "intake_answers",
       "intake_sessions",
       "messages",
+      "recommendation_citations",
+      "recommendation_versions",
+      "regulatory_source_sections",
+      "regulatory_source_sections_fts",
+      "regulatory_source_sections_fts_config",
+      "regulatory_source_sections_fts_content",
+      "regulatory_source_sections_fts_data",
+      "regulatory_source_sections_fts_docsize",
+      "regulatory_source_sections_fts_idx",
+      "regulatory_source_versions",
+      "regulatory_sources",
+      "schema_migrations",
       "users",
     ],
   );

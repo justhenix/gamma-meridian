@@ -1,0 +1,280 @@
+{
+  "retrievedAt": "2026-08-30T08:30:00.000Z",
+  "artifacts": [
+    {
+      "sourceKey": "pp-44-2022-ppn",
+      "identifier": "PP 44 TAHUN 2022",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pp-44-2022.pdf",
+      "path": "data/regulations/raw/pp-44-2022-ppn/pp-44-2022.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/6f040fee-fdad-43dc-9a3e-55ccc638828b/44TAHUN2022PP.pdf",
+      "format": "pdf",
+      "bytes": 5461868,
+      "sha256": "d9b8c414075296234f91ba5fe20091fdb838c4938a7d68ebe184528e0259c333"
+    },
+    {
+      "sourceKey": "pmk-168-2023-pph21",
+      "identifier": "PMK 168 TAHUN 2023",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pmk-168-2023.pdf",
+      "path": "data/regulations/raw/pmk-168-2023-pph21/pmk-168-2023.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/e60a82e0-b218-40f5-9d18-b924aa1e11ce/2023pmkeuangan168.pdf",
+      "format": "pdf",
+      "bytes": 5374488,
+      "sha256": "6b06a241f9cd6fc64eacf3ee6b5cc6a8d78571a699d3cb7e039d6e5a56c30858"
+    },
+    {
+      "sourceKey": "pmk-172-2023-transfer-pricing",
+      "identifier": "PMK 172 TAHUN 2023",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pmk-172-2023.pdf",
+      "path": "data/regulations/raw/pmk-172-2023-transfer-pricing/pmk-172-2023.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/b0b74668-cf4d-456b-bb23-be5e1aeac2cb/2023pmkeuangan172.pdf",
+      "format": "pdf",
+      "bytes": 10899760,
+      "sha256": "0422d05ec7cb560c7127dabd47cacd14024faeafd097dd0e089ebb01cc709326"
+    },
+    {
+      "sourceKey": "pmk-112-2025-tax-treaties",
+      "identifier": "PMK 112 TAHUN 2025",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pmk-112-2025.pdf",
+      "path": "data/regulations/raw/pmk-112-2025-tax-treaties/pmk-112-2025.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/8830a44a-12f5-4717-84c0-fed0e6239bdf/2025pmkeuangan112.pdf",
+      "format": "pdf",
+      "bytes": 2548150,
+      "sha256": "551d2a9ac214e79d21abbb4c891906262df0eeb6097d8c1e15723437a2250728"
+    },
+    {
+      "sourceKey": "per-7-pj-2025-tax-administration",
+      "identifier": "PER-7/PJ/2025",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "per-7-pj-2025.pdf",
+      "path": "data/regulations/raw/per-7-pj-2025-tax-administration/per-7-pj-2025.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/09e80404-0ce8-48b1-8938-31530ada8701/PER-7%20PJ%202025.pdf",
+      "format": "pdf",
+      "bytes": 826251,
+      "sha256": "02895646a4454fb10c1264db39874d6e656b1d9709a84254ee2d0d7a646fa89b"
+    },
+    {
+      "sourceKey": "per-7-pj-2025-tax-administration",
+      "identifier": "PER-7/PJ/2025",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "per-7-pj-2025-lampiran.pdf",
+      "path": "data/regulations/raw/per-7-pj-2025-tax-administration/per-7-pj-2025-lampiran.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/2df88590-f6b2-4e89-9a28-98f6d4084876/Lampiran%20PER-7%20PJ%202025.pdf",
+      "format": "pdf",
+      "bytes": 2786639,
+      "sha256": "bdec5d23c3934f4a9be459ca925bff76a500d26e695f1b47e07dfff458824e5e"
+    },
+    {
+      "sourceKey": "pmk-35-2019-permanent-establishment",
+      "identifier": "35/PMK.03/2019",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pmk-35-2019.pdf",
+      "path": "data/regulations/raw/pmk-35-2019-permanent-establishment/pmk-35-2019.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/fulltext/2019/35~PMK.03~2019Per.pdf",
+      "format": "pdf",
+      "bytes": 1973812,
+      "sha256": "ff48dd45460fd95b466d65df6c3c32e057ebe6236730da08c183e0f9ba91a884"
+    },
+    {
+      "sourceKey": "pp-28-2025-risk-based-licensing",
+      "identifier": "PP 28 TAHUN 2025",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pp-28-2025.pdf",
+      "path": "data/regulations/raw/pp-28-2025-risk-based-licensing/pp-28-2025.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/381375/PP%20Nomor%2028%20Tahun%202025.pdf",
+      "format": "pdf",
+      "bytes": 20861755,
+      "sha256": "8808de485eab2499cf3d8369921c097beaea68ae55aa767c61095d47a5a118fb"
+    },
+    {
+      "sourceKey": "permeninves-bkpm-5-2025-oss-procedures",
+      "identifier": "PERMENINVES/BKPM 5 TAHUN 2025",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "permeninves-bkpm-5-2025.pdf",
+      "path": "data/regulations/raw/permeninves-bkpm-5-2025-oss-procedures/permeninves-bkpm-5-2025.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/394633/005%20th%202025.pdf",
+      "format": "pdf",
+      "bytes": 7716631,
+      "sha256": "38da20dec8c63159fd5227f3999b641180ee0498466b7aeb5093f5fbe7495067"
+    },
+    {
+      "sourceKey": "pp-8-2021-company-capital",
+      "identifier": "PP 8 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pp-8-2021-batang-tubuh.pdf",
+      "path": "data/regulations/raw/pp-8-2021-company-capital/pp-8-2021-batang-tubuh.pdf",
+      "url": "https://www.peraturan.go.id/files/pp8-2021bt.pdf",
+      "format": "pdf",
+      "bytes": 584803,
+      "sha256": "5726c36342d96279c8a2519ca94fe72bbcdeb4b82bd63efc0a484d8f88b8301a"
+    },
+    {
+      "sourceKey": "pp-8-2021-company-capital",
+      "identifier": "PP 8 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pp-8-2021-penjelasan.pdf",
+      "path": "data/regulations/raw/pp-8-2021-company-capital/pp-8-2021-penjelasan.pdf",
+      "url": "https://www.peraturan.go.id/files/pp8-2021pjl.pdf",
+      "format": "pdf",
+      "bytes": 98559,
+      "sha256": "bdb8d266f85604f0b398adac53a82969568a37a19f36cb3f62e7bb27062fac32"
+    },
+    {
+      "sourceKey": "uu-7-2021-hpp",
+      "identifier": "UU 7 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "uu-7-2021-hpp.pdf",
+      "path": "data/regulations/raw/uu-7-2021-hpp/uu-7-2021-hpp.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/178620/UU%20Nomor%207%20Tahun%202021.pdf",
+      "format": "pdf",
+      "bytes": 12126450,
+      "sha256": "ad45e199a739e081e2a1ffb4dfdf7283d59bc29f257215f69fa830dc43a2ea78"
+    },
+    {
+      "sourceKey": "pp-55-2022-income-tax",
+      "identifier": "PP 55 TAHUN 2022",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pp-55-2022.pdf",
+      "path": "data/regulations/raw/pp-55-2022-income-tax/pp-55-2022.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/cab6ec99-3dbc-47c6-adbf-ea5f0f7117d6/55TAHUN2022PP.pdf",
+      "format": "pdf",
+      "bytes": 13014729,
+      "sha256": "110443f869e4ef2314a2752dd0f57744c9d1f3c07bce233c62ac9d6151a0aaf6"
+    },
+    {
+      "sourceKey": "pp-20-2026-income-tax-amendment",
+      "identifier": "PP 20 TAHUN 2026",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pp-20-2026.pdf",
+      "path": "data/regulations/raw/pp-20-2026-income-tax-amendment/pp-20-2026.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/d057ff82-50e7-4127-b66b-f704a36f071d/2026pp020.pdf",
+      "format": "pdf",
+      "bytes": 642533,
+      "sha256": "3aadd85768e7dc3dd5f8431178ee0dd1d03d631835a493288563692de7cf8520"
+    },
+    {
+      "sourceKey": "pmk-81-2024-coretax",
+      "identifier": "PMK 81 TAHUN 2024",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pmk-81-2024.pdf",
+      "path": "data/regulations/raw/pmk-81-2024-coretax/pmk-81-2024.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/637047be-3dba-4347-aba1-98fa7fd5ab3f/2024pmkeuangan081.pdf",
+      "format": "pdf",
+      "bytes": 7584351,
+      "sha256": "b8f385dee2a8684c24f718c5b2413910760d7273236f9d0d27d2da4cf2892574"
+    },
+    {
+      "sourceKey": "pmk-1-2026-coretax-amendment",
+      "identifier": "PMK 1 TAHUN 2026",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "pmk-1-2026.pdf",
+      "path": "data/regulations/raw/pmk-1-2026-coretax-amendment/pmk-1-2026.pdf",
+      "url": "https://jdih.kemenkeu.go.id/api/download/b5f99bff-f689-4e4f-ae3a-7c6a9a4cfe8a/2026pmkeuangan001.pdf",
+      "format": "pdf",
+      "bytes": 1160407,
+      "sha256": "d2a1ffe926a020c178e88348e974a9199e6fc746ef7884bb72e12a5cbc29a2af"
+    },
+    {
+      "sourceKey": "perpres-10-2021-investment-fields",
+      "identifier": "PERPRES 10 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "perpres-10-2021.pdf",
+      "path": "data/regulations/raw/perpres-10-2021-investment-fields/perpres-10-2021.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/154474/Perpres%20Nomor%2010%20Tahun%202021.pdf",
+      "format": "pdf",
+      "bytes": 560232,
+      "sha256": "aef350461440b4231fb22ac4d5e66cbcbef4d6ba55284f51318a53c45dcb3440"
+    },
+    {
+      "sourceKey": "perpres-10-2021-investment-fields",
+      "identifier": "PERPRES 10 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "perpres-10-2021-lampiran.zip",
+      "path": "data/regulations/raw/perpres-10-2021-investment-fields/perpres-10-2021-lampiran.zip",
+      "url": "https://peraturan.bpk.go.id/Download/154475/Perpres%20Nomor%2010%20Tahun%202021%20-%20Lampiran.zip",
+      "format": "zip",
+      "bytes": 3489269,
+      "sha256": "64f52d98ace90c4d022591ca98816cc61b00be5bee49f6ea99c2559ad04bccba"
+    },
+    {
+      "sourceKey": "perpres-49-2021-investment-fields-amendment",
+      "identifier": "PERPRES 49 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "perpres-49-2021.pdf",
+      "path": "data/regulations/raw/perpres-49-2021-investment-fields-amendment/perpres-49-2021.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/161562/Perpres%20Nomor%2049%20Tahun%202021.pdf",
+      "format": "pdf",
+      "bytes": 313905,
+      "sha256": "ea8eb182a88a1276d988fc81dee3a2a91f5c3be63253b53ff082b47ee6edaab4"
+    },
+    {
+      "sourceKey": "perpres-49-2021-investment-fields-amendment",
+      "identifier": "PERPRES 49 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "perpres-49-2021-lampiran-i.pdf",
+      "path": "data/regulations/raw/perpres-49-2021-investment-fields-amendment/perpres-49-2021-lampiran-i.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/161563/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20I.pdf",
+      "format": "pdf",
+      "bytes": 2523482,
+      "sha256": "a1969d087b977544493bfe8ca3d975ea720492015c0adb5c83bd7e0d3c736d8e"
+    },
+    {
+      "sourceKey": "perpres-49-2021-investment-fields-amendment",
+      "identifier": "PERPRES 49 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "perpres-49-2021-lampiran-ii.pdf",
+      "path": "data/regulations/raw/perpres-49-2021-investment-fields-amendment/perpres-49-2021-lampiran-ii.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/161564/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20II.pdf",
+      "format": "pdf",
+      "bytes": 967280,
+      "sha256": "0fccda0cfa9c1202037fb878d209f3100c91a547d90a23b39364cf12c033ad2b"
+    },
+    {
+      "sourceKey": "perpres-49-2021-investment-fields-amendment",
+      "identifier": "PERPRES 49 TAHUN 2021",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "perpres-49-2021-lampiran-iii.pdf",
+      "path": "data/regulations/raw/perpres-49-2021-investment-fields-amendment/perpres-49-2021-lampiran-iii.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/161565/Perpres%20Nomor%2049%20Tahun%202021%20-%20Lampiran%20III.pdf",
+      "format": "pdf",
+      "bytes": 192893,
+      "sha256": "d5574e58bb4beb298203faa7188fca8c645517a3aaef8ce39988d9f0627eff95"
+    },
+    {
+      "sourceKey": "uu-25-2007-investment",
+      "identifier": "UU 25 TAHUN 2007",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "uu-25-2007.pdf",
+      "path": "data/regulations/raw/uu-25-2007-investment/uu-25-2007.pdf",
+      "url": "https://www.peraturan.go.id/files/uu25-2007.pdf",
+      "format": "pdf",
+      "bytes": 101698,
+      "sha256": "17697b246d0745082fa133eeed554a45dd1c28fa84fa9d8501b4fff5fff19b61"
+    },
+    {
+      "sourceKey": "uu-40-2007-limited-liability-company",
+      "identifier": "UU 40 TAHUN 2007",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "uu-40-2007.pdf",
+      "path": "data/regulations/raw/uu-40-2007-limited-liability-company/uu-40-2007.pdf",
+      "url": "https://www.peraturan.go.id/files/uu40-2007.pdf",
+      "format": "pdf",
+      "bytes": 642230,
+      "sha256": "2dbced16d6ecbe4a68bff4b456a8d92318d4e9e2da676ccd65c8924807f7aa82"
+    },
+    {
+      "sourceKey": "uu-6-2023-job-creation",
+      "identifier": "UU 6 TAHUN 2023",
+      "retrievedAt": "2026-08-30T08:30:00.000Z",
+      "filename": "uu-6-2023.pdf",
+      "path": "data/regulations/raw/uu-6-2023-job-creation/uu-6-2023.pdf",
+      "url": "https://peraturan.bpk.go.id/Download/302681/UU%20Nomor%206%20Tahun%202023.pdf",
+      "format": "pdf",
+      "bytes": 85354383,
+      "sha256": "de73c84f11d4e721a4c0e66cadadac7f698941ec8adff5934e70f32dc885fdae"
+    }
+  ]
+}
