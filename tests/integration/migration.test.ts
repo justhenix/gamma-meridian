@@ -41,6 +41,7 @@ test("numbered migrations create the human, regulatory, AI, and escalation table
       "regulatory_source_versions",
       "regulatory_sources",
       "schema_migrations",
+      "staff_auth_verification_challenges",
       "users",
     ],
   );

@@ -3,12 +3,11 @@
 import * as React from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { AlertCircle, ArrowLeft, Check, ChevronDown, Globe, KeyRound, Shield } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, Globe, Shield } from "lucide-react";
 
 import * as m from "@/paraglide/messages.js";
+import { StaffEmailVerificationPanel } from "@/components/auth/staff-email-verification-panel";
 import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
-import { Button } from "@/components/ui/button";
-import { PRESET_USERS } from "@/lib/auth/session";
 
 function safeStaffRedirect(value: string | null) {
   if (!value) return "/staff/helpdesk";
@@ -22,8 +21,6 @@ export default function StaffLoginPage() {
   const t = useLocalizedMessage();
 
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -35,26 +32,6 @@ export default function StaffLoginPage() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const handleStaffLogin = async (email: string) => {
-    setIsLoading(true);
-    setErrorMessage(null);
-    try {
-      const response = await fetch("/api/auth/development/staff-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({})) as { error?: { message?: string } };
-        throw new Error(body.error?.message ?? "Could not start the development staff session.");
-      }
-      window.location.href = redirectTarget;
-    } catch (cause) {
-      setErrorMessage(cause instanceof Error ? cause.message : String(cause));
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-amber-400 selection:text-slate-900">
@@ -128,75 +105,7 @@ export default function StaffLoginPage() {
             </p>
           </div>
 
-          <div className="bg-card border border-border rounded-lg p-6 sm:p-7 shadow-sm space-y-5">
-            {errorMessage && (
-              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/40 text-destructive text-xs flex items-center gap-2">
-                <AlertCircle className="size-4 shrink-0" />
-                <span>{errorMessage}</span>
-              </div>
-            )}
-
-            <Button
-              type="button"
-              variant="default"
-              size="default"
-              onClick={() => handleStaffLogin(PRESET_USERS.partner.email)}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 font-semibold cursor-pointer h-10"
-            >
-              <KeyRound className="size-4" />
-              <span>{t(m.login_sso_button)}</span>
-            </Button>
-
-            <div className="relative flex items-center justify-center">
-              <div className="border-t border-border w-full" />
-              <span className="bg-card px-3 text-xs font-semibold text-muted-foreground shrink-0">
-                {t(m.login_quick_roles_title)}
-              </span>
-            </div>
-
-            <div className="space-y-2.5">
-              <button
-                type="button"
-                onClick={() => handleStaffLogin(PRESET_USERS.partner.email)}
-                disabled={isLoading}
-                className="w-full text-left p-3.5 rounded-lg bg-muted/40 hover:bg-muted border border-border hover:border-slate-400 dark:hover:border-slate-600 transition-all duration-200 cursor-pointer group flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="size-8 rounded-full bg-slate-200 dark:bg-slate-800 text-foreground flex items-center justify-center font-bold text-xs shrink-0 border border-border">
-                    HP
-                  </div>
-                  <div>
-                    <span className="font-heading font-semibold text-sm text-foreground block group-hover:text-primary dark:group-hover:text-amber-400 transition-colors">
-                      {PRESET_USERS.partner.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground block">{t(m.login_role_partner)}</span>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold text-foreground group-hover:translate-x-0.5 transition-transform">→</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleStaffLogin(PRESET_USERS.consultant.email)}
-                disabled={isLoading}
-                className="w-full text-left p-3.5 rounded-lg bg-muted/40 hover:bg-muted border border-border hover:border-slate-400 dark:hover:border-slate-600 transition-all duration-200 cursor-pointer group flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="size-8 rounded-full bg-slate-200 dark:bg-slate-800 text-foreground flex items-center justify-center font-bold text-xs shrink-0 border border-border">
-                    MK
-                  </div>
-                  <div>
-                    <span className="font-heading font-semibold text-sm text-foreground block group-hover:text-primary dark:group-hover:text-amber-400 transition-colors">
-                      {PRESET_USERS.consultant.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground block">{t(m.login_role_consultant)}</span>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold text-foreground group-hover:translate-x-0.5 transition-transform">→</span>
-              </button>
-            </div>
-          </div>
+          <StaffEmailVerificationPanel redirectTarget={redirectTarget} />
 
           <div className="text-center">
             <p className="text-[13px] text-muted-foreground leading-relaxed max-w-sm mx-auto">
