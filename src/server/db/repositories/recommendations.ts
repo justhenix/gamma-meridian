@@ -78,9 +78,12 @@ export class RecommendationsRepository {
     });
 
     const sourceById = new Map(input.sources.map((source) => [source.id, source]));
-    const citationStatements: InStatement[] = input.content.citations.map((citation, index) => {
-      const source = sourceById.get(citation.sourceSectionId)!;
-      return {
+    const citationStatements: InStatement[] = [];
+    for (let index = 0; index < input.content.citations.length; index += 1) {
+      const citation = input.content.citations[index]!;
+      const source = sourceById.get(citation.sourceSectionId);
+      if (!source) continue;
+      citationStatements.push({
         sql: `
           INSERT INTO recommendation_citations (
             id, recommendation_version_id, source_section_id, claim_key,
@@ -99,8 +102,8 @@ export class RecommendationsRepository {
           timestamp,
           index,
         ],
-      };
-    });
+      });
+    }
     if (citationStatements.length > 0) {
       if (this.database.batch) {
         await this.database.batch(citationStatements);

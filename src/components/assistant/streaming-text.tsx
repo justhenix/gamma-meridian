@@ -20,8 +20,8 @@ export function StreamingText({
 
     let current = 0;
     const interval = setInterval(() => {
-      // Chunk tokens for natural pacing
-      const step = Math.floor(Math.random() * 6) + 4;
+      // Chunk tokens for natural, responsive pacing
+      const step = Math.floor(Math.random() * 8) + 8;
       current += step;
       if (current >= content.length) {
         setStreamProgress(content.length);
@@ -30,7 +30,7 @@ export function StreamingText({
       } else {
         setStreamProgress(current);
       }
-    }, 24);
+    }, 16);
 
     return () => clearInterval(interval);
   }, [content, isStreaming, onStreamComplete]);
@@ -39,57 +39,87 @@ export function StreamingText({
 
   const rawText = content.slice(0, displayedLength);
 
-  // Render text with inline citations replaced by interactive chips
-  const renderFormattedText = (text: string) => {
-    // Look for bracketed citations like [PMK 172/2023 · Pasal 4]
-    const parts = text.split(/(\[[^\]]+\])/g);
-
+  // Format inline bold markup **text**, italic *text*, and bracketed citations
+  const renderInlineContent = (text: string) => {
+    const parts = text.split(/(\[[^\]]+\]|\*\*[^*]+\*\*|\*[^*]+\*)/g);
     return parts.map((part, index) => {
       if (part.startsWith("[") && part.endsWith("]")) {
-        const citationCode = part.slice(1, -1).trim();
         return (
           <span key={index} className="text-foreground/90 font-medium">
-            {citationCode}
+            {part.slice(1, -1).trim()}
           </span>
         );
       }
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return (
+          <strong key={index} className="font-semibold text-foreground">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      if (part.startsWith("*") && part.endsWith("*")) {
+        return (
+          <em key={index} className="italic text-foreground">
+            {part.slice(1, -1)}
+          </em>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
 
-      // Format bold markup **text** and linebreaks cleanly
-      const lines = part.split("\n");
+  // Render text with structured paragraphs, headers, and list items
+  const renderFormattedText = (text: string) => {
+    const rawLines = text.split(/\r?\n/);
+
+    return rawLines.map((line, lineIdx) => {
+      const trimmed = line.trim();
+
+      if (!trimmed) {
+        return <div key={lineIdx} className="h-2" />;
+      }
+
+      // Bullet points: - item, * item, • item
+      const bulletMatch = trimmed.match(/^[-*•]\s+(.*)$/);
+      if (bulletMatch) {
+        return (
+          <div key={lineIdx} className="flex items-start gap-2.5 my-1 pl-1">
+            <span className="text-amber-500 font-bold shrink-0 mt-0.5 leading-none select-none">•</span>
+            <div className="flex-1">{renderInlineContent(bulletMatch[1]!)}</div>
+          </div>
+        );
+      }
+
+      // Numbered lists: 1. item, 2. item
+      const numberedMatch = trimmed.match(/^(\d+[.)])\s+(.*)$/);
+      if (numberedMatch) {
+        return (
+          <div key={lineIdx} className="flex items-start gap-2 my-1 pl-1">
+            <span className="text-amber-500 font-semibold shrink-0 text-xs mt-0.5 select-none">{numberedMatch[1]}</span>
+            <div className="flex-1">{renderInlineContent(numberedMatch[2]!)}</div>
+          </div>
+        );
+      }
+
+      // Standalone bold category headers like **1. Master File:** or **Overview:**
+      if (/^\*\*[^*]+\*\*:?$/.test(trimmed)) {
+        return (
+          <div key={lineIdx} className="font-semibold text-foreground pt-1.5 pb-0.5">
+            {renderInlineContent(trimmed)}
+          </div>
+        );
+      }
+
       return (
-        <React.Fragment key={index}>
-          {lines.map((line, lineIdx) => {
-            const boldParts = line.split(/(\*\*[^*]+\*\*)/g);
-            return (
-              <React.Fragment key={lineIdx}>
-                {lineIdx > 0 && <br />}
-                {boldParts.map((bPart, bIdx) => {
-                  if (bPart.startsWith("**") && bPart.endsWith("**")) {
-                    return (
-                      <strong key={bIdx} className="font-semibold text-foreground">
-                        {bPart.slice(2, -2)}
-                      </strong>
-                    );
-                  }
-                  if (bPart.startsWith("*") && bPart.endsWith("*")) {
-                    return (
-                      <em key={bIdx} className="italic text-foreground">
-                        {bPart.slice(1, -1)}
-                      </em>
-                    );
-                  }
-                  return <span key={bIdx}>{bPart}</span>;
-                })}
-              </React.Fragment>
-            );
-          })}
-        </React.Fragment>
+        <div key={lineIdx} className="leading-relaxed">
+          {renderInlineContent(line)}
+        </div>
       );
     });
   };
 
   return (
-    <div className="text-sm leading-relaxed space-y-2 text-foreground/90 font-normal">
+    <div className="text-sm leading-relaxed space-y-1 text-foreground/90 font-normal">
       {renderFormattedText(rawText)}
       {isStreaming && displayedLength < content.length && (
         <span className="inline-block w-1.5 h-4 ml-1 align-middle bg-primary/80 dark:bg-amber-400 animate-pulse" />

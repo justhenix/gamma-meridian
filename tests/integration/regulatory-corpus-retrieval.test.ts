@@ -88,7 +88,35 @@ test("regulatory corpus: approved sources are retrievable by FTS and topics whil
         heading: "Pasal 29 dan Pasal 30",
         locator: "Pasal 29-30",
         ordinal: 29,
-        bodyText: "Dokumen induk memuat informasi Grup Usaha. Dokumen lokal memuat identitas dan kegiatan usaha, informasi Transaksi Afiliasi dan Transaksi Independen, penerapan Prinsip Kewajaran dan Kelaziman Usaha, informasi keuangan, dan fakta non-keuangan.",
+        bodyText: "Dokumen Penentuan Harga Transfer berupa dokumen induk dan dokumen lokal harus memuat informasi Grup Usaha, identitas dan kegiatan usaha, informasi Transaksi Afiliasi dan Transaksi Independen, penerapan Prinsip Kewajaran dan Kelaziman Usaha, informasi keuangan, dan fakta non-keuangan.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
+      },
+      {
+        heading: "Pasal 16",
+        locator: "Pasal 16",
+        ordinal: 16,
+        bodyText: "Dokumen Penentuan Harga Transfer terdiri atas dokumen induk, dokumen lokal, dan laporan per negara untuk mendukung Transaksi Afiliasi.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
+      },
+      {
+        heading: "Pasal 43 - Kesepakatan Harga Transfer",
+        locator: "Pasal 43",
+        ordinal: 43,
+        bodyText: "Kesepakatan Harga Transfer atau Advance Pricing Agreement membahas penentuan harga transfer untuk Transaksi Afiliasi dalam dokumen permohonan APA.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border"],
+      },
+      {
+        heading: "Pasal 50 - Prosedur Persetujuan Bersama",
+        locator: "Pasal 50",
+        ordinal: 50,
+        bodyText: "Prosedur Persetujuan Bersama atau Mutual Agreement Procedure membahas sengketa penentuan harga transfer dan Transaksi Afiliasi.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border"],
+      },
+      {
+        heading: "Pasal 17 - Teks OCR renggang",
+        locator: "Pasal 17 OCR",
+        ordinal: 17,
+        bodyText: "Dokumen berdasarkan data pada saat transaksi untuk penyusunan berkas induk serta berkas lokal wajib disimpan.",
         taxTopics: ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
       },
     ],
@@ -150,10 +178,25 @@ test("regulatory corpus: approved sources are retrievable by FTS and topics whil
     jurisdiction: "ID",
     taxTopics: ["tax.transfer_pricing"],
     effectiveAt: "2026-08-30",
-    limit: 5,
+    limit: 2,
   });
-  assert.equal(transferPricingResults[0]?.source.officialIdentifier, "PMK 172 TAHUN 2023");
+  assert.deepEqual(
+    transferPricingResults.map((result) => result.locator),
+    ["Pasal 29-30", "Pasal 16"],
+  );
   assert.equal(transferPricingResults[0]?.retrievalMethod, "fts5_bm25");
+
+  const ocrVariantResults = await retrieveApprovedSources(database, {
+    query: "What should I prepare first for Indonesian transfer pricing documentation?",
+    jurisdiction: "ID",
+    taxTopics: ["tax.transfer_pricing"],
+    effectiveAt: "2026-08-30",
+    limit: 6,
+  });
+  assert.equal(
+    ocrVariantResults.some((result) => result.locator === "Pasal 17 OCR"),
+    true,
+  );
 
   // Test retrieval for pending source: UU 7/2021 must NOT be returned
   const pendingResults = await retrieveApprovedSources(database, {

@@ -135,9 +135,9 @@ export class BaiAiProvider implements AiProvider {
         lastError = new AiProviderError(
           timedOut ? "timeout" : "network_error",
           timedOut ? "B.AI request timed out" : "B.AI network request failed",
-          true,
+          !timedOut,
         );
-        if (attempt === 1) throw lastError;
+        if (timedOut || attempt === 1) throw lastError;
         await sleep(150 * 2 ** attempt + Math.floor(Math.random() * 100));
       } finally {
         clearTimeout(timeout);

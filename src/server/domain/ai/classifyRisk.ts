@@ -57,7 +57,11 @@ const contextualRiskRules: Array<{
   },
 ];
 
-const humanRequestPattern = /\b(speak|talk|connect|hubungkan|bicara|konsultan|consultant|expert|ahli|manusia|human|person)\b/i;
+import { matchConversationalIntent } from "./safeResponse";
+import { evaluateGuardrails } from "./guardrails";
+
+const humanRequestPattern =
+  /\b(?:(?:speak|talk|connect|chat|communicate)\s+(?:with|to)|hubungkan\s+dengan|bicara\s+dengan|sambungkan\s+ke|transfer\s+to|switch\s+to)\s+(?:a\s+|an\s+)?(?:human|person|agent|consultant|expert|specialist|advisor|konsultan|ahli|manusia|staf|staff)\b|\b(?:talk|speak)\s+to\s+someone\b|\b(?:i\s+want|need|prefer)\s+(?:to\s+speak\s+with|to\s+talk\s+to|a)\s+(?:human|expert|consultant|person)\b|\b(?:minta|butuh|ingin)\s+(?:bicara|konsultasi|terhubung)\s+dengan\s+(?:manusia|ahli|konsultan)\b/i;
 
 const riskInputSchema = z.object({
   question: z.string().trim().min(1).max(20000),
@@ -72,6 +76,12 @@ export function classifyRisk(input: unknown): DeterministicRiskResult {
   const reasonCodes: string[] = [];
   const missingFacts: string[] = [];
   let classification: DeterministicRiskResult["classification"] = "simple";
+
+  const guardrail = evaluateGuardrails(data.question);
+  if (guardrail.triggered && guardrail.reasonCode) {
+    reasonCodes.push(guardrail.reasonCode);
+    classification = "high_risk";
+  }
 
   if (!new Set(["ID", "INDONESIA"]).has(data.jurisdiction)) {
     reasonCodes.push("unsupported_jurisdiction");
@@ -95,7 +105,8 @@ export function classifyRisk(input: unknown): DeterministicRiskResult {
       classification = rule.classification;
     }
   }
-  if (!data.requiredFactsAvailable || data.question.length < 12) {
+  const isConversational = matchConversationalIntent(data.question) !== null;
+  if (!isConversational && (!data.requiredFactsAvailable || data.question.length < 12)) {
     reasonCodes.push("missing_critical_facts");
     missingFacts.push("A more specific description of the tax question is required.");
     if (classification === "simple") classification = "needs_information";

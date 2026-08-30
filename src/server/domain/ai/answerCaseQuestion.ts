@@ -32,9 +32,19 @@ import { classifyRisk } from "./classifyRisk";
 import {
   ANSWER_PROMPT_KEY,
   ANSWER_PROMPT_VERSION,
+  FLASH_ADVISORY_PROMPT_KEY,
+  FLASH_ADVISORY_PROMPT_VERSION,
+  buildFlashAdvisoryPrompt,
   buildGroundedAnswerPrompt,
 } from "./prompt";
-import { humanRecommendationMessage, unavailableSourceMessage } from "./safeResponse";
+import { evaluateGuardrails } from "./guardrails";
+import { routeRetrievalMode } from "./routeRetrieval";
+import {
+  conversationalAnswer,
+  humanRecommendationMessage,
+  matchConversationalIntent,
+  unavailableSourceMessage,
+} from "./safeResponse";
 import { inferRetrievalTopics } from "./retrievalTopics";
 import { sanitizeForAi } from "./sanitize";
 import type { AiRunRecord, AnswerCaseQuestionResult } from "./types";
@@ -112,6 +122,171 @@ export class AnswerCaseQuestionService {
 
     const relevantDate =
       data.relevantDate ?? access.caseRecord.taxPeriodEnd ?? new Date().toISOString().slice(0, 10);
+
+    const guardrail = evaluateGuardrails(userMessage.bodyMarkdown);
+    if (guardrail.triggered && guardrail.responseMessage) {
+      const refusalText = guardrail.responseMessage[userMessage.language];
+      return withWriteTransaction(this.database, async (transaction) => {
+        const runs = new AiRunsRepository(transaction);
+        const claimed = await runs.claim({
+          caseId: access.caseRecord.id,
+          conversationId: conversation.id,
+          triggerType: "user_message",
+          triggerId: userMessage.id,
+          requestedByUserId: access.user?.id ?? null,
+          provider: "guardrail",
+          model: "system",
+          promptKey: "meridian_guardrail",
+          promptVersion: "1",
+          rulesetVersion: "guardrail-v1",
+          inputSnapshotJson: canonicalJson({
+            caseId: access.caseRecord.id,
+            conversationId: conversation.id,
+            userMessageId: userMessage.id,
+            guardrailCategory: guardrail.category,
+            question: userMessage.bodyMarkdown,
+          }),
+          inputSha256: sha256(userMessage.bodyMarkdown),
+          idempotencyKey: data.idempotencyKey,
+        });
+        if (!claimed.created) return this.replay(claimed.run);
+
+        const contract: AiAnswerContract = {
+          classification: "high_risk",
+          canAnswerWithAI: true,
+          needsHuman: false,
+          reasonCodes: [guardrail.reasonCode ?? "guardrail_triggered"],
+          missingFacts: [],
+          answer: refusalText,
+          citations: [],
+          assumptions: [],
+          humanHandoffSummary: null,
+        };
+        const outputJson = canonicalJson(contract);
+        await runs.finalize({
+          id: claimed.run.id,
+          status: "succeeded",
+          providerRequestId: null,
+          outputJson,
+          outputSha256: sha256(outputJson),
+          inputTokens: 0,
+          outputTokens: 0,
+          latencyMs: 1,
+        });
+        const message = await new ConversationsRepository(transaction).createMessage({
+          conversationId: conversation.id,
+          authorType: "ai",
+          authorUserId: null,
+          aiRunId: claimed.run.id,
+          bodyMarkdown: refusalText,
+          language: userMessage.language,
+          clientRequestId: `ai-guardrail:${claimed.run.id}`,
+        });
+        await new AuditService(transaction).write(actor, {
+          caseId: access.caseRecord.id,
+          eventType: "ai.guardrail_triggered",
+          targetType: "ai_run",
+          targetId: claimed.run.id,
+          metadata: {
+            guardrailCategory: guardrail.category ?? null,
+            reasonCode: guardrail.reasonCode ?? null,
+          },
+        });
+        return this.toResult(
+          claimed.run.id,
+          "answered",
+          contract,
+          message.id,
+          null,
+          [],
+        );
+      });
+    }
+
+    const conversational = matchConversationalIntent(userMessage.bodyMarkdown);
+    if (conversational) {
+      const answerText = conversationalAnswer(
+        conversational,
+        userMessage.language,
+        relevantDate,
+      );
+      return withWriteTransaction(this.database, async (transaction) => {
+        const runs = new AiRunsRepository(transaction);
+        const claimed = await runs.claim({
+          caseId: access.caseRecord.id,
+          conversationId: conversation.id,
+          triggerType: "user_message",
+          triggerId: userMessage.id,
+          requestedByUserId: access.user?.id ?? null,
+          provider: "conversational_fastpath",
+          model: "system",
+          promptKey: "meridian_conversational",
+          promptVersion: "1",
+          rulesetVersion: "conversational-v1",
+          inputSnapshotJson: canonicalJson({
+            caseId: access.caseRecord.id,
+            conversationId: conversation.id,
+            userMessageId: userMessage.id,
+            intent: conversational,
+            question: userMessage.bodyMarkdown,
+          }),
+          inputSha256: sha256(userMessage.bodyMarkdown),
+          idempotencyKey: data.idempotencyKey,
+        });
+        if (!claimed.created) return this.replay(claimed.run);
+
+        const contract: AiAnswerContract = {
+          classification: "simple",
+          canAnswerWithAI: true,
+          needsHuman: false,
+          reasonCodes: [],
+          missingFacts: [],
+          answer: answerText,
+          citations: [],
+          assumptions: [],
+          humanHandoffSummary: null,
+        };
+        const outputJson = canonicalJson(contract);
+        await runs.finalize({
+          id: claimed.run.id,
+          status: "succeeded",
+          providerRequestId: null,
+          outputJson,
+          outputSha256: sha256(outputJson),
+          inputTokens: 0,
+          outputTokens: 0,
+          latencyMs: 1,
+        });
+        const message = await new ConversationsRepository(transaction).createMessage({
+          conversationId: conversation.id,
+          authorType: "ai",
+          authorUserId: null,
+          aiRunId: claimed.run.id,
+          bodyMarkdown: answerText,
+          language: userMessage.language,
+          clientRequestId: `ai-answer:${claimed.run.id}`,
+        });
+        await new AuditService(transaction).write(actor, {
+          caseId: access.caseRecord.id,
+          eventType: "ai.answer_published",
+          targetType: "ai_run",
+          targetId: claimed.run.id,
+          changedFields: ["status"],
+          metadata: { aiRunId: claimed.run.id, purpose: "conversational_fastpath" },
+        });
+        return this.toResult(
+          claimed.run.id,
+          "answered",
+          contract,
+          message.id,
+          null,
+          [],
+        );
+      });
+    }
+
+    const retrievalRoute = routeRetrievalMode(userMessage.bodyMarkdown, access.caseRecord.taxTopics);
+    const isFlashAdvisory = retrievalRoute.mode === "flash_advisory";
     const retrievalTopics = inferRetrievalTopics(userMessage.bodyMarkdown, access.caseRecord.taxTopics);
     const risk = classifyRisk({
       question: userMessage.bodyMarkdown,
@@ -124,13 +299,13 @@ export class AnswerCaseQuestionService {
     const [messageHistory, intakeAnswers, sources] = await Promise.all([
       conversations.listMessages(conversation.id),
       new IntakeRepository(this.database).listAnswers(access.caseRecord.intakeSessionId),
-      risk.canAttemptAiAnswer
+      risk.canAttemptAiAnswer && !isFlashAdvisory
         ? retrieveApprovedSources(this.database, {
             query: userMessage.bodyMarkdown,
             jurisdiction: access.caseRecord.primaryJurisdiction,
             taxTopics: retrievalTopics,
             effectiveAt: relevantDate,
-            limit: 6,
+            limit: 4,
           })
         : Promise.resolve([] as RetrievedRegulatorySection[]),
     ]);
@@ -174,8 +349,8 @@ export class AnswerCaseQuestionService {
         requestedByUserId: access.user?.id ?? null,
         provider: this.provider.providerName,
         model: this.provider.model,
-        promptKey: ANSWER_PROMPT_KEY,
-        promptVersion: ANSWER_PROMPT_VERSION,
+        promptKey: isFlashAdvisory ? FLASH_ADVISORY_PROMPT_KEY : ANSWER_PROMPT_KEY,
+        promptVersion: isFlashAdvisory ? FLASH_ADVISORY_PROMPT_VERSION : ANSWER_PROMPT_VERSION,
         rulesetVersion: risk.rulesetVersion,
         inputSnapshotJson,
         inputSha256: sha256(inputSnapshotJson),
@@ -188,7 +363,10 @@ export class AnswerCaseQuestionService {
           eventType: "ai.run_started",
           targetType: "ai_run",
           targetId: result.run.id,
-          metadata: { sourceCount: sources.length, purpose: "answer_case_question" },
+          metadata: {
+            sourceCount: sources.length,
+            purpose: isFlashAdvisory ? "flash_advisory_answer" : "answer_case_question",
+          },
         });
       }
       return result;
@@ -208,7 +386,7 @@ export class AnswerCaseQuestionService {
       return this.persistWithheld(actor, claimed.run, contract, "escalated", null);
     }
 
-    if (sources.length === 0) {
+    if (!isFlashAdvisory && sources.length === 0) {
       const contract = safetyContract({
         classification: "complex",
         reasonCodes: ["missing_approved_source"],
@@ -217,16 +395,25 @@ export class AnswerCaseQuestionService {
       return this.persistWithheld(actor, claimed.run, contract, "escalated", null);
     }
 
-    const prompt = buildGroundedAnswerPrompt({
-      locale: userMessage.language,
-      question: String(sanitizeForAi(userMessage.bodyMarkdown)),
-      jurisdiction: access.caseRecord.primaryJurisdiction,
-      relevantDate,
-      taxTopics: retrievalTopics,
-      conversation: sanitizedConversation,
-      intakeFacts: sanitizedIntake,
-      sources,
-    });
+    const prompt = isFlashAdvisory
+      ? buildFlashAdvisoryPrompt({
+          locale: userMessage.language,
+          question: String(sanitizeForAi(userMessage.bodyMarkdown)),
+          jurisdiction: access.caseRecord.primaryJurisdiction,
+          relevantDate,
+          conversation: sanitizedConversation,
+          intakeFacts: sanitizedIntake,
+        })
+      : buildGroundedAnswerPrompt({
+          locale: userMessage.language,
+          question: String(sanitizeForAi(userMessage.bodyMarkdown)),
+          jurisdiction: access.caseRecord.primaryJurisdiction,
+          relevantDate,
+          taxTopics: retrievalTopics,
+          conversation: sanitizedConversation,
+          intakeFacts: sanitizedIntake,
+          sources,
+        });
 
     let providerResult: AiProviderResult;
     try {
@@ -260,6 +447,7 @@ export class AnswerCaseQuestionService {
       suppliedSources: sources,
       jurisdiction: access.caseRecord.primaryJurisdiction,
       effectiveAt: relevantDate,
+      mode: isFlashAdvisory ? "flash_advisory" : "corpus_grounded",
     });
     const validatedContract = validation.contract;
     if (!validation.canPublish || !validatedContract) {

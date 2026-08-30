@@ -81,7 +81,7 @@ function welcomeMessage(isEnglish: boolean): ChatMessageType {
     sender: "ai",
     body: isEnglish
       ? "Welcome to **Meridian Assistant**.\n\nAsk about your tax or business situation in Indonesia, or choose a common topic to get started."
-      : "Selamat datang di **Meridian Assistant**.\n\nTanyakan mengenai situasi perpajakan atau bisnis Anda di Indonesia, atau pilih topik umum untuk memulai.",
+      : "Selamat datang di **Asisten Meridian**.\n\nTanyakan mengenai situasi perpajakan atau bisnis Anda di Indonesia, atau pilih topik umum untuk memulai.",
     timestamp: new Date().toISOString(),
   };
 }
@@ -109,6 +109,15 @@ function mapCitation(citation: AnswerResult["citations"][number]): Citation {
   };
 }
 
+function deduplicateCitations(citations: Citation[]): Citation[] {
+  const seen = new Set<string>();
+  return citations.filter((c) => {
+    if (seen.has(c.id)) return false;
+    seen.add(c.id);
+    return true;
+  });
+}
+
 export function ChatContainer({
   isEnglish,
   onClose,
@@ -131,6 +140,7 @@ export function ChatContainer({
 
   const applySession = React.useCallback((next: AssistantSession) => {
     setSession(next);
+    setError(null);
     setMessages([welcomeMessage(effectiveIsEnglish), ...next.messages.map(mapSessionMessage)]);
     const hasStaff = next.messages.some((message) => message.sender === "staff");
     setConversationState(
@@ -216,7 +226,7 @@ export function ChatContainer({
         sender: "ai",
         body: answer.answer,
         timestamp: new Date().toISOString(),
-        citations: answer.citations.map(mapCitation),
+        citations: deduplicateCitations(answer.citations.map(mapCitation)),
         escalationRecommended: answer.status === "needs_human",
         escalationState: answer.status === "needs_human" ? "recommended" : "none",
         freeEscalationConfirmed: false,
@@ -236,6 +246,33 @@ export function ChatContainer({
     setConversationState("expert_requested");
   }
 
+  const handleReset = React.useCallback(async () => {
+    setIsSessionLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/assistant/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ locale: effectiveIsEnglish ? "en" : "id", reset: true }),
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        const body = (await response.json().catch(() => ({}))) as ApiErrorBody;
+        throw new Error(
+          body.error?.message ??
+            (effectiveIsEnglish
+              ? "Could not reset assistant session."
+              : "Gagal memulai ulang sesi asisten."),
+        );
+      }
+      applySession((await response.json()) as AssistantSession);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setIsSessionLoading(false);
+    }
+  }, [applySession, effectiveIsEnglish]);
+
   return (
     <div className={`flex h-full flex-col overflow-hidden rounded-lg border border-border bg-background shadow-lg ${embedded ? "rounded-none border-0 shadow-none" : ""}`}>
       <AssistantHeader
@@ -244,6 +281,7 @@ export function ChatContainer({
         onClose={onClose}
         isExpanded={isExpanded}
         onToggleExpand={onToggleExpand}
+        onReset={handleReset}
       />
       <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-4 text-sm sm:px-6">
         {isSessionLoading ? (

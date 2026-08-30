@@ -14,11 +14,15 @@ export const aiAnswerContractSchema = z.object({
       z.object({
         sourceSectionId: z.uuid(),
         claim: z.string().trim().min(1).max(2000),
+        sourceQuote: z.string().trim().min(1).max(2000).optional(),
       }),
     )
     .max(24),
   assumptions: z.array(z.string().trim().min(1).max(1000)).max(24),
-  humanHandoffSummary: z.string().trim().min(1).max(6000).nullable(),
+  humanHandoffSummary: z.preprocess(
+    (value) => value === "" ? null : value,
+    z.string().trim().min(1).max(6000).nullable(),
+  ),
 });
 
 export type AiAnswerContract = z.infer<typeof aiAnswerContractSchema>;
@@ -53,14 +57,30 @@ export const aiAnswerJsonSchema = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["sourceSectionId", "claim"],
+        required: ["sourceSectionId", "claim", "sourceQuote"],
         properties: {
-          sourceSectionId: { type: "string", format: "uuid" },
-          claim: { type: "string" },
+          sourceSectionId: {
+            type: "string",
+            format: "uuid",
+            description: "The sourceSectionId UUID of the cited approved source from approvedSources.",
+          },
+          claim: {
+            type: "string",
+            description: "The specific factual statement or bullet point in answer (in the requested responseLanguage) supported by this source.",
+          },
+          sourceQuote: {
+            type: "string",
+            description: "The verbatim Indonesian excerpt or passage from the source section bodyText supporting the claim.",
+          },
         },
       },
     },
     assumptions: { type: "array", maxItems: 24, items: { type: "string" } },
-    humanHandoffSummary: { type: ["string", "null"] },
+    humanHandoffSummary: {
+      anyOf: [
+        { type: "string", minLength: 1 },
+        { type: "null" },
+      ],
+    },
   },
 } as const;

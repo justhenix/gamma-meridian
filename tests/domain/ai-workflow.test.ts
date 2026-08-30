@@ -11,6 +11,7 @@ import { AnswerCaseQuestionService } from "../../src/server/domain/ai/answerCase
 import { CasesService } from "../../src/server/domain/cases/service";
 import { ConversationsService } from "../../src/server/domain/conversations/service";
 import { EscalationsService } from "../../src/server/domain/escalations/escalateConversation";
+import { RegulatoryIngestionService } from "../../src/server/domain/regulations/ingestSource";
 import { AiProviderError } from "../../src/server/integrations/ai/provider";
 import { FakeAiProvider, ingestSyntheticSource } from "../helpers/ai";
 import { createTestDatabase, hasDomainError } from "../helpers/database";
@@ -107,6 +108,128 @@ test("AI publishes a concise answer only with an approved effective supplied sou
   assert.equal(serialized.includes("inputSnapshot"), false);
   assert.equal(serialized.includes("sourceSectionIds"), false);
   assert.equal(serialized.includes("providerRequestId"), false);
+});
+
+test("exact transfer-pricing starter publishes a concise persisted answer from relevant PMK sections", async (context) => {
+  const question = "What should I prepare first for Indonesian transfer pricing documentation?";
+  const setup = await createAiCase(context, question);
+  const ingestion = new RegulatoryIngestionService(setup.database, setup.guestTokens);
+  const ingested = await ingestion.ingestSource(createSyntheticUserActor(setup.admin.id), {
+    officialIdentifier: "PMK 172 TAHUN 2023",
+    title: "Penerapan Prinsip Kewajaran dan Kelaziman Usaha",
+    authority: "Kementerian Keuangan",
+    jurisdiction: "ID",
+    sourceType: "ministerial_regulation",
+    canonicalUrl: "https://jdih.kemenkeu.go.id/dok/pmk-172-tahun-2023",
+    versionLabel: "2023-12-29",
+    publicationDate: "2023-12-29",
+    effectiveFrom: "2023-12-29",
+    effectiveTo: null,
+    retrievedAt: "2026-08-30T00:00:00.000Z",
+    sections: [
+      {
+        heading: "Pasal 16",
+        locator: "Pasal 16",
+        ordinal: 16,
+        bodyText: "Dokumen Penentuan Harga Transfer terdiri atas dokumen induk, dokumen lokal, dan laporan per negara.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
+      },
+      {
+        heading: "Pasal 29 dan Pasal 30",
+        locator: "Pasal 29-30",
+        ordinal: 29,
+        bodyText: "Dokumen induk harus memuat informasi struktur Grup Usaha, kegiatan usaha, harta tidak berwujud, aktivitas keuangan dan pembiayaan, serta laporan keuangan konsolidasi. Dokumen lokal harus memuat identitas, Transaksi Afiliasi, penerapan Prinsip Kewajaran dan Kelaziman Usaha, informasi keuangan, dan fakta non-keuangan.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
+      },
+      {
+        heading: "Pasal 17",
+        locator: "Pasal 17",
+        ordinal: 17,
+        bodyText: "Dokumen Penentuan Harga Transfer wajib diselenggarakan berdasarkan data dan informasi yang tersedia pada saat dilakukan Transaksi Afiliasi.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
+      },
+      {
+        heading: "Pasal 19",
+        locator: "Pasal 19",
+        ordinal: 19,
+        bodyText: "Dokumen Penentuan Harga Transfer berupa dokumen induk dan dokumen lokal wajib dibuat ikhtisar untuk surat pemberitahuan tahunan pajak penghasilan badan.",
+        taxTopics: ["tax.transfer_pricing", "tax.corporate_income"],
+      },
+      {
+        heading: "Pasal 43 - Kesepakatan Harga Transfer",
+        locator: "Pasal 43",
+        ordinal: 43,
+        bodyText: "Kesepakatan Harga Transfer mengatur permohonan Advance Pricing Agreement untuk penentuan harga transfer.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border"],
+      },
+    ],
+  });
+  const approved = await ingestion.approveSourceVersion(
+    createSyntheticUserActor(setup.admin.id),
+    ingested.version.id,
+  );
+  const pasal16 = approved.sections.find((section) => section.locator === "Pasal 16")!;
+  const pasal29 = approved.sections.find((section) => section.locator === "Pasal 29-30")!;
+  const firstClaim = "Start by identifying whether the Master File and Local File requirements apply.";
+  const secondClaim = "Then gather group structure, business activities, intangible assets, financing information, consolidated financial statements, related-party transaction details, and financial data.";
+  const answer = `${firstClaim} ${secondClaim}`;
+  const provider = new FakeAiProvider((request) => {
+    assert.equal(request.systemPrompt.includes("sourceQuote"), true);
+    assert.equal(request.userPrompt.includes("Pasal 29-30"), true);
+    assert.equal(request.userPrompt.includes("Pasal 43"), false);
+    return {
+      classification: "simple",
+      canAnswerWithAI: true,
+      needsHuman: false,
+      reasonCodes: [],
+      missingFacts: [],
+      answer,
+      citations: [
+        {
+          sourceSectionId: pasal16.id,
+          claim: firstClaim,
+          sourceQuote: pasal16.bodyText,
+        },
+        {
+          sourceSectionId: pasal29.id,
+          claim: secondClaim,
+          sourceQuote: pasal29.bodyText,
+        },
+      ],
+      assumptions: [],
+      humanHandoffSummary: null,
+    };
+  });
+
+  const result = await new AnswerCaseQuestionService(
+    setup.database,
+    setup.guestTokens,
+    provider,
+    runtimeConfig,
+  ).answerCaseQuestion(setup.actor, {
+    caseId: setup.submitted.id,
+    conversationId: setup.submitted.clientConversationId,
+    userMessageId: setup.message.id,
+    idempotencyKey: "exact-transfer-pricing-starter-01",
+    relevantDate: "2026-08-30",
+  });
+
+  assert.equal(result.status, "answered");
+  assert.equal(result.needsHuman, false);
+  assert.ok(result.recommendationVersionId);
+  assert.equal(result.answer, answer);
+  assert.equal(result.answer.split(/\s+/).length <= 180, true);
+  assert.deepEqual(
+    result.citations.map((citation) => citation.locator),
+    ["Pasal 16", "Pasal 29-30"],
+  );
+  assert.equal(provider.calls, 1);
+  const messages = await new ConversationsDal(
+    setup.database,
+    setup.guestTokens,
+  ).getMessages(setup.actor, setup.submitted.clientConversationId);
+  assert.deepEqual(messages.messages.map((message) => message.authorType), ["user", "ai"]);
+  assert.equal(messages.messages.at(-1)?.bodyMarkdown, answer);
 });
 
 test("nonexistent citations invalidate the run and never expose the unsupported answer", async (context) => {
@@ -375,3 +498,68 @@ test("AI answer service rejects cross-client IDOR attempts before model access",
   );
   assert.equal(provider.calls, 0);
 });
+
+test("conversational queries like date or greetings are answered instantly without model or expert escalation", async (context) => {
+  const setup = await createAiCase(context, "What is current date");
+  const provider = new FakeAiProvider(() => {
+    throw new Error("Provider must not be called for conversational fastpath queries");
+  });
+  const service = new AnswerCaseQuestionService(
+    setup.database,
+    setup.guestTokens,
+    provider,
+    runtimeConfig,
+  );
+  const result = await service.answerCaseQuestion(setup.actor, {
+    caseId: setup.submitted.id,
+    conversationId: setup.submitted.clientConversationId,
+    userMessageId: setup.message.id,
+    idempotencyKey: "conversational-date-fastpath-01",
+    relevantDate: "2026-08-30",
+  });
+
+  assert.equal(result.status, "answered");
+  assert.equal(result.needsHuman, false);
+  assert.equal(result.citations.length, 0);
+  assert.ok(result.answer.includes("August 30, 2026"));
+  assert.equal(provider.calls, 0);
+
+  const messages = await new ConversationsDal(
+    setup.database,
+    setup.guestTokens,
+  ).getMessages(setup.actor, setup.submitted.clientConversationId);
+  assert.deepEqual(messages.messages.map((m) => m.authorType), ["user", "ai"]);
+  assert.ok(messages.messages.at(-1)?.bodyMarkdown.includes("August 30, 2026"));
+});
+
+test("queries with word 'person' or 'connect' do not falsely trigger human escalation", async (context) => {
+  const setup = await createAiCase(
+    context,
+    "Can a foreign person hold shares in a local Indonesian company?",
+  );
+  const source = await ingestSyntheticSource(
+    setup.database,
+    setup.guestTokens,
+    setup.admin,
+  );
+  const provider = new FakeAiProvider(() => validOutput(source.sections[0]!.id));
+  const service = new AnswerCaseQuestionService(
+    setup.database,
+    setup.guestTokens,
+    provider,
+    runtimeConfig,
+  );
+  const result = await service.answerCaseQuestion(setup.actor, {
+    caseId: setup.submitted.id,
+    conversationId: setup.submitted.clientConversationId,
+    userMessageId: setup.message.id,
+    idempotencyKey: "non-aggressive-person-word-01",
+    relevantDate: "2026-08-30",
+  });
+
+  assert.equal(result.status, "answered");
+  assert.equal(result.needsHuman, false);
+  assert.equal(result.reasonCodes.includes("user_requested_human"), false);
+  assert.equal(provider.calls, 1);
+});
+
