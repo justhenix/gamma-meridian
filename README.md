@@ -1,26 +1,30 @@
-# Meridian Tax & Legal Advisory
+# Meridian Tax Advisory
 
-Platform konsultasi perpajakan korporasi dan hukum bisnis Indonesia. Proyek ini memadukan portal publik dwibahasa, asisten AI yang terikat pada pasal perundang-undangan resmi, serta alur kerja *helpdesk* internal untuk konsultan senior.
+Platform konsultasi perpajakan korporasi berbasis AI yang terhubung langsung dengan konsultan senior berlisensi. Sistem ini memadukan asisten cerdas berbasis regulasi resmi Indonesia dengan alur kerja *helpdesk* internal untuk penanganan sengketa dan kepatuhan pajak.
+
+Demo Online: [gamma-meridian.vercel.app](https://gamma-meridian.vercel.app)
+
+---
 
 ## Fitur Utama
 
-- **Asisten AI Regulasi**: Menjawab konsultasi pajak dengan sitasi pasal resmi (PMK 172/2023, UU KUP, UU HPP) dan eskalasi otomatis ke konsultan manusia untuk kasus berisiko tinggi.
-- **Guardrail Keamanan**: Menangkal injeksi prompt, menolak manipulasi persona, serta memblokir konsultasi skema ilegal.
-- **Portal Klien & Staf**: Akses klien berbasis OTP email tanpa kata sandi, serta *workspace* internal bagi konsultan untuk meninjau dan menyelesaikan tiket kasus.
-- **Dukungan Dwibahasa**: Antarmuka penuh dalam Bahasa Indonesia dan Bahasa Inggris menggunakan Paraglide JS.
+- **AI Tax Assistant**: Menjawab konsultasi pajak berdasarkan peraturan resmi (PMK 172/2023, UU KUP, UU HPP) lengkap dengan sitasi pasal, serta eskalasi otomatis ke konsultan manusia jika mendeteksi kasus berisiko tinggi.
+- **Safety & Guardrails**: Proteksi terhadap *prompt injection*, *jailbreak*, manipulasi persona, serta penolakan otomatis untuk pertanyaan terkait skema pajak ilegal.
+- **Client & Staff Portal**: Login *passwordless* menggunakan OTP email untuk klien, serta *dashboard helpdesk* bagi tim konsultan untuk mengklaim dan membalas tiket kasus secara langsung.
+- **Bilingual (i18n)**: Dukungan penuh Bahasa Indonesia dan Bahasa Inggris menggunakan Paraglide JS.
 
-## Tumpukan Teknologi
+## Tech Stack
 
-- **Framework**: Next.js 16 (App Router, Turbopack) dan React 19
-- **Bahasa & Tampilan**: TypeScript, Tailwind CSS v4, shadcn/ui
-- **Basis Data**: Turso LibSQL / SQLite lokal (`meridian.db`)
-- **Penyedia AI**: B.AI (`qwen3.8-flash`) dengan format luaran JSON terstruktur
-- **Autentikasi & Email**: Passwordless OTP via Nodemailer
-- **Manajer Paket**: npm
+- **Framework**: Next.js 16 (App Router, Turbopack) & React 19
+- **Language & Styling**: TypeScript, Tailwind CSS v4, shadcn/ui
+- **Database**: Turso LibSQL / SQLite lokal (`meridian.db`)
+- **AI Integration**: B.AI (`qwen3.8-flash`) dengan validasi *structured JSON output*
+- **Auth & Email**: Passwordless OTP via Nodemailer
+- **Package Manager**: npm
 
-## Cara Menjalankan
+## Cara Menjalankan Project
 
-### 1. Siapkan Lingkungan
+### 1. Setup Environment
 
 Salin file contoh konfigurasi:
 
@@ -28,13 +32,13 @@ Salin file contoh konfigurasi:
 cp .env.example .env.local
 ```
 
-Atur variabel penting pada `.env.local`:
+Sesuaikan variabel di `.env.local`:
 - `TURSO_DATABASE_URL="file:meridian.db"`
-- `INTAKE_TOKEN_PEPPER` dan `AUTH_TOKEN_PEPPER` (kunci acak pengaman)
-- `BAI_API_KEY` (kunci API untuk model AI)
-- `MERIDIAN_STAFF_EMAILS` (daftar email staf/partner berwenang)
+- `INTAKE_TOKEN_PEPPER` & `AUTH_TOKEN_PEPPER` (kunci acak keamanan sesi)
+- `BAI_API_KEY` (API key provider AI)
+- `MERIDIAN_STAFF_EMAILS` (daftar email staf/partner yang memiliki akses)
 
-### 2. Pasang Dependensi dan Siapkan Data
+### 2. Install Dependencies & Setup Database
 
 ```bash
 npm install
@@ -42,23 +46,24 @@ npm run migrate
 npm run ingest:corpus
 ```
 
-### 3. Jalankan Server Lokal
+### 3. Jalankan Dev Server
 
 ```bash
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di peramban.
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-## Perintah Penting
+## Script & Perintah
 
-| Perintah | Deskripsi |
+| Command | Deskripsi |
 | :--- | :--- |
-| `npm run dev` | Menjalankan server lokal (otomatis kompilasi bahasa) |
-| `npm run build` | Kompilasi bahasa dan build aplikasi produksi |
-| `npm run start` | Menjalankan server produksi |
-| `npm run migrate` | Menerapkan migrasi skema SQL ke database |
-| `npm run ingest:corpus` | Memuat data regulasi resmi ke korpus SQLite |
-| `npm run test` | Menjalankan seluruh pengujian otomatis |
+| `npm run dev` | Menjalankan dev server lokal (auto-compile i18n) |
+| `npm run build` | Build aplikasi untuk production |
+| `npm run start` | Menjalankan production server |
+| `npm run migrate` | Menjalankan migrasi skema SQL ke database |
+| `npm run ingest:corpus` | Ingest data regulasi perpajakan ke database SQLite |
+| `npm run test` | Menjalankan seluruh pengujian otomatis (unit & integration tests) |
 | `npm run lint` | Memeriksa format dan standar kode |
+
 
