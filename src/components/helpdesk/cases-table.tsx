@@ -2,23 +2,40 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Search, AlertTriangle, Clock, ArrowRight, ShieldCheck, UserCheck, Sparkles } from "lucide-react";
+import { Search, AlertTriangle, Clock, ArrowRight, ShieldCheck, UserCheck } from "lucide-react";
 import * as m from "@/paraglide/messages.js";
 import { useLocalizedMessage } from "@/components/locale-provider";
-import type { HelpdeskCase, CaseStatusFilter, HelpdeskCaseStatus, RiskLevel } from "@/lib/assistant/types";
-import { SEED_HELPDESK_CASES } from "@/lib/assistant/mock-cases";
+import type {
+  CaseStatusFilter,
+  HelpdeskCaseStatus,
+  RiskLevel,
+  StaffHelpdeskListItem,
+} from "@/lib/assistant/types";
 
-export function CasesTable() {
+interface CasesTableProps {
+  cases: StaffHelpdeskListItem[];
+}
+
+function matchesFilter(c: StaffHelpdeskListItem, filter: CaseStatusFilter) {
+  if (filter === "all") return true;
+  if (filter === "new") return c.status === "needs_expert" && !c.assignedToCurrentStaff;
+  if (filter === "needs_expert") {
+    return c.assignedToCurrentStaff && (c.status === "needs_expert" || c.status === "consultant_working");
+  }
+  if (filter === "waiting") return c.status === "waiting_for_client";
+  if (filter === "resolved") return c.status === "resolved" || c.status === "closed";
+  return false;
+}
+
+export function CasesTable({ cases }: CasesTableProps) {
   const t = useLocalizedMessage();
   const [activeFilter, setActiveFilter] = React.useState<CaseStatusFilter>("all");
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [cases] = React.useState<HelpdeskCase[]>(SEED_HELPDESK_CASES);
 
   const filterTabs: { id: CaseStatusFilter; label: string }[] = [
     { id: "all", label: t(m.helpdesk_tab_all) },
     { id: "new", label: t(m.helpdesk_tab_new) },
     { id: "needs_expert", label: t(m.helpdesk_tab_needs_expert) },
-    { id: "ai_handling", label: t(m.helpdesk_tab_ai) },
     { id: "waiting", label: t(m.helpdesk_tab_waiting) },
     { id: "resolved", label: t(m.helpdesk_tab_resolved) },
   ];
@@ -33,12 +50,7 @@ export function CasesTable() {
           </span>
         );
       case "ai_handling":
-        return (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-border px-2 py-0.5 rounded">
-            <Sparkles className="size-3 text-amber-500" />
-            {t(m.helpdesk_status_ai_handling)}
-          </span>
-        );
+        return null;
       case "consultant_working":
         return (
           <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/60 px-2 py-0.5 rounded">
@@ -91,22 +103,14 @@ export function CasesTable() {
 
   const filteredCases = React.useMemo(() => {
     return cases.filter((c) => {
-      // Filter tab check
-      if (activeFilter === "new" && c.status !== "needs_expert" && c.status !== "ai_handling") return false;
-      if (activeFilter === "needs_expert" && c.status !== "needs_expert") return false;
-      if (activeFilter === "ai_handling" && c.status !== "ai_handling") return false;
-      if (activeFilter === "waiting" && c.status !== "waiting_for_client") return false;
-      if (activeFilter === "resolved" && c.status !== "resolved" && c.status !== "closed") return false;
+      if (!matchesFilter(c, activeFilter)) return false;
 
-      // Search query check
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         return (
           c.caseReference.toLowerCase().includes(q) ||
           c.clientName.toLowerCase().includes(q) ||
-          c.companyName.toLowerCase().includes(q) ||
-          c.title.toLowerCase().includes(q) ||
-          c.practiceArea.toLowerCase().includes(q)
+          c.title.toLowerCase().includes(q)
         );
       }
       return true;
@@ -120,15 +124,7 @@ export function CasesTable() {
         {/* Filter Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {filterTabs.map((tab) => {
-            const count = cases.filter((c) => {
-              if (tab.id === "all") return true;
-              if (tab.id === "new") return c.status === "needs_expert" || c.status === "ai_handling";
-              if (tab.id === "needs_expert") return c.status === "needs_expert";
-              if (tab.id === "ai_handling") return c.status === "ai_handling";
-              if (tab.id === "waiting") return c.status === "waiting_for_client";
-              if (tab.id === "resolved") return c.status === "resolved" || c.status === "closed";
-              return false;
-            }).length;
+            const count = cases.filter((c) => matchesFilter(c, tab.id)).length;
 
             const isActive = activeFilter === tab.id;
 
@@ -195,29 +191,27 @@ export function CasesTable() {
               ) : (
                 filteredCases.map((c) => (
                   <tr
-                    key={c.id}
+                    key={c.caseId}
                     className="hover:bg-muted/40 transition-colors group cursor-pointer"
                   >
                     {/* Client & Company */}
                     <td className="py-3.5 px-4 font-medium text-foreground">
-                      <Link href={`/helpdesk/${c.id}`} className="block">
+                      <Link href={`/staff/helpdesk/${c.caseId}`} className="block">
                         <div className="font-semibold text-sm text-foreground group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
-                          {c.companyName}
-                        </div>
-                        <div className="text-xs text-muted-foreground font-normal mt-0.5">
                           {c.clientName}
                         </div>
+                        <div className="text-xs text-muted-foreground font-normal mt-0.5">{c.caseReference}</div>
                       </Link>
                     </td>
 
                     {/* Matter Title */}
                     <td className="py-3.5 px-4 max-w-xs sm:max-w-md">
-                      <Link href={`/helpdesk/${c.id}`} className="block">
+                      <Link href={`/staff/helpdesk/${c.caseId}`} className="block">
                         <div className="font-medium text-foreground text-xs sm:text-sm truncate">
                           {c.title}
                         </div>
                         <div className="text-xs text-muted-foreground mt-0.5">
-                          {c.caseReference} · {c.practiceArea}
+                          {c.assignedToCurrentStaff ? "Assigned to you" : "Unassigned"}
                         </div>
                       </Link>
                     </td>
@@ -245,7 +239,7 @@ export function CasesTable() {
                     {/* Action */}
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <Link
-                        href={`/helpdesk/${c.id}`}
+                        href={`/staff/helpdesk/${c.caseId}`}
                         className="inline-flex items-center gap-1 font-semibold text-xs text-slate-800 dark:text-slate-200 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors"
                       >
                         <span>{t(m.helpdesk_open_case)}</span>

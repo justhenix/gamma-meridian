@@ -201,8 +201,8 @@
   "story3_title": "Tax Due Diligence Akuisisi Lintas Batas & Tarif P3B Form DGT",
   "story3_desc": "Mengidentifikasi eksposur historis pemotongan pajak pada target akuisisi dan menyusun dokumentasi beneficial ownership untuk kepastian tarif P3B 5%.",
   "story3_result": "Mengamankan escrow ganti rugi pajak dan memvalidasi kelayakan P3B",
-  "login_title": "Portal Akses Meridian",
-  "login_subtitle": "Autentikasi aman untuk partner, konsultan pajak berlisensi, dan klien korporasi.",
+  "login_title": "Akses Konsultasi Klien",
+  "login_subtitle": "Akses konsultasi yang terhubung ke email perusahaan Anda yang telah diverifikasi secara aman.",
   "login_tab_staff": "Staf Penasihat & Partner",
   "login_tab_client": "Portal Klien Korporasi",
   "login_sso_button": "Masuk dengan SSO Perusahaan (Azure AD / Okta)",
@@ -215,6 +215,10 @@
   "login_client_desc": "Masukkan nomor referensi penugasan dan email terdaftar Anda untuk melihat progres penanganan perkara aktif.",
   "login_back_home": "Kembali ke Beranda Meridian",
   "login_security_notice": "Dilindungi enkripsi TLS 256-bit, kontrol akses berbasis peran (RBAC), dan kepatuhan UU Pelindungan Data Pribadi (PDP).",
+  "staff_login_title": "Akses Staf Meridian",
+  "staff_login_subtitle": "Autentikasi internal untuk partner dan konsultan pajak Meridian yang berwenang.",
+  "staff_login_workspace_label": "Ruang Kerja Staf Penasihat",
+  "staff_login_security_notice": "Khusus personel Meridian yang berwenang. Sesi staf dibatasi berdasarkan peran dan tercatat dalam audit.",
   "helpdesk_logout": "Keluar",
   "helpdesk_switch_account": "Ganti Akun"
 }

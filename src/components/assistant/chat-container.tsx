@@ -1,15 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { ArrowRight } from "lucide-react";
+import { AlertCircle, ArrowRight, Loader2 } from "lucide-react";
+
+import { EmailVerificationPanel } from "@/components/auth/email-verification-panel";
+import { useAppLocale } from "@/components/locale-provider";
 import type { ChatMessage as ChatMessageType, Citation, ClientConversationState } from "@/lib/assistant/types";
-import { generateAssistantResponse } from "@/lib/assistant/chat-engine";
+import { AssistantHeader } from "./assistant-header";
 import { ChatMessage } from "./chat-message";
+import { CitationModal } from "./citation-modal";
 import { LoadingProcessState } from "./loading-process-state";
 import { PromptBar } from "./prompt-bar";
-import { CitationModal } from "./citation-modal";
-import { useAppLocale } from "@/components/locale-provider";
-import { AssistantHeader } from "./assistant-header";
 
 interface ChatContainerProps {
   isEnglish?: boolean;
@@ -19,43 +20,94 @@ interface ChatContainerProps {
   embedded?: boolean;
 }
 
+interface SessionMessage {
+  id: string;
+  sender: "client" | "ai" | "staff" | "system";
+  bodyMarkdown: string;
+  language: "id" | "en";
+  createdAt: string;
+  authorName: string | null;
+}
+
+interface AssistantSession {
+  caseId: string;
+  conversationId: string;
+  caseReference: string;
+  status: string;
+  messages: SessionMessage[];
+}
+
+interface ApiErrorBody {
+  error?: { message?: string };
+}
+
+interface AnswerResult {
+  status: "answered" | "needs_human";
+  answer: string;
+  messageId: string;
+  citations: Array<{
+    sourceSectionId: string;
+    officialIdentifier: string;
+    title: string;
+    authority: string;
+    canonicalUrl: string;
+    locator: string;
+  }>;
+}
+
+interface AssistantMessageResult {
+  userMessage: {
+    id: string;
+    createdAt: string;
+  };
+  answer: AnswerResult;
+}
+
 const STARTER_PROMPTS_ID = [
-  {
-    topic: "Transfer Pricing (PMK-172/2023)",
-    prompt: "Kapan batas waktu pembuatan Local File & Master File untuk tahun pajak 2025?",
-  },
-  {
-    topic: "Tanggapan SP2DK Pajak",
-    prompt: "Kami menerima SP2DK atas royalti afiliasi. Apa langkah dan batas waktu tanggapan?",
-  },
-  {
-    topic: "Dividen & PPh Badan (UU HPP)",
-    prompt: "Apakah dividen dari anak perusahaan lokal masih dipotong PPh 23?",
-  },
-  {
-    topic: "Tax Treaty & Form DGT",
-    prompt: "Bagaimana ketentuan pengisian Form DGT untuk pemanfaatan tarif P3B luar negeri?",
-  },
+  { topic: "Transfer Pricing", preview: "Apa yang perlu disiapkan?", prompt: "Apa hal utama yang perlu saya siapkan untuk dokumentasi transfer pricing?" },
+  { topic: "Pendirian Usaha", preview: "Bagaimana mulai usaha di Indonesia?", prompt: "Saya warga negara asing dan ingin membuka usaha di Indonesia. Dari mana saya harus mulai?" },
+  { topic: "Pajak Perusahaan", preview: "Apa kewajiban pajak awalnya?", prompt: "Apa kewajiban pajak awal untuk perusahaan baru di Indonesia?" },
 ];
 
 const STARTER_PROMPTS_EN = [
-  {
-    topic: "Transfer Pricing (PMK-172/2023)",
-    prompt: "What is the mandatory availability deadline for 2025 Local & Master Files?",
-  },
-  {
-    topic: "SP2DK Tax Audit Notice",
-    prompt: "We received an SP2DK regarding intercompany royalties. What is the statutory timeline?",
-  },
-  {
-    topic: "Corporate Income Tax (CIT)",
-    prompt: "Are domestic intercompany dividends exempt from withholding tax under UU HPP?",
-  },
-  {
-    topic: "Tax Treaty & Form DGT",
-    prompt: "What are the requirements for Form DGT electronic filing for foreign consultants?",
-  },
+  { topic: "Transfer Pricing", preview: "What should I prepare first?", prompt: "What should I prepare first for Indonesian transfer pricing documentation?" },
+  { topic: "Business Setup", preview: "How do I start in Indonesia?", prompt: "I am a foreign founder planning to open a business in Indonesia. Where should I start?" },
+  { topic: "Corporate Tax", preview: "What are the first tax obligations?", prompt: "What are the first tax obligations for a newly established Indonesian company?" },
 ];
+
+function welcomeMessage(isEnglish: boolean): ChatMessageType {
+  return {
+    id: "welcome-msg",
+    sender: "ai",
+    body: isEnglish
+      ? "Welcome to **Meridian Assistant**.\n\nAsk about your tax or business situation in Indonesia, or choose a common topic to get started."
+      : "Selamat datang di **Meridian Assistant**.\n\nTanyakan mengenai situasi perpajakan atau bisnis Anda di Indonesia, atau pilih topik umum untuk memulai.",
+    timestamp: new Date().toISOString(),
+  };
+}
+
+function mapSessionMessage(message: SessionMessage): ChatMessageType {
+  return {
+    id: message.id,
+    sender: message.sender === "staff" ? "consultant" : message.sender,
+    authorName: message.authorName ?? undefined,
+    body: message.bodyMarkdown,
+    timestamp: message.createdAt,
+  };
+}
+
+function mapCitation(citation: AnswerResult["citations"][number]): Citation {
+  return {
+    id: citation.sourceSectionId,
+    code: citation.officialIdentifier,
+    title: citation.title,
+    authority: citation.authority,
+    locator: citation.locator,
+    excerpt: "",
+    officialUrl: citation.canonicalUrl,
+    verified: true,
+  };
+}
 
 export function ChatContainer({
   isEnglish,
@@ -66,197 +118,212 @@ export function ChatContainer({
 }: ChatContainerProps) {
   const { locale } = useAppLocale();
   const effectiveIsEnglish = isEnglish !== undefined ? isEnglish : locale === "en";
-  const [messages, setMessages] = React.useState<ChatMessageType[]>(() => [
-    {
-      id: "welcome-msg",
-      sender: "ai",
-      body:
-        (isEnglish !== undefined ? isEnglish : locale === "en")
-          ? "Welcome to **Meridian Assistant**.\n\nAsk about your tax or business situation in Indonesia, or choose a common topic to get started."
-          : "Selamat datang di **Meridian Assistant**.\n\nTanyakan mengenai situasi perpajakan atau bisnis Anda di Indonesia, atau pilih topik umum untuk memulai.",
-      timestamp: "2026-08-30T00:00:00.000Z",
-      isStreaming: false,
-    },
-  ]);
-  const [conversationState, setConversationState] =
-    React.useState<ClientConversationState>("ai_assistant");
+  const [session, setSession] = React.useState<AssistantSession | null>(null);
+  const [messages, setMessages] = React.useState<ChatMessageType[]>([welcomeMessage(effectiveIsEnglish)]);
+  const [conversationState, setConversationState] = React.useState<ClientConversationState>("ai_assistant");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isSessionLoading, setIsSessionLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+  const [identityOpen, setIdentityOpen] = React.useState(false);
   const [activeCitation, setActiveCitation] = React.useState<Citation | null>(null);
-
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const starters = effectiveIsEnglish ? STARTER_PROMPTS_EN : STARTER_PROMPTS_ID;
 
-  // Auto-scroll on new messages
-  React.useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollRef.current.scrollHeight,
-        behavior: "smooth",
-      });
+  const applySession = React.useCallback((next: AssistantSession) => {
+    setSession(next);
+    setMessages([welcomeMessage(effectiveIsEnglish), ...next.messages.map(mapSessionMessage)]);
+    const hasStaff = next.messages.some((message) => message.sender === "staff");
+    setConversationState(
+      hasStaff
+        ? "expert_joined"
+        : ["human_review_required", "consultant_working", "waiting_for_client"].includes(next.status)
+          ? "expert_requested"
+          : "ai_assistant",
+    );
+  }, [effectiveIsEnglish]);
+
+  const loadSession = React.useCallback(async (createIfMissing: boolean) => {
+    const response = await fetch("/api/assistant/session", {
+      method: createIfMissing ? "POST" : "GET",
+      headers: createIfMissing ? { "Content-Type": "application/json" } : undefined,
+      body: createIfMissing ? JSON.stringify({ locale: effectiveIsEnglish ? "en" : "id" }) : undefined,
+      cache: "no-store",
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({})) as ApiErrorBody;
+      throw new Error(body.error?.message ?? (effectiveIsEnglish ? "Assistant session is unavailable." : "Sesi asisten tidak tersedia."));
     }
-  }, [messages, isLoading]);
+    applySession(await response.json() as AssistantSession);
+  }, [applySession, effectiveIsEnglish]);
 
-  const handleSendMessage = (text: string) => {
-    if (!text.trim() || isLoading) return;
+  React.useEffect(() => {
+    let cancelled = false;
+    const timeout = window.setTimeout(() => {
+      loadSession(true)
+        .catch((cause) => { if (!cancelled) setError(cause instanceof Error ? cause.message : String(cause)); })
+        .finally(() => { if (!cancelled) setIsSessionLoading(false); });
+    }, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeout);
+    };
+  }, [loadSession]);
 
-    const messageId = `user-${crypto.randomUUID()}`;
-    const isoTimestamp = new Date().toISOString();
+  React.useEffect(() => {
+    if (conversationState !== "expert_requested") return;
+    const interval = window.setInterval(() => loadSession(false).catch(() => undefined), 10_000);
+    return () => window.clearInterval(interval);
+  }, [conversationState, loadSession]);
 
-    const userMessage: ChatMessageType = {
-      id: messageId,
+  React.useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, isLoading, identityOpen]);
+
+  async function handleSendMessage(text: string) {
+    if (!text.trim() || isLoading || !session) return;
+    setIsLoading(true);
+    setError(null);
+    const optimisticId = `optimistic-${crypto.randomUUID()}`;
+    setMessages((current) => [...current, {
+      id: optimisticId,
       sender: "client",
       body: text,
-      timestamp: isoTimestamp,
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setIsLoading(true);
-
-    setTimeout(() => {
-      const generated = generateAssistantResponse(text, effectiveIsEnglish);
-      const aiResponseMsg: ChatMessageType = {
-        id: `ai-${crypto.randomUUID()}`,
+      timestamp: new Date().toISOString(),
+    }]);
+    try {
+      const response = await fetch("/api/assistant/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversationId: session.conversationId,
+          bodyMarkdown: text,
+          language: effectiveIsEnglish ? "en" : "id",
+          clientRequestId: `client-${crypto.randomUUID()}`,
+        }),
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({})) as ApiErrorBody;
+        throw new Error(body.error?.message ?? "Message could not be sent.");
+      }
+      const result = await response.json() as AssistantMessageResult;
+      const sent = result.userMessage;
+      setMessages((current) => current.map((message) => message.id === optimisticId
+        ? { ...message, id: sent.id, timestamp: sent.createdAt }
+        : message));
+      const answer = result.answer;
+      setMessages((current) => [...current, {
+        id: answer.messageId,
         sender: "ai",
-        body: generated.body,
+        body: answer.answer,
         timestamp: new Date().toISOString(),
-        citations: generated.citations,
-        suggestedFollowUps: generated.suggestedFollowUps,
-        escalationRecommended: generated.escalationRecommended,
-        freeEscalationConfirmed: true,
-        escalationState: generated.escalationRecommended ? "recommended" : "none",
+        citations: answer.citations.map(mapCitation),
+        escalationRecommended: answer.status === "needs_human",
+        escalationState: answer.status === "needs_human" ? "recommended" : "none",
+        freeEscalationConfirmed: false,
         isStreaming: true,
-      };
-
+      }]);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+      await loadSession(false).catch(() => undefined);
+    } finally {
       setIsLoading(false);
-      setMessages((prev) => [...prev, aiResponseMsg]);
-    }, 1200);
-  };
+    }
+  }
 
-  const handleStreamComplete = (msgId: string) => {
-    setMessages((prev) =>
-      prev.map((m) => (m.id === msgId ? { ...m, isStreaming: false } : m))
-    );
-  };
-
-  const handleEscalateToExpert = (msgId: string) => {
+  async function handleVerified() {
+    setIdentityOpen(false);
+    await loadSession(false);
     setConversationState("expert_requested");
-
-    setMessages((prev) =>
-      prev.map((m) =>
-        m.id === msgId
-          ? { ...m, escalationState: "requested", freeEscalationConfirmed: true }
-          : m
-      )
-    );
-
-    setTimeout(() => {
-      setConversationState("expert_joined");
-      const consultantMsg: ChatMessageType = {
-        id: `consultant-${Date.now()}`,
-        sender: "consultant",
-        authorName: "Hendrik Prasetyo, BAP, S.H.",
-        authorTitle: effectiveIsEnglish ? "Senior Tax Litigation Partner" : "Partner Litigasi Pajak Senior",
-        body: effectiveIsEnglish
-          ? "Hello, I am Hendrik Prasetyo, Senior Tax Partner at Meridian. I have reviewed your inquiry and the preliminary statutory analysis above. We are preparing a structured strategy regarding this matter. Please feel free to provide any additional notices or relevant fiscal years."
-          : "Halo, saya Hendrik Prasetyo, Partner Pajak Senior di Meridian. Saya telah membaca kronologi dan telaah regulasi awal di atas. Kami sedang menyiapkan langkah mitigasi terstruktur untuk kasus ini. Anda dapat menyampaikan surat SP2DK atau tahun pajak terkait untuk pendalaman.",
-        timestamp: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, consultantMsg]);
-    }, 2500);
-  };
-
-  const handleReset = () => {
-    setConversationState("ai_assistant");
-    setMessages([
-      {
-        id: "welcome-msg",
-        sender: "ai",
-        body: effectiveIsEnglish
-          ? "Welcome to **Meridian Assistant**.\n\nAsk about your tax or business situation in Indonesia, or choose a common topic to get started."
-          : "Selamat datang di **Meridian Assistant**.\n\nTanyakan mengenai situasi perpajakan atau bisnis Anda di Indonesia, atau pilih topik umum untuk memulai.",
-        timestamp: new Date().toISOString(),
-        isStreaming: false,
-      },
-    ]);
-  };
+  }
 
   return (
-    <div
-      className={`flex flex-col h-full bg-background rounded-lg border border-border shadow-lg overflow-hidden ${
-        embedded ? "border-0 shadow-none rounded-none" : ""
-      }`}
-    >
-      {/* Assistant Header */}
+    <div className={`flex h-full flex-col overflow-hidden rounded-lg border border-border bg-background shadow-lg ${embedded ? "rounded-none border-0 shadow-none" : ""}`}>
       <AssistantHeader
         state={conversationState}
         isEnglish={effectiveIsEnglish}
-        onReset={handleReset}
         onClose={onClose}
         isExpanded={isExpanded}
         onToggleExpand={onToggleExpand}
       />
-
-      {/* Messages Scroll Area */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 space-y-4 text-sm"
-      >
-        {messages.map((msg) => (
-          <ChatMessage
-            key={msg.id}
-            message={msg}
-            isEnglish={effectiveIsEnglish}
-            onCitationClick={(citation) => setActiveCitation(citation)}
-            onFollowUpClick={(question) => handleSendMessage(question)}
-            onEscalate={() => handleEscalateToExpert(msg.id)}
-            onStreamComplete={() => handleStreamComplete(msg.id)}
-          />
-        ))}
-
-        {isLoading && <LoadingProcessState isEnglish={effectiveIsEnglish} />}
-
-        {/* Starter Prompts (shown only at start) */}
-        {messages.length === 1 && !isLoading && (
-          <div className="pt-2 pb-4">
-            <span className="block text-xs font-semibold text-muted-foreground mb-2">
-              {effectiveIsEnglish ? "Common Practice Topics:" : "Topik Konsultasi Populer:"}
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {starters.map((item, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleSendMessage(item.prompt)}
-                  className="text-left p-3 rounded-lg bg-card hover:bg-muted/70 border border-border hover:border-amber-400/60 transition-all cursor-pointer group shadow-2xs"
-                >
-                  <div className="flex items-center justify-between text-xs font-semibold text-primary dark:text-amber-400 mb-1">
-                    <span>{item.topic}</span>
-                    <ArrowRight className="size-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                    {item.prompt}
-                  </p>
-                </button>
-              ))}
-            </div>
+      <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-4 text-sm sm:px-6">
+        {isSessionLoading ? (
+          <div className="flex min-h-40 items-center justify-center gap-2 text-xs text-muted-foreground">
+            <Loader2 className="size-4 animate-spin" />
+            {effectiveIsEnglish ? "Opening your secure assistant session…" : "Membuka sesi asisten yang aman…"}
           </div>
+        ) : (
+          <>
+            {messages.map((message) => (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                isEnglish={effectiveIsEnglish}
+                onCitationClick={setActiveCitation}
+                onFollowUpClick={handleSendMessage}
+                onEscalate={() => setIdentityOpen(true)}
+                onStreamComplete={() => setMessages((current) => current.map((item) => item.id === message.id ? { ...item, isStreaming: false } : item))}
+              />
+            ))}
+            {isLoading && <LoadingProcessState isEnglish={effectiveIsEnglish} />}
+            {messages.length === 1 && !isLoading && session && (
+              <div className="pt-2 pb-4">
+                <span className="mb-2 block text-xs font-semibold text-muted-foreground">
+                  {effectiveIsEnglish ? "Common topics:" : "Topik umum:"}
+                </span>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  {starters.map((item) => (
+                    <button key={item.topic} type="button" onClick={() => handleSendMessage(item.prompt)} className="group rounded-lg border border-border bg-card p-3 text-left transition-colors hover:bg-muted/70">
+                      <div className="mb-1 flex items-center justify-between text-xs font-semibold text-primary dark:text-amber-400">
+                        <span>{item.topic}</span><ArrowRight className="size-3 opacity-0 group-hover:opacity-100" />
+                      </div>
+                      <p className="text-xs leading-relaxed text-muted-foreground">{item.preview}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {identityOpen && (
+              <EmailVerificationPanel
+                purpose="claim"
+                isEnglish={effectiveIsEnglish}
+                onVerified={handleVerified}
+                onCancel={() => setIdentityOpen(false)}
+              />
+            )}
+            {error && (
+              <div className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive">
+                <AlertCircle className="mt-0.5 size-4 shrink-0" />
+                <div>
+                  <p>{error}</p>
+                  {!session && (
+                    <button
+                      type="button"
+                      className="mt-2 underline"
+                      onClick={() => {
+                        setIsSessionLoading(true);
+                        loadSession(true)
+                          .catch((cause) => setError(cause instanceof Error ? cause.message : String(cause)))
+                          .finally(() => setIsSessionLoading(false));
+                      }}
+                    >
+                      {effectiveIsEnglish ? "Try again" : "Coba lagi"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
-
-      {/* Prompt Bar Footer */}
-      <div className="p-3 sm:p-4 bg-background/95 border-t border-border">
+      <div className="border-t border-border bg-background/95 p-3 sm:p-4">
         <PromptBar
           onSend={handleSendMessage}
           isLoading={isLoading}
           isEnglish={effectiveIsEnglish}
+          disabled={!session || isSessionLoading || identityOpen}
         />
       </div>
-
-      {/* Statutory Citation Modal */}
-      <CitationModal
-        citation={activeCitation}
-        onClose={() => setActiveCitation(null)}
-      />
+      <CitationModal citation={activeCitation} onClose={() => setActiveCitation(null)} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Globe, ChevronDown, Check } from "lucide-react";
 import * as m from "@/paraglide/messages.js";
 import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
@@ -104,6 +105,9 @@ export function Navbar() {
 
         {/* Right Action & KPMG-Style Language Switcher */}
         <div className="flex items-center gap-4 sm:gap-6">
+          <Link href="/consultations" className="hidden sm:inline text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+            My Consultations
+          </Link>
           {/* Language Dropdown */}
           <div className="relative" ref={menuRef}>
             <button

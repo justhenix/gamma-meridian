@@ -7,24 +7,56 @@ import { ArrowLeft, Globe, ChevronDown, Check, LogOut, UserCheck } from "lucide-
 import * as m from "@/paraglide/messages.js";
 import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
 import { Button } from "@/components/ui/button";
-import { getClientSession, clearClientSession, PRESET_USERS, type AuthUser } from "@/lib/auth/session";
+
+interface StaffSessionUser {
+  displayName: string;
+  email: string;
+  role: "consultant" | "admin";
+}
+
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "MS";
+}
 
 export function StaffNavbar() {
   const router = useRouter();
   const { locale: currentLocale, setLocale: changeLocale } = useAppLocale();
   const t = useLocalizedMessage();
 
-  const [currentUser] = React.useState<AuthUser>(() => {
-    if (typeof window !== "undefined") {
-      return getClientSession() ?? PRESET_USERS.partner;
-    }
-    return PRESET_USERS.partner;
-  });
+  const [currentUser, setCurrentUser] = React.useState<StaffSessionUser | null>(null);
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
   const [userMenuOpen, setUserMenuOpen] = React.useState(false);
 
   const menuRef = React.useRef<HTMLDivElement>(null);
   const userMenuRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/session", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("unauthenticated");
+        return response.json() as Promise<{ user: StaffSessionUser }>;
+      })
+      .then(({ user }) => {
+        if (cancelled) return;
+        if (user.role !== "consultant" && user.role !== "admin") {
+          router.replace("/staff/login?redirect=/staff/helpdesk");
+          return;
+        }
+        setCurrentUser(user);
+      })
+      .catch(() => {
+        if (!cancelled) router.replace("/staff/login?redirect=/staff/helpdesk");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
 
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -54,9 +86,10 @@ export function StaffNavbar() {
     setLangMenuOpen(false);
   };
 
-  const handleSignOut = () => {
-    clearClientSession();
-    router.push("/login");
+  const handleSignOut = async () => {
+    await fetch("/api/auth/session", { method: "DELETE" }).catch(() => undefined);
+    router.push("/staff/login?redirect=/staff/helpdesk");
+    router.refresh();
   };
 
   return (
@@ -64,7 +97,7 @@ export function StaffNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         {/* Left branding */}
         <div className="flex items-center gap-4">
-          <Link href="/helpdesk" className="flex items-center gap-2.5 group">
+          <Link href="/staff/helpdesk" className="flex items-center gap-2.5 group">
             <span className="font-heading font-bold text-base tracking-tight text-foreground">
               {t(m.helpdesk_title)}
             </span>
@@ -124,14 +157,14 @@ export function StaffNavbar() {
               className="flex items-center gap-2.5 text-xs text-muted-foreground hover:text-foreground rounded-lg p-1.5 hover:bg-muted/60 transition-all cursor-pointer border border-transparent hover:border-border/60"
             >
               <div className="size-7 rounded-full bg-slate-800 text-amber-400 flex items-center justify-center font-bold text-xs border border-amber-400/30">
-                {currentUser.avatarInitials}
+                {initials(currentUser?.displayName ?? "Meridian Staff")}
               </div>
               <div className="hidden sm:block text-left">
                 <span className="font-medium text-foreground block leading-tight truncate max-w-[130px]">
-                  {currentUser.name}
+                  {currentUser?.displayName ?? "Meridian Staff"}
                 </span>
                 <span className="text-xs text-muted-foreground block truncate max-w-[130px]">
-                  {currentUser.roleTitle}
+                  {currentUser?.role === "admin" ? "Meridian Administrator" : "Meridian Tax Consultant"}
                 </span>
               </div>
               <ChevronDown className="size-3 text-muted-foreground hidden sm:block" />
@@ -141,16 +174,16 @@ export function StaffNavbar() {
               <div className="absolute right-0 mt-1.5 w-56 rounded-lg bg-card border border-border shadow-xl py-1.5 z-50 text-xs animate-in fade-in-0 zoom-in-95 duration-100 divide-y divide-border/60">
                 <div className="px-3.5 py-2">
                   <span className="font-semibold text-foreground block truncate">
-                    {currentUser.name}
+                    {currentUser?.displayName ?? "Meridian Staff"}
                   </span>
                   <span className="text-xs text-muted-foreground block truncate mt-0.5">
-                    {currentUser.email}
+                    {currentUser?.email ?? ""}
                   </span>
                 </div>
 
                 <div className="py-1">
                   <Link
-                    href="/login"
+                    href="/staff/login"
                     onClick={() => setUserMenuOpen(false)}
                     className="w-full flex items-center gap-2 px-3.5 py-2 text-left text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
                   >

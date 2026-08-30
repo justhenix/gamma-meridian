@@ -11,7 +11,7 @@ import { CitationModal } from "@/components/assistant/citation-modal";
 
 interface CaseThreadProps {
   messages: ChatMessage[];
-  onSendMessage: (body: string) => void;
+  onSendMessage: (body: string) => void | Promise<void>;
   isLeftOpen?: boolean;
   onToggleLeft?: () => void;
   isRightOpen?: boolean;
@@ -28,6 +28,7 @@ export function CaseThread({
 }: CaseThreadProps) {
   const t = useLocalizedMessage();
   const [replyText, setReplyText] = React.useState("");
+  const [isSending, setIsSending] = React.useState(false);
   const [activeCitation, setActiveCitation] = React.useState<Citation | null>(null);
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
@@ -40,11 +41,17 @@ export function CaseThread({
     }
   }, [messages]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!replyText.trim()) return;
-    onSendMessage(replyText.trim());
-    setReplyText("");
+    const body = replyText.trim();
+    if (!body || isSending) return;
+    setIsSending(true);
+    try {
+      await onSendMessage(body);
+      setReplyText("");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const renderMessageContent = (text: string, citations?: Citation[]) => {
@@ -234,7 +241,7 @@ export function CaseThread({
             type="submit"
             size="sm"
             variant="accent"
-            disabled={!replyText.trim()}
+            disabled={!replyText.trim() || isSending}
             className="gap-1.5 cursor-pointer font-semibold text-xs shadow-xs"
           >
             <Send className="size-3.5" />

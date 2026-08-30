@@ -25,6 +25,17 @@ export function ChatMessage({
 }: ChatMessageProps) {
   const isClient = message.sender === "client";
   const isConsultant = message.sender === "consultant";
+  const isSystem = message.sender === "system";
+
+  if (isSystem) {
+    return (
+      <div className="my-3 flex justify-center">
+        <span className="rounded-full border border-border bg-muted/60 px-3 py-1 text-xs text-muted-foreground">
+          {message.body}
+        </span>
+      </div>
+    );
+  }
 
   if (isClient) {
     return (

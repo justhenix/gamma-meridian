@@ -200,8 +200,8 @@
   "story3_title": "Cross-Border M&A Tax Due Diligence & Form DGT Treaty Exemption",
   "story3_desc": "Identified historical withholding tax exposures in target entity and structured holding entity beneficial ownership documentation to secure 5% treaty rate.",
   "story3_result": "Secured tax indemnity escrow and validated tax treaty eligibility",
-  "login_title": "Meridian Identity Gateway",
-  "login_subtitle": "Secure authentication for partners, licensed tax consultants, and corporate clients.",
+  "login_title": "Client Consultation Access",
+  "login_subtitle": "Securely access consultations linked to your verified corporate email.",
   "login_tab_staff": "Advisory Staff & Partners",
   "login_tab_client": "Corporate Client Portal",
   "login_sso_button": "Single Sign-On (Azure AD / Okta)",
@@ -214,6 +214,10 @@
   "login_client_desc": "Enter your confidential engagement reference and registered email to view active case proceedings.",
   "login_back_home": "Return to Meridian Advisory",
   "login_security_notice": "Protected by 256-bit TLS encryption, strict role-based access control, and Indonesian PDP Law compliance.",
+  "staff_login_title": "Meridian Staff Access",
+  "staff_login_subtitle": "Internal authentication for Meridian partners and authorized tax consultants.",
+  "staff_login_workspace_label": "Advisory Staff Workspace",
+  "staff_login_security_notice": "Restricted to authorized Meridian personnel. Staff sessions are role-scoped and audited.",
   "helpdesk_logout": "Sign Out",
   "helpdesk_switch_account": "Switch Account"
 }

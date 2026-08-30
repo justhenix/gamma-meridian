@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 interface CaseHeaderProps {
   caseData: HelpdeskCase;
   currentStatus: HelpdeskCaseStatus;
-  onStatusChange: (newStatus: HelpdeskCaseStatus) => void;
+  onStatusChange: (newStatus: "waiting_for_client" | "resolved") => void | Promise<void>;
   isLeftOpen: boolean;
   onToggleLeft: () => void;
 }
@@ -26,20 +26,26 @@ export function CaseHeader({
   const t = useLocalizedMessage();
   const [savedSuccess, setSavedSuccess] = React.useState(false);
 
-  const handleSelectStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const [isUpdating, setIsUpdating] = React.useState(false);
+
+  const handleSelectStatus = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value as HelpdeskCaseStatus;
-    onStatusChange(val);
-    setTimeout(() => {
+    if (val !== "waiting_for_client" && val !== "resolved") return;
+    setIsUpdating(true);
+    try {
+      await onStatusChange(val);
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 2000);
-    }, 200);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
     <div className="bg-card border-b border-border py-2.5 px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 select-none">
       {/* Left Back, Toggle & Title */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-        <Link href="/helpdesk">
+        <Link href="/staff/helpdesk">
           <Button
             variant="ghost"
             size="sm"
@@ -89,14 +95,21 @@ export function CaseHeader({
             id="case-status-select"
             value={currentStatus}
             onChange={handleSelectStatus}
+            disabled={isUpdating || currentStatus === "resolved" || currentStatus === "closed"}
             className="h-8 pl-2.5 pr-8 text-xs font-semibold rounded-md bg-muted/70 border border-border text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
           >
-            <option value="ai_handling">{t(m.helpdesk_status_ai_handling)}</option>
-            <option value="needs_expert">{t(m.helpdesk_status_needs_expert)}</option>
-            <option value="consultant_working">{t(m.helpdesk_status_consultant_working)}</option>
+            {currentStatus !== "waiting_for_client" && currentStatus !== "resolved" && currentStatus !== "closed" && (
+              <option value={currentStatus} disabled>
+                {currentStatus === "needs_expert"
+                  ? t(m.helpdesk_status_needs_expert)
+                  : currentStatus === "consultant_working"
+                    ? t(m.helpdesk_status_consultant_working)
+                    : t(m.helpdesk_status_ai_handling)}
+              </option>
+            )}
             <option value="waiting_for_client">{t(m.helpdesk_status_waiting_for_client)}</option>
             <option value="resolved">{t(m.helpdesk_status_resolved)}</option>
-            <option value="closed">{t(m.helpdesk_status_closed)}</option>
+            {currentStatus === "closed" && <option value="closed">{t(m.helpdesk_status_closed)}</option>}
           </select>
         </div>
 

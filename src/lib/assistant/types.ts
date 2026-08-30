@@ -23,6 +23,18 @@ export type HelpdeskCaseStatus =
 
 export type RiskLevel = "low" | "medium" | "high" | "unknown";
 
+export interface StaffHelpdeskListItem {
+  caseId: string;
+  caseReference: string;
+  clientName: string;
+  title: string;
+  status: HelpdeskCaseStatus;
+  riskLevel: RiskLevel;
+  updatedAt: string;
+  escalationSeverity: "low" | "medium" | "high" | "critical" | null;
+  assignedToCurrentStaff: boolean;
+}
+
 export interface Citation {
   id: string;
   code: string; // e.g. "PMK 172/2023 · Pasal 4"
@@ -37,7 +49,7 @@ export interface Citation {
 
 export interface ChatMessage {
   id: string;
-  sender: "client" | "ai" | "consultant";
+  sender: "client" | "ai" | "consultant" | "system";
   authorName?: string;
   authorTitle?: string;
   body: string;
