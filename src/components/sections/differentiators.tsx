@@ -2,20 +2,22 @@
 
 import * as React from "react";
 import * as m from "@/paraglide/messages.js";
+import { useLocalizedMessage } from "@/components/locale-provider";
 
 export function Differentiators() {
+  const t = useLocalizedMessage();
   const items = [
     {
-      title: m.diff1_title(),
-      desc: m.diff1_desc(),
+      title: t(m.diff1_title),
+      desc: t(m.diff1_desc),
     },
     {
-      title: m.diff2_title(),
-      desc: m.diff2_desc(),
+      title: t(m.diff2_title),
+      desc: t(m.diff2_desc),
     },
     {
-      title: m.diff3_title(),
-      desc: m.diff3_desc(),
+      title: t(m.diff3_title),
+      desc: t(m.diff3_desc),
     },
   ];
 
@@ -25,10 +27,10 @@ export function Differentiators() {
         {/* Section Header */}
         <div className="max-w-2xl space-y-3">
           <h2 suppressHydrationWarning className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-foreground tracking-tight text-balance">
-            {m.diff_section_title()}
+            {t(m.diff_section_title)}
           </h2>
           <p suppressHydrationWarning className="text-base text-muted-foreground leading-relaxed text-pretty font-normal">
-            {m.diff_section_subtitle()}
+            {t(m.diff_section_subtitle)}
           </p>
         </div>
 

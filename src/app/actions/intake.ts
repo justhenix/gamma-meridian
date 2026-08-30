@@ -1,7 +1,5 @@
 "use server";
 
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { z } from "zod";
 
 import type { Actor } from "@/server/auth/actor";
@@ -29,36 +27,11 @@ export interface ConsultationActionResult {
   error?: string;
 }
 
-let isDbInitialized = false;
-
-async function ensureDatabaseReady() {
-  if (isDbInitialized) return;
-  const db = getDatabaseClient();
-
-  // If running with local file SQLite in dev mode, run initial migration if users table does not exist
-  try {
-    const check = await db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
-    if (check.rows.length === 0) {
-      const migrationSql = await readFile(
-        resolve(process.cwd(), "db/migrations/0001_human_case_workflow.sql"),
-        "utf8",
-      );
-      await db.executeMultiple(migrationSql);
-    }
-    isDbInitialized = true;
-  } catch {
-    // If not SQLite / remote Turso already migrated, continue
-    isDbInitialized = true;
-  }
-}
-
 export async function submitConsultationAction(
   input: ConsultationFormInput,
 ): Promise<ConsultationActionResult> {
   try {
     const validated = consultationFormSchema.parse(input);
-
-    await ensureDatabaseReady();
 
     const database = getDatabaseClient();
     const guestTokens = getGuestTokenService();

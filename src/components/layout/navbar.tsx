@@ -3,11 +3,12 @@
 import * as React from "react";
 import { Globe, ChevronDown, Check } from "lucide-react";
 import * as m from "@/paraglide/messages.js";
-import { getLocale, setLocale, type Locale } from "@/paraglide/runtime.js";
+import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
-  const [currentLocale, setCurrentLocale] = React.useState<Locale>(() => getLocale());
+  const { locale: currentLocale, setLocale: changeLocale } = useAppLocale();
+  const t = useLocalizedMessage();
   const [scrolled, setScrolled] = React.useState(false);
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
@@ -37,9 +38,8 @@ export function Navbar() {
     };
   }, []);
 
-  const handleSelectLocale = (target: Locale) => {
-    setLocale(target);
-    setCurrentLocale(target);
+  const handleSelectLocale = (target: "id" | "en") => {
+    changeLocale(target);
     setLangMenuOpen(false);
   };
 
@@ -56,35 +56,49 @@ export function Navbar() {
         {/* Brand Wordmark */}
         <a href="#" className="flex flex-col group">
           <span suppressHydrationWarning className="font-heading font-bold text-lg tracking-tight text-foreground leading-none">
-            {m.brand_name()}
+            {t(m.brand_name)}
           </span>
-          <span suppressHydrationWarning className="text-[13px] font-medium text-muted-foreground mt-0.5">
-            {m.brand_tagline()}
+          <span suppressHydrationWarning className="text-xs font-medium text-muted-foreground mt-0.5">
+            {t(m.brand_tagline)}
           </span>
         </a>
 
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8">
+        {/* Client-Facing Navigation Links: Our Insights | Services | Industries | Client Stories | About Us */}
+        <nav className="hidden md:flex items-center gap-7">
+          <a
+            href="#insights"
+            suppressHydrationWarning
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t(m.nav_insights)}
+          </a>
           <a
             href="#practice-areas"
             suppressHydrationWarning
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            {m.nav_practice_areas()}
+            {t(m.nav_services)}
+          </a>
+          <a
+            href="#industries"
+            suppressHydrationWarning
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t(m.nav_industries)}
+          </a>
+          <a
+            href="#client-stories"
+            suppressHydrationWarning
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t(m.nav_client_stories)}
           </a>
           <a
             href="#why-meridian"
             suppressHydrationWarning
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            {m.nav_differentiators()}
-          </a>
-          <a
-            href="#consultation"
-            suppressHydrationWarning
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {m.nav_consultation_link()}
+            {t(m.nav_about_us)}
           </a>
         </nav>
 
@@ -98,14 +112,14 @@ export function Navbar() {
               onClick={() => setLangMenuOpen((prev) => !prev)}
               aria-expanded={langMenuOpen}
               aria-haspopup="true"
-              className="flex items-center gap-1.5 py-1 text-sm font-medium text-slate-700 hover:text-blue-700 dark:text-slate-200 dark:hover:text-blue-400 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 py-1 text-xs font-medium text-slate-700 hover:text-blue-700 dark:text-slate-200 dark:hover:text-blue-400 transition-colors cursor-pointer"
             >
-              <Globe className="size-4 text-blue-700 dark:text-blue-400 shrink-0" />
+              <Globe className="size-3.5 text-blue-700 dark:text-blue-400 shrink-0" />
               <span>
                 {currentLocale === "id" ? "Bahasa Indonesia" : "English"}
               </span>
               <ChevronDown
-                className={`size-3.5 text-blue-700 dark:text-blue-400 transition-transform duration-200 ${
+                className={`size-3 text-blue-700 dark:text-blue-400 transition-transform duration-200 ${
                   langMenuOpen ? "rotate-180" : ""
                 }`}
               />
@@ -115,13 +129,13 @@ export function Navbar() {
             {langMenuOpen && (
               <div
                 role="menu"
-                className="absolute right-0 mt-2 w-44 rounded-md bg-card border border-border shadow-md py-1 z-50 text-sm animate-in fade-in-0 zoom-in-95 duration-100"
+                className="absolute right-0 mt-2 w-44 rounded-md bg-card border border-border shadow-md py-1 z-50 text-xs animate-in fade-in-0 zoom-in-95 duration-100"
               >
                 <button
                   type="button"
                   role="menuitem"
                   onClick={() => handleSelectLocale("en")}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-left text-[13px] hover:bg-muted transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3 py-2 text-left text-xs hover:bg-muted transition-colors cursor-pointer ${
                     currentLocale === "en"
                       ? "text-blue-700 dark:text-blue-400 font-semibold bg-muted/50"
                       : "text-foreground font-normal"
@@ -135,7 +149,7 @@ export function Navbar() {
                   type="button"
                   role="menuitem"
                   onClick={() => handleSelectLocale("id")}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-left text-[13px] hover:bg-muted transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3 py-2 text-left text-xs hover:bg-muted transition-colors cursor-pointer ${
                     currentLocale === "id"
                       ? "text-blue-700 dark:text-blue-400 font-semibold bg-muted/50"
                       : "text-foreground font-normal"
@@ -150,8 +164,8 @@ export function Navbar() {
 
           {/* Primary Consultation CTA */}
           <a href="#consultation" className="hidden sm:inline-flex">
-            <Button variant="accent" size="sm" className="cursor-pointer font-semibold text-[13px]" suppressHydrationWarning>
-              {m.nav_consultation()}
+            <Button variant="accent" size="sm" className="cursor-pointer font-semibold text-xs" suppressHydrationWarning>
+              {t(m.nav_consultation)}
             </Button>
           </a>
         </div>

@@ -2,13 +2,15 @@
 
 import * as React from "react";
 import * as m from "@/paraglide/messages.js";
-import { getLocale } from "@/paraglide/runtime.js";
+import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { submitConsultationAction, type ConsultationActionResult } from "@/app/actions/intake";
 
 export function ConsultationForm() {
+  const { locale } = useAppLocale();
+  const t = useLocalizedMessage();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [result, setResult] = React.useState<ConsultationActionResult | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
@@ -37,19 +39,18 @@ export function ConsultationForm() {
     setErrorMessage(null);
 
     try {
-      const currentLocale = (getLocale() as "id" | "en") || "id";
       const res = await submitConsultationAction({
         ...formData,
-        locale: currentLocale,
+        locale,
       });
 
       if (res.success) {
         setResult(res);
       } else {
-        setErrorMessage(res.error || m.form_error_generic());
+        setErrorMessage(res.error || t(m.form_error_generic));
       }
     } catch {
-      setErrorMessage(m.form_error_generic());
+      setErrorMessage(t(m.form_error_generic));
     } finally {
       setIsSubmitting(false);
     }
@@ -74,10 +75,10 @@ export function ConsultationForm() {
         {/* Header */}
         <div className="space-y-3">
           <h2 suppressHydrationWarning className="font-heading font-bold text-2xl sm:text-3xl text-foreground tracking-tight text-balance">
-            {m.form_title()}
+            {t(m.form_title)}
           </h2>
           <p suppressHydrationWarning className="text-base text-muted-foreground leading-relaxed text-pretty font-normal">
-            {m.form_subtitle()}
+            {t(m.form_subtitle)}
           </p>
         </div>
 
@@ -89,10 +90,10 @@ export function ConsultationForm() {
             </div>
             <div className="space-y-2">
               <h3 suppressHydrationWarning className="font-heading font-bold text-xl text-foreground text-balance">
-                {m.form_success_title()}
+                {t(m.form_success_title)}
               </h3>
               <p suppressHydrationWarning className="text-[13px] text-muted-foreground text-pretty">
-                {m.form_success_message()}
+                {t(m.form_success_message)}
               </p>
               <div className="p-3 bg-muted border border-border rounded-md font-sans text-base font-bold tracking-wider text-foreground max-w-xs mx-auto">
                 {result.caseReference}
@@ -100,12 +101,12 @@ export function ConsultationForm() {
             </div>
 
             <p suppressHydrationWarning className="text-[13px] text-muted-foreground max-w-md mx-auto leading-relaxed text-pretty">
-              {m.form_success_sla()}
+              {t(m.form_success_sla)}
             </p>
 
             <div className="pt-2">
               <Button variant="outline" size="sm" onClick={handleReset} className="cursor-pointer text-[13px]" suppressHydrationWarning>
-                {m.form_success_new()}
+                {t(m.form_success_new)}
               </Button>
             </div>
           </div>
@@ -122,7 +123,7 @@ export function ConsultationForm() {
               {/* Full Name & Title */}
               <div className="space-y-2">
                 <label htmlFor="fullName" suppressHydrationWarning className="text-[13px] font-semibold text-foreground">
-                  {m.form_label_name()} *
+                  {t(m.form_label_name)} *
                 </label>
                 <Input
                   id="fullName"
@@ -130,7 +131,7 @@ export function ConsultationForm() {
                   required
                   value={formData.fullName}
                   onChange={handleChange}
-                  placeholder={m.form_placeholder_name()}
+                  placeholder={t(m.form_placeholder_name)}
                   disabled={isSubmitting}
                 />
               </div>
@@ -138,7 +139,7 @@ export function ConsultationForm() {
               {/* Work Email */}
               <div className="space-y-2">
                 <label htmlFor="workEmail" suppressHydrationWarning className="text-[13px] font-semibold text-foreground">
-                  {m.form_label_email()} *
+                  {t(m.form_label_email)} *
                 </label>
                 <Input
                   id="workEmail"
@@ -147,7 +148,7 @@ export function ConsultationForm() {
                   required
                   value={formData.workEmail}
                   onChange={handleChange}
-                  placeholder={m.form_placeholder_email()}
+                  placeholder={t(m.form_placeholder_email)}
                   disabled={isSubmitting}
                 />
               </div>
@@ -155,7 +156,7 @@ export function ConsultationForm() {
               {/* Company Name */}
               <div className="space-y-2">
                 <label htmlFor="companyName" suppressHydrationWarning className="text-[13px] font-semibold text-foreground">
-                  {m.form_label_company()} *
+                  {t(m.form_label_company)} *
                 </label>
                 <Input
                   id="companyName"
@@ -163,7 +164,7 @@ export function ConsultationForm() {
                   required
                   value={formData.companyName}
                   onChange={handleChange}
-                  placeholder={m.form_placeholder_company()}
+                  placeholder={t(m.form_placeholder_company)}
                   disabled={isSubmitting}
                 />
               </div>
@@ -171,7 +172,7 @@ export function ConsultationForm() {
               {/* Primary Jurisdiction */}
               <div className="space-y-2">
                 <label htmlFor="primaryJurisdiction" suppressHydrationWarning className="text-[13px] font-semibold text-foreground">
-                  {m.form_label_jurisdiction()} *
+                  {t(m.form_label_jurisdiction)} *
                 </label>
                 <Input
                   id="primaryJurisdiction"
@@ -179,7 +180,7 @@ export function ConsultationForm() {
                   required
                   value={formData.primaryJurisdiction}
                   onChange={handleChange}
-                  placeholder={m.form_placeholder_jurisdiction()}
+                  placeholder={t(m.form_placeholder_jurisdiction)}
                   disabled={isSubmitting}
                 />
               </div>
@@ -188,7 +189,7 @@ export function ConsultationForm() {
             {/* Practice Area Selector */}
             <div className="space-y-2">
               <label htmlFor="practiceArea" suppressHydrationWarning className="text-[13px] font-semibold text-foreground">
-                {m.form_label_practice()} *
+                {t(m.form_label_practice)} *
               </label>
               <select
                 id="practiceArea"
@@ -199,18 +200,18 @@ export function ConsultationForm() {
                 disabled={isSubmitting}
                 className="flex h-9 w-full rounded-md border border-input bg-card px-3 py-1 text-sm transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring text-foreground"
               >
-                <option suppressHydrationWarning value="Corporate Tax Compliance & CIT">{m.form_practice_opt1()}</option>
-                <option suppressHydrationWarning value="Transfer Pricing Documentation (PMK-172)">{m.form_practice_opt2()}</option>
-                <option suppressHydrationWarning value="Tax Dispute / SP2DK / Tax Court">{m.form_practice_opt3()}</option>
-                <option suppressHydrationWarning value="Cross-Border Tax / M&A Due Diligence">{m.form_practice_opt4()}</option>
-                <option suppressHydrationWarning value="Other Strategic Advisory">{m.form_practice_opt5()}</option>
+                <option suppressHydrationWarning value="Corporate Tax Compliance & CIT">{t(m.form_practice_opt1)}</option>
+                <option suppressHydrationWarning value="Transfer Pricing Documentation (PMK-172)">{t(m.form_practice_opt2)}</option>
+                <option suppressHydrationWarning value="Tax Dispute / SP2DK / Tax Court">{t(m.form_practice_opt3)}</option>
+                <option suppressHydrationWarning value="Cross-Border Tax / M&A Due Diligence">{t(m.form_practice_opt4)}</option>
+                <option suppressHydrationWarning value="Other Strategic Advisory">{t(m.form_practice_opt5)}</option>
               </select>
             </div>
 
             {/* Inquiry Summary */}
             <div className="space-y-2">
               <label htmlFor="inquirySummary" suppressHydrationWarning className="text-[13px] font-semibold text-foreground">
-                {m.form_label_summary()} *
+                {t(m.form_label_summary)} *
               </label>
               <Textarea
                 id="inquirySummary"
@@ -219,14 +220,14 @@ export function ConsultationForm() {
                 rows={4}
                 value={formData.inquirySummary}
                 onChange={handleChange}
-                placeholder={m.form_placeholder_summary()}
+                placeholder={t(m.form_placeholder_summary)}
                 disabled={isSubmitting}
               />
             </div>
 
             {/* Institutional Confidentiality Notice */}
             <p suppressHydrationWarning className="text-[13px] text-muted-foreground leading-relaxed text-pretty">
-              {m.form_nda_note()}
+              {t(m.form_nda_note)}
             </p>
 
             {/* Form Submission CTA */}
@@ -239,7 +240,7 @@ export function ConsultationForm() {
                 className="w-full sm:w-auto h-12 px-8 text-sm font-semibold cursor-pointer"
                 suppressHydrationWarning
               >
-                {isSubmitting ? m.form_submitting() : m.form_submit_button()}
+                {isSubmitting ? t(m.form_submitting) : t(m.form_submit_button)}
               </Button>
             </div>
           </form>

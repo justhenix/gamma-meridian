@@ -3,9 +3,12 @@
 import * as React from "react";
 import Image from "next/image";
 import * as m from "@/paraglide/messages.js";
+import { useLocalizedMessage } from "@/components/locale-provider";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
+  const t = useLocalizedMessage();
+
   return (
     <section className="relative w-full overflow-hidden bg-[#0b0f17] text-white min-h-[500px] sm:min-h-[540px] lg:min-h-[600px] flex items-center">
       {/* Full-bleed Background Image Layer */}
@@ -43,9 +46,9 @@ export function Hero() {
         <div className="max-w-xl lg:max-w-2xl space-y-6 md:space-y-8">
           {/* Main Display Headline */}
           <h1 className="font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-[46px] tracking-tight text-white leading-[1.15] text-balance">
-            <span suppressHydrationWarning>{m.hero_title_line1()}</span>{" "}
+            <span suppressHydrationWarning>{t(m.hero_title_line1)}</span>{" "}
             <span suppressHydrationWarning className="text-white">
-              {m.hero_title_line2()}
+              {t(m.hero_title_line2)}
             </span>
           </h1>
 
@@ -54,7 +57,7 @@ export function Hero() {
             suppressHydrationWarning
             className="text-base sm:text-lg text-slate-200/90 leading-relaxed font-normal max-w-lg text-pretty"
           >
-            {m.hero_lead()}
+            {t(m.hero_lead)}
           </p>
 
           {/* Action CTAs */}
@@ -66,7 +69,7 @@ export function Hero() {
                 className="w-full sm:w-auto h-12 px-8 text-sm font-semibold cursor-pointer shadow-sm transition-all"
                 suppressHydrationWarning
               >
-                {m.hero_cta_primary()}
+                {t(m.hero_cta_primary)}
               </Button>
             </a>
             <a href="#practice-areas">
@@ -76,7 +79,7 @@ export function Hero() {
                 className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/25 hover:border-white/40 h-12 px-7 text-sm font-medium cursor-pointer backdrop-blur-xs transition-all"
                 suppressHydrationWarning
               >
-                {m.hero_cta_secondary()}
+                {t(m.hero_cta_secondary)}
               </Button>
             </a>
           </div>
@@ -85,4 +88,3 @@ export function Hero() {
     </section>
   );
 }
-

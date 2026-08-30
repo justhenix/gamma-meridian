@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { headers } from "next/headers";
+import { LocaleProvider } from "@/components/locale-provider";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -19,18 +21,24 @@ export const metadata: Metadata = {
   description: "Elite tax consulting and financial advisory firm.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const requestHeaders = await headers();
+  const locale = requestHeaders.get("x-language-tag") === "id" ? "id" : "en";
+
   return (
     <html
-      lang="en"
-      suppressHydrationWarning
+      lang={locale}
       className={`${inter.variable} ${plusJakartaSans.variable} font-sans h-full antialiased`}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col bg-background text-foreground">{children}</body>
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        <LocaleProvider initialLocale={locale}>
+          {children}
+        </LocaleProvider>
+      </body>
     </html>
   );
 }

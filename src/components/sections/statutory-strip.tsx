@@ -2,24 +2,26 @@
 
 import * as React from "react";
 import * as m from "@/paraglide/messages.js";
+import { useLocalizedMessage } from "@/components/locale-provider";
 
 export function StatutoryStrip() {
+  const t = useLocalizedMessage();
   const items = [
     {
-      title: m.stat_p1_title(),
-      desc: m.stat_p1_desc(),
+      title: t(m.stat_p1_title),
+      desc: t(m.stat_p1_desc),
     },
     {
-      title: m.stat_p2_title(),
-      desc: m.stat_p2_desc(),
+      title: t(m.stat_p2_title),
+      desc: t(m.stat_p2_desc),
     },
     {
-      title: m.stat_p3_title(),
-      desc: m.stat_p3_desc(),
+      title: t(m.stat_p3_title),
+      desc: t(m.stat_p3_desc),
     },
     {
-      title: m.stat_p4_title(),
-      desc: m.stat_p4_desc(),
+      title: t(m.stat_p4_title),
+      desc: t(m.stat_p4_desc),
     },
   ];
 
