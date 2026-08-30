@@ -18,12 +18,12 @@ export function AssistantDrawer() {
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          aria-label="Open Meridian Assistant"
+          aria-label={isEnglish ? "Open Meridian Assistant" : "Buka Asisten Meridian"}
           className="flex items-center gap-2 px-3.5 py-2.5 sm:px-4 sm:py-2.5 rounded-lg bg-primary text-primary-foreground dark:bg-amber-400 dark:text-slate-950 font-semibold text-xs sm:text-sm shadow-lg border border-border/80 hover:border-amber-400/80 hover:shadow-xl active:scale-95 transition-all duration-150 cursor-pointer select-none"
         >
           <Sparkles className="size-4 text-amber-400 dark:text-slate-950 shrink-0" />
           <span className="font-heading tracking-tight">
-            {isEnglish ? "Meridian Assistant" : "Konsultasi AI Meridian"}
+            {isEnglish ? "Meridian Assistant" : "Asisten Meridian"}
           </span>
         </button>
       </div>

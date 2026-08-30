@@ -279,7 +279,7 @@ test("email verification claims the existing guest case idempotently and invalid
     setup.database,
     setup.guestTokens,
     new AuthTokenService(authSecret),
-    new DevelopmentEmailVerificationProvider(),
+    new DevelopmentEmailVerificationProvider(true),
     runtimeConfig,
   );
   const started = await auth.startVerification(setup.actor, {
@@ -296,6 +296,14 @@ test("email verification claims the existing guest case idempotently and invalid
   });
   assert.equal(first.claim?.caseId, setup.opened.caseId);
   assert.equal(first.claim?.conversationId, setup.opened.conversationId);
+
+  await assert.rejects(
+    auth.verify(anonymousActor("consumed-otp-replay"), {
+      challengeId: started.challengeId,
+      code: started.developmentCode,
+    }),
+    hasDomainError("UNAUTHENTICATED"),
+  );
 
   const userActor: Actor = {
     kind: "user",
@@ -352,7 +360,7 @@ test("returning client sees only own consultations and consultant continues the 
     setup.database,
     setup.guestTokens,
     new AuthTokenService(authSecret),
-    new DevelopmentEmailVerificationProvider(),
+    new DevelopmentEmailVerificationProvider(true),
     runtimeConfig,
   );
   const challenge = await auth.startVerification(setup.actor, {
@@ -411,3 +419,45 @@ test("returning client sees only own consultations and consultant continues the 
   assert.equal(caseRecord?.createdByUserId, verified.user.id);
   assert.ok(caseRecord?.clientAccountId);
 });
+
+test("authenticated user without consultations opens assistant and creates active consultation", async (context) => {
+  const database = await createTestDatabase(context);
+  const guestTokens = new GuestTokenService(guestSecret);
+  const user = await createUser(database, "client", "new-client");
+  const userActor = createSyntheticUserActor(user.id);
+
+  const assistant = new AssistantSessionService(database, guestTokens, runtimeConfig.safeTopics);
+  const opened = await assistant.open(userActor, { locale: "en" });
+
+  assert.ok(opened.caseId);
+  assert.ok(opened.conversationId);
+  assert.equal(opened.status, "received");
+
+  const consultations = new ConsultationsDal(database, guestTokens);
+  const detail = await consultations.get(userActor, opened.caseId);
+  assert.equal(detail.caseId, opened.caseId);
+  assert.equal(detail.conversationId, opened.conversationId);
+
+  const list = await consultations.list(userActor);
+  assert.equal(list.length, 1);
+  assert.equal(list[0]?.caseId, opened.caseId);
+});
+
+test("stale guest credential recovers cleanly when opening assistant", async (context) => {
+  const database = await createTestDatabase(context);
+  const guestTokens = new GuestTokenService(guestSecret);
+  const assistant = new AssistantSessionService(database, guestTokens, runtimeConfig.safeTopics);
+
+  const staleGuest: Actor = {
+    kind: "guest",
+    intakeSessionId: "00000000-0000-0000-0000-000000000000",
+    token: "stale-guest-token",
+    requestId: "request-stale-guest",
+  };
+
+  const recovered = await assistant.open(staleGuest, { locale: "en" });
+  assert.ok(recovered.guestToken);
+  assert.ok(recovered.caseId);
+  assert.equal(recovered.status, "received");
+});
+

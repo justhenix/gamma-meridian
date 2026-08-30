@@ -6,6 +6,7 @@ import { useAppLocale, useLocalizedMessage } from "@/components/locale-provider"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ChevronDown } from "lucide-react";
 import { submitConsultationAction, type ConsultationActionResult } from "@/app/actions/intake";
 
 export function ConsultationForm() {
@@ -191,21 +192,24 @@ export function ConsultationForm() {
               <label htmlFor="practiceArea" suppressHydrationWarning className="text-[13px] font-semibold text-foreground">
                 {t(m.form_label_practice)} *
               </label>
-              <select
-                id="practiceArea"
-                name="practiceArea"
-                suppressHydrationWarning
-                value={formData.practiceArea}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                className="flex h-9 w-full rounded-md border border-input bg-card px-3 py-1 text-sm transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring text-foreground"
-              >
-                <option suppressHydrationWarning value="Corporate Tax Compliance & CIT">{t(m.form_practice_opt1)}</option>
-                <option suppressHydrationWarning value="Transfer Pricing Documentation (PMK-172)">{t(m.form_practice_opt2)}</option>
-                <option suppressHydrationWarning value="Tax Dispute / SP2DK / Tax Court">{t(m.form_practice_opt3)}</option>
-                <option suppressHydrationWarning value="Cross-Border Tax / M&A Due Diligence">{t(m.form_practice_opt4)}</option>
-                <option suppressHydrationWarning value="Other Strategic Advisory">{t(m.form_practice_opt5)}</option>
-              </select>
+              <div className="relative">
+                <select
+                  id="practiceArea"
+                  name="practiceArea"
+                  suppressHydrationWarning
+                  value={formData.practiceArea}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="flex h-9 w-full appearance-none rounded-md border border-input bg-card pl-3 pr-10 py-1 text-sm transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring text-foreground cursor-pointer"
+                >
+                  <option suppressHydrationWarning value="Corporate Tax Compliance & CIT">{t(m.form_practice_opt1)}</option>
+                  <option suppressHydrationWarning value="Transfer Pricing Documentation (PMK-172)">{t(m.form_practice_opt2)}</option>
+                  <option suppressHydrationWarning value="Tax Dispute / SP2DK / Tax Court">{t(m.form_practice_opt3)}</option>
+                  <option suppressHydrationWarning value="Cross-Border Tax / M&A Due Diligence">{t(m.form_practice_opt4)}</option>
+                  <option suppressHydrationWarning value="Other Strategic Advisory">{t(m.form_practice_opt5)}</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              </div>
             </div>
 
             {/* Inquiry Summary */}

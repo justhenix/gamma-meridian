@@ -136,12 +136,13 @@ export class AuthService {
     ) {
       throw new DomainError("UNAUTHENTICATED", "The original guest credential is required to claim this conversation");
     }
-    if (
-      before.consumedAt !== null &&
-      actor.kind === "user" &&
-      actor.userId !== before.verifiedUserId
-    ) {
-      throw new DomainError("FORBIDDEN", "This verification belongs to another user");
+    if (before.consumedAt !== null) {
+      if (actor.kind !== "user") {
+        throw new DomainError("UNAUTHENTICATED", "Verification challenge was already used");
+      }
+      if (actor.userId !== before.verifiedUserId) {
+        throw new DomainError("FORBIDDEN", "This verification belongs to another user");
+      }
     }
 
     const verified = await withWriteTransaction(this.database, async (transaction) => {

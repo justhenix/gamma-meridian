@@ -56,7 +56,7 @@ export function AssistantHeader({
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
             <span className="font-heading font-bold text-sm sm:text-base tracking-tight text-foreground">
-              Meridian Assistant
+              {isEnglish ? "Meridian Assistant" : "Asisten Meridian"}
             </span>
             {getStateBadge()}
           </div>

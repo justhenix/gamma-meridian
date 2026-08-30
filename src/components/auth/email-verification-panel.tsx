@@ -11,6 +11,10 @@ interface EmailVerificationPanelProps {
   isEnglish?: boolean;
   onVerified: () => void | Promise<void>;
   onCancel?: () => void;
+  surface?: "card" | "plain";
+  showIntroduction?: boolean;
+  emailLabel?: string;
+  submitLabel?: string;
 }
 
 interface ApiErrorBody {
@@ -22,6 +26,10 @@ export function EmailVerificationPanel({
   isEnglish = true,
   onVerified,
   onCancel,
+  surface = "card",
+  showIntroduction = true,
+  emailLabel = "Email",
+  submitLabel,
 }: EmailVerificationPanelProps) {
   const isClaim = purpose === "claim";
   const [fullName, setFullName] = React.useState("");
@@ -57,7 +65,6 @@ export function EmailVerificationPanel({
       const result = await response.json() as { challengeId: string; developmentCode?: string };
       setChallengeId(result.challengeId);
       setDevelopmentCode(result.developmentCode ?? null);
-      if (result.developmentCode) setCode(result.developmentCode);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
     } finally {
@@ -86,51 +93,51 @@ export function EmailVerificationPanel({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5 shadow-sm">
-      <div className="flex items-start gap-3">
+    <div className={surface === "card" ? "rounded-lg border border-border bg-card p-5 shadow-sm" : "w-full"}>
+      {showIntroduction && <div className="flex items-start gap-3">
         <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
           <ShieldCheck className="size-4" />
         </div>
         <div>
-          <h3 className="font-heading text-sm font-semibold text-foreground">
+          <h3 className="font-heading text-[14px] font-semibold text-foreground">
             {isClaim
               ? (isEnglish ? "Continue securely with a Meridian expert" : "Lanjutkan dengan aman bersama konsultan Meridian")
               : (isEnglish ? "Access My Consultations" : "Akses Konsultasi Saya")}
           </h3>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
             {isClaim
               ? (isEnglish
                   ? "Verify your email so our team can continue from this conversation. You won't need to explain everything again."
                   : "Verifikasi email agar tim kami dapat melanjutkan dari percakapan ini. Anda tidak perlu menjelaskan semuanya dari awal.")
               : (isEnglish
-                  ? "Verify your email to view consultations linked to your account."
-                  : "Verifikasi email untuk melihat konsultasi yang terhubung ke akun Anda.")}
+                  ? "Enter your email to continue previous conversations with Meridian."
+                  : "Masukkan email Anda untuk melanjutkan percakapan sebelumnya dengan Meridian.")}
           </p>
         </div>
-      </div>
+      </div>}
 
       {error && (
-        <div className="mt-4 flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive">
+        <div className="mt-4 flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-[13px] text-destructive">
           <AlertCircle className="mt-0.5 size-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {!challengeId ? (
-        <form onSubmit={startVerification} className="mt-5 space-y-3">
+        <form onSubmit={startVerification} className={showIntroduction ? "mt-5 space-y-4" : "space-y-4"}>
           {isClaim && (
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">{isEnglish ? "Full name" : "Nama lengkap"}</label>
+              <label className="text-[13px] font-semibold text-foreground">{isEnglish ? "Full name" : "Nama lengkap"}</label>
               <Input value={fullName} onChange={(event) => setFullName(event.target.value)} required autoComplete="name" />
             </div>
           )}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Email</label>
-            <Input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="email" />
+            <label className="text-[13px] font-semibold text-foreground">{emailLabel}</label>
+            <Input className="h-11" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="email" />
           </div>
           {isClaim && (
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">
+              <label className="text-[13px] font-semibold text-foreground">
                 {isEnglish ? "Company name (optional)" : "Nama perusahaan (opsional)"}
               </label>
               <Input value={companyName} onChange={(event) => setCompanyName(event.target.value)} autoComplete="organization" />
@@ -138,25 +145,27 @@ export function EmailVerificationPanel({
           )}
           <div className="flex justify-end gap-2 pt-1">
             {onCancel && <Button type="button" variant="ghost" onClick={onCancel}>{isEnglish ? "Cancel" : "Batal"}</Button>}
-            <Button type="submit" variant="accent" disabled={busy}>
+            <Button type="submit" variant="accent" size="lg" disabled={busy} className={surface === "plain" ? "w-full" : undefined}>
               {busy && <Loader2 className="size-3.5 animate-spin" />}
-              {isEnglish ? "Send verification code" : "Kirim kode verifikasi"}
+              {submitLabel ?? (isClaim
+                ? (isEnglish ? "Send verification code" : "Kirim kode verifikasi")
+                : (isEnglish ? "Continue with email" : "Lanjutkan dengan email"))}
             </Button>
           </div>
         </form>
       ) : (
-        <form onSubmit={verifyCode} className="mt-5 space-y-3">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <form onSubmit={verifyCode} className={showIntroduction ? "mt-5 space-y-4" : "space-y-4"}>
+          <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
             <MailCheck className="size-4" />
             <span>{isEnglish ? `Verification code sent to ${email}.` : `Kode verifikasi dikirim ke ${email}.`}</span>
           </div>
           {developmentCode && (
-            <div className="rounded-md border border-dashed border-amber-300 bg-amber-50/60 px-3 py-2 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-              Development code: <span className="font-mono font-semibold">{developmentCode}</span>
-            </div>
+            <p className="text-[13px] text-muted-foreground">
+              Development only · OTP: <span className="font-semibold tracking-wider text-foreground">{developmentCode}</span>
+            </p>
           )}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">{isEnglish ? "6-digit code" : "Kode 6 digit"}</label>
+            <label className="text-[13px] font-semibold text-foreground">{isEnglish ? "6-digit code" : "Kode 6 digit"}</label>
             <Input
               inputMode="numeric"
               pattern="[0-9]{6}"
@@ -171,7 +180,7 @@ export function EmailVerificationPanel({
             <Button type="button" variant="ghost" disabled={busy} onClick={() => { setChallengeId(null); setCode(""); setDevelopmentCode(null); }}>
               {isEnglish ? "Change email" : "Ganti email"}
             </Button>
-            <Button type="submit" variant="accent" disabled={busy || code.length !== 6}>
+            <Button type="submit" variant="accent" size="lg" disabled={busy || code.length !== 6} className={surface === "plain" ? "flex-1" : undefined}>
               {busy && <Loader2 className="size-3.5 animate-spin" />}
               {isClaim ? (isEnglish ? "Continue to expert" : "Lanjut ke konsultan") : (isEnglish ? "Verify and continue" : "Verifikasi dan lanjutkan")}
             </Button>

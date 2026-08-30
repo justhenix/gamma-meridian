@@ -18,6 +18,30 @@ export interface EmailVerificationProvider {
   deliverCode(input: VerificationDeliveryInput): Promise<VerificationDeliveryResult>;
 }
 
+interface VerificationEnvironment {
+  NODE_ENV?: string;
+  VERCEL_ENV?: string;
+  MERIDIAN_ENABLE_DEV_OTP?: string;
+}
+
+export function canExposeDevelopmentCode(
+  env: VerificationEnvironment = process.env,
+): boolean {
+  return env.NODE_ENV === "development"
+    && !env.VERCEL_ENV
+    && env.MERIDIAN_ENABLE_DEV_OTP === "true";
+}
+
+export function toPublicVerificationResult<T extends { developmentCode?: string }>(
+  result: T,
+  env: VerificationEnvironment = process.env,
+): Omit<T, "developmentCode"> & { developmentCode?: string } {
+  if (canExposeDevelopmentCode(env)) return result;
+  const safeResult = { ...result };
+  delete safeResult.developmentCode;
+  return safeResult;
+}
+
 interface MailTransport {
   sendMail(message: {
     from: string;
@@ -56,8 +80,10 @@ export class SumoPodEmailVerificationProvider implements EmailVerificationProvid
 }
 
 export class DevelopmentEmailVerificationProvider implements EmailVerificationProvider {
+  constructor(private readonly exposeCode = canExposeDevelopmentCode()) {}
+
   async deliverCode(input: VerificationDeliveryInput): Promise<VerificationDeliveryResult> {
-    return { developmentCode: input.code };
+    return this.exposeCode ? { developmentCode: input.code } : {};
   }
 }
 

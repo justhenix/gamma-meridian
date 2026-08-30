@@ -54,7 +54,7 @@ async function createEscalatedClaimedCase(context: TestContext, label: string) {
     database,
     guestTokens,
     new AuthTokenService(authSecret),
-    new DevelopmentEmailVerificationProvider(),
+    new DevelopmentEmailVerificationProvider(true),
     runtimeConfig,
   );
   const challenge = await auth.startVerification(guestActor, {

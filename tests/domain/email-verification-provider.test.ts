@@ -61,3 +61,64 @@ test("SumoPod provider labels staff OTP email as staff sign-in", async () => {
 
   assert.match(String(sent[0]?.subject), /staff sign-in/i);
 });
+
+test("development OTP exposure is limited to explicit local development", async () => {
+  const providerModule = await import("../../src/server/auth/verification-provider");
+
+  assert.equal(
+    providerModule.canExposeDevelopmentCode({
+      NODE_ENV: "development",
+      MERIDIAN_ENABLE_DEV_OTP: "true",
+    }),
+    true,
+  );
+  assert.equal(
+    providerModule.canExposeDevelopmentCode({
+      NODE_ENV: "production",
+      MERIDIAN_ENABLE_DEV_OTP: "true",
+    }),
+    false,
+  );
+  assert.equal(
+    providerModule.canExposeDevelopmentCode({
+      NODE_ENV: "development",
+      VERCEL_ENV: "preview",
+      MERIDIAN_ENABLE_DEV_OTP: "true",
+    }),
+    false,
+  );
+  assert.equal(
+    providerModule.canExposeDevelopmentCode({
+      NODE_ENV: "development",
+      MERIDIAN_ENABLE_DEV_OTP: "false",
+    }),
+    false,
+  );
+});
+
+test("public verification response strips development code outside local development", async () => {
+  const providerModule = await import("../../src/server/auth/verification-provider");
+  const result = {
+    challengeId: "challenge-id",
+    expiresAt: "2026-08-30T13:00:00.000Z",
+    developmentCode: "123456",
+  };
+
+  assert.deepEqual(
+    providerModule.toPublicVerificationResult(result, {
+      NODE_ENV: "production",
+      MERIDIAN_ENABLE_DEV_OTP: "true",
+    }),
+    {
+      challengeId: "challenge-id",
+      expiresAt: "2026-08-30T13:00:00.000Z",
+    },
+  );
+  assert.deepEqual(
+    providerModule.toPublicVerificationResult(result, {
+      NODE_ENV: "development",
+      MERIDIAN_ENABLE_DEV_OTP: "true",
+    }),
+    result,
+  );
+});
