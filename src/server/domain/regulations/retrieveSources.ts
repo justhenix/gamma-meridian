@@ -11,14 +11,34 @@ const stopWords = new Set([
   "from", "with", "what", "how", "does", "tax", "pajak",
 ]);
 
-function toFtsQuery(query: string): string | null {
+const topicSearchTerms: Record<string, string[]> = {
+  "tax.transfer_pricing": [
+    "dokumen", "induk", "lokal", "penentuan", "harga", "transfer", "transaksi", "afiliasi",
+  ],
+  "tax.permanent_establishment": ["bentuk", "usaha", "tetap", "kegiatan"],
+  "tax.cross_border": ["luar", "negeri", "lintas", "negara", "p3b"],
+  "tax.foreign_taxpayer": ["wajib", "pajak", "luar", "negeri"],
+  "tax.corporate_income": ["penghasilan", "badan", "tahunan", "spt"],
+  "tax.registration": ["npwp", "pendaftaran", "wajib", "pajak"],
+  "tax.withholding": ["pemotongan", "penghasilan"],
+  "tax.vat": ["pertambahan", "nilai", "pkp"],
+  "business.company_setup": ["pendirian", "perseroan", "usaha", "perizinan", "berusaha"],
+  "business.foreign_investment": ["penanaman", "modal", "asing", "pma", "perizinan", "berusaha"],
+  "business.licensing": ["perizinan", "berusaha", "oss", "risiko"],
+  "business.oss": ["oss", "perizinan", "berusaha"],
+};
+
+function toFtsQuery(query: string, taxTopics: string[]): string | null {
+  const expandedTerms = taxTopics.flatMap((topic) => topicSearchTerms[topic] ?? []);
   const terms = [...new Set(
-    query
-      .toLocaleLowerCase("id")
-      .normalize("NFKC")
-      .match(/[\p{L}\p{N}]{3,}/gu)
-      ?.filter((term) => !stopWords.has(term)) ?? [],
-  )].slice(0, 12);
+    [
+      ...expandedTerms,
+      ...(query
+        .toLocaleLowerCase("id")
+        .normalize("NFKC")
+        .match(/[\p{L}\p{N}]{3,}/gu) ?? []),
+    ].filter((term) => !stopWords.has(term)),
+  )].slice(0, 20);
   if (terms.length === 0) return null;
   return terms.map((term) => `"${term.replaceAll('"', '""')}"`).join(" OR ");
 }
@@ -41,7 +61,7 @@ export async function retrieveApprovedSources(
 ): Promise<RetrievedRegulatorySection[]> {
   const data = retrievalInputSchema.parse(input);
   return new RegulationsRepository(database).retrieve({
-    ftsQuery: toFtsQuery(data.query),
+    ftsQuery: toFtsQuery(data.query, data.taxTopics),
     jurisdiction: data.jurisdiction,
     taxTopics: data.taxTopics,
     effectiveAt: data.effectiveAt,

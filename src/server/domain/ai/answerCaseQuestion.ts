@@ -35,6 +35,7 @@ import {
   buildGroundedAnswerPrompt,
 } from "./prompt";
 import { humanRecommendationMessage, unavailableSourceMessage } from "./safeResponse";
+import { inferRetrievalTopics } from "./retrievalTopics";
 import { sanitizeForAi } from "./sanitize";
 import type { AiRunRecord, AnswerCaseQuestionResult } from "./types";
 import { validateAiResult } from "./validateAIResult";
@@ -80,39 +81,38 @@ export class AnswerCaseQuestionService {
   ): Promise<AnswerCaseQuestionResult> {
     const data = answerQuestionSchema.parse(input);
     const policy = new AuthorizationPolicy(this.database, this.guestTokens);
-    const access = await policy.requireCaseAccess(actor, data.caseId);
+    const access = await policy.requireConversationAccess(actor, data.caseId, "client");
     const conversations = new ConversationsRepository(this.database);
-    const conversation = await conversations.findConversationById(data.conversationId);
+    const [conversation, userMessage, existing] = await Promise.all([
+      conversations.findConversationById(data.conversationId),
+      conversations.findMessageById(data.userMessageId),
+      new AiRunsRepository(this.database).findByIdempotency(data.conversationId, data.idempotencyKey),
+    ]);
     if (!conversation || conversation.caseId !== access.caseRecord.id) {
       throw new DomainError("NOT_FOUND", "Conversation was not found for this case");
     }
     if (conversation.channel !== "client" || conversation.status !== "open") {
       throw new DomainError("INVALID_STATE", "AI answers require an open client conversation");
     }
-    await policy.requireConversationAccess(actor, conversation.caseId, conversation.channel);
-
-    const userMessage = await conversations.findMessageById(data.userMessageId);
+    const ownsTriggerMessage = actor.kind === "user"
+      ? userMessage?.authorUserId === access.user?.id
+      : actor.kind === "guest"
+        ? userMessage?.authorGuestSessionId === actor.intakeSessionId
+        : false;
     if (
       !userMessage ||
       userMessage.conversationId !== conversation.id ||
       userMessage.authorType !== "user" ||
-      userMessage.authorUserId !== access.user.id
+      !ownsTriggerMessage
     ) {
       throw new DomainError("FORBIDDEN", "The triggering user message is not accessible");
     }
 
-    const existing = await new AiRunsRepository(this.database).findByIdempotency(
-      conversation.id,
-      data.idempotencyKey,
-    );
     if (existing) return this.replay(existing);
 
     const relevantDate =
       data.relevantDate ?? access.caseRecord.taxPeriodEnd ?? new Date().toISOString().slice(0, 10);
-    const messageHistory = await conversations.listMessages(conversation.id);
-    const intakeAnswers = await new IntakeRepository(this.database).listAnswers(
-      access.caseRecord.intakeSessionId,
-    );
+    const retrievalTopics = inferRetrievalTopics(userMessage.bodyMarkdown, access.caseRecord.taxTopics);
     const risk = classifyRisk({
       question: userMessage.bodyMarkdown,
       jurisdiction: access.caseRecord.primaryJurisdiction,
@@ -121,16 +121,19 @@ export class AnswerCaseQuestionService {
       requiredFactsAvailable: userMessage.bodyMarkdown.trim().length >= 12,
     });
 
-    let sources: RetrievedRegulatorySection[] = [];
-    if (risk.canAttemptAiAnswer) {
-      sources = await retrieveApprovedSources(this.database, {
-        query: userMessage.bodyMarkdown,
-        jurisdiction: access.caseRecord.primaryJurisdiction,
-        taxTopics: access.caseRecord.taxTopics,
-        effectiveAt: relevantDate,
-        limit: 6,
-      });
-    }
+    const [messageHistory, intakeAnswers, sources] = await Promise.all([
+      conversations.listMessages(conversation.id),
+      new IntakeRepository(this.database).listAnswers(access.caseRecord.intakeSessionId),
+      risk.canAttemptAiAnswer
+        ? retrieveApprovedSources(this.database, {
+            query: userMessage.bodyMarkdown,
+            jurisdiction: access.caseRecord.primaryJurisdiction,
+            taxTopics: retrievalTopics,
+            effectiveAt: relevantDate,
+            limit: 6,
+          })
+        : Promise.resolve([] as RetrievedRegulatorySection[]),
+    ]);
 
     const sanitizedConversation = sanitizeForAi(
       messageHistory.map((message) => ({
@@ -152,6 +155,7 @@ export class AnswerCaseQuestionService {
       userMessageId: userMessage.id,
       jurisdiction: access.caseRecord.primaryJurisdiction,
       taxTopics: access.caseRecord.taxTopics,
+      retrievalTopics,
       relevantDate,
       risk,
       conversation: sanitizedConversation,
@@ -167,7 +171,7 @@ export class AnswerCaseQuestionService {
         conversationId: conversation.id,
         triggerType: "user_message",
         triggerId: userMessage.id,
-        requestedByUserId: access.user.id,
+        requestedByUserId: access.user?.id ?? null,
         provider: this.provider.providerName,
         model: this.provider.model,
         promptKey: ANSWER_PROMPT_KEY,
@@ -218,7 +222,7 @@ export class AnswerCaseQuestionService {
       question: String(sanitizeForAi(userMessage.bodyMarkdown)),
       jurisdiction: access.caseRecord.primaryJurisdiction,
       relevantDate,
-      taxTopics: access.caseRecord.taxTopics,
+      taxTopics: retrievalTopics,
       conversation: sanitizedConversation,
       intakeFacts: sanitizedIntake,
       sources,

@@ -12,8 +12,8 @@ const baiConfigSchema = z.object({
   apiKey: z.string().min(1),
   baseUrl: z.url().default("https://api.b.ai/v1").transform((value) => value.replace(/\/$/, "")),
   model: z.string().min(1).default("qwen3.8-flash"),
-  timeoutMs: z.coerce.number().int().min(1000).max(120000).default(30000),
-  maxOutputTokens: z.coerce.number().int().min(256).max(12000).default(2000),
+  timeoutMs: z.coerce.number().int().min(1000).max(120000).default(15000),
+  maxOutputTokens: z.coerce.number().int().min(256).max(12000).default(1200),
 });
 
 type BaiConfig = z.infer<typeof baiConfigSchema>;
@@ -47,7 +47,7 @@ export class BaiAiProvider implements AiProvider {
     const startedAt = Date.now();
     let lastError: AiProviderError | null = null;
 
-    for (let attempt = 0; attempt < 3; attempt += 1) {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), this.config.timeoutMs);
       try {
@@ -66,6 +66,11 @@ export class BaiAiProvider implements AiProvider {
             ],
             stream: false,
             temperature: 0,
+            // Meridian uses this model for fast, grounded first-line retrieval.
+            // Qwen's reasoning mode adds substantial latency for long legal context
+            // and is unnecessary because risk routing and citation validation happen
+            // deterministically outside the provider.
+            enable_thinking: false,
             max_tokens: this.config.maxOutputTokens,
             response_format: {
               type: "json_schema",
@@ -92,7 +97,7 @@ export class BaiAiProvider implements AiProvider {
             retryable,
             providerRequestId,
           );
-          if (!retryable || attempt === 2) throw lastError;
+          if (!retryable || attempt === 1) throw lastError;
           await sleep(150 * 2 ** attempt + Math.floor(Math.random() * 100));
           continue;
         }
@@ -132,7 +137,7 @@ export class BaiAiProvider implements AiProvider {
           timedOut ? "B.AI request timed out" : "B.AI network request failed",
           true,
         );
-        if (attempt === 2) throw lastError;
+        if (attempt === 1) throw lastError;
         await sleep(150 * 2 ** attempt + Math.floor(Math.random() * 100));
       } finally {
         clearTimeout(timeout);

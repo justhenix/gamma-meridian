@@ -2,6 +2,8 @@ import "server-only";
 
 import { z } from "zod";
 
+export const GENERAL_ASSISTANT_TOPIC = "general_tax_business";
+
 const booleanString = z
   .enum(["true", "false"])
   .default("false")
@@ -9,7 +11,12 @@ const booleanString = z
 
 const runtimeConfigSchema = z.object({
   safeTopics: z.string().default("").transform((value) =>
-    [...new Set(value.split(",").map((topic) => topic.trim().toLowerCase()).filter(Boolean))],
+    [
+      ...new Set([
+        GENERAL_ASSISTANT_TOPIC,
+        ...value.split(",").map((topic) => topic.trim().toLowerCase()).filter(Boolean),
+      ]),
+    ],
   ),
   expertEscalationFree: booleanString,
 });

@@ -71,6 +71,30 @@ test("regulatory corpus: approved sources are retrievable by FTS and topics whil
   });
   await ingestion.approveSourceVersion(actor, pmk168.version.id);
 
+  const pmk172 = await ingestion.ingestSource(actor, {
+    officialIdentifier: "PMK 172 TAHUN 2023",
+    title: "Penerapan Prinsip Kewajaran dan Kelaziman Usaha",
+    authority: "Kementerian Keuangan",
+    jurisdiction: "ID",
+    sourceType: "ministerial_regulation",
+    canonicalUrl: "https://jdih.kemenkeu.go.id/dok/pmk-172-tahun-2023",
+    versionLabel: "2023-12-29",
+    publicationDate: "2023-12-29",
+    effectiveFrom: "2023-12-29",
+    effectiveTo: null,
+    retrievedAt: "2026-08-30T00:00:00.000Z",
+    sections: [
+      {
+        heading: "Pasal 29 dan Pasal 30",
+        locator: "Pasal 29-30",
+        ordinal: 29,
+        bodyText: "Dokumen induk memuat informasi Grup Usaha. Dokumen lokal memuat identitas dan kegiatan usaha, informasi Transaksi Afiliasi dan Transaksi Independen, penerapan Prinsip Kewajaran dan Kelaziman Usaha, informasi keuangan, dan fakta non-keuangan.",
+        taxTopics: ["tax.transfer_pricing", "tax.cross_border", "tax.corporate_income"],
+      },
+    ],
+  });
+  await ingestion.approveSourceVersion(actor, pmk172.version.id);
+
   // Ingest pending source (NEEDS_REVIEW): UU 7/2021 (HPP) - NOT approved
   const uu7 = await ingestion.ingestSource(actor, {
     officialIdentifier: "UU 7 TAHUN 2021",
@@ -121,6 +145,16 @@ test("regulatory corpus: approved sources are retrievable by FTS and topics whil
   assert.equal(pphResults[0]?.source.officialIdentifier, "PMK 168 TAHUN 2023");
   assert.equal(pphResults[0]?.locator, "Pasal 5");
 
+  const transferPricingResults = await retrieveApprovedSources(database, {
+    query: "What should I prepare first for Indonesian transfer pricing documentation?",
+    jurisdiction: "ID",
+    taxTopics: ["tax.transfer_pricing"],
+    effectiveAt: "2026-08-30",
+    limit: 5,
+  });
+  assert.equal(transferPricingResults[0]?.source.officialIdentifier, "PMK 172 TAHUN 2023");
+  assert.equal(transferPricingResults[0]?.retrievalMethod, "fts5_bm25");
+
   // Test retrieval for pending source: UU 7/2021 must NOT be returned
   const pendingResults = await retrieveApprovedSources(database, {
     query: "fasilitas penanaman modal dividen",
@@ -129,7 +163,10 @@ test("regulatory corpus: approved sources are retrievable by FTS and topics whil
     effectiveAt: "2026-08-30",
     limit: 5,
   });
-  assert.equal(pendingResults.length, 0);
+  assert.equal(
+    pendingResults.some((result) => result.source.officialIdentifier === "UU 7 TAHUN 2021"),
+    false,
+  );
 
   // Verify direct repository query returns null for unapproved section retrieval
   const repo = new RegulationsRepository(database);
@@ -170,6 +207,30 @@ test("regulatory risk classification: hard-risk statutory topics force expert es
   assert.equal(disputeRisk.classification, "high_risk");
   assert.equal(disputeRisk.needsHuman, true);
   assert.ok(disputeRisk.reasonCodes.includes("audit_or_dispute"));
+});
+
+test("regulatory risk classification: general source-backed questions stay AI-answerable", () => {
+  const transferPricingOverview = classifyRisk({
+    question: "What should I prepare first for Indonesian transfer pricing documentation?",
+    jurisdiction: "ID",
+    taxTopics: ["general_tax_business"],
+    safeTopicAllowlist: ["general_tax_business"],
+  });
+  assert.equal(transferPricingOverview.classification, "simple");
+  assert.equal(transferPricingOverview.canAttemptAiAnswer, true);
+  assert.equal(transferPricingOverview.needsHuman, false);
+  assert.equal(transferPricingOverview.reasonCodes.includes("transfer_pricing"), false);
+
+  const statutoryDeadline = classifyRisk({
+    question: "What is the statutory filing deadline for a newly established Indonesian company?",
+    jurisdiction: "ID",
+    taxTopics: ["general_tax_business"],
+    safeTopicAllowlist: ["general_tax_business"],
+  });
+  assert.equal(statutoryDeadline.classification, "simple");
+  assert.equal(statutoryDeadline.canAttemptAiAnswer, true);
+  assert.equal(statutoryDeadline.needsHuman, false);
+  assert.equal(statutoryDeadline.reasonCodes.includes("sanction_or_deadline"), false);
 });
 
 test("regulatory corpus: consolidated instruments are retrievable across key corporate tax, SP2DK, Coretax, company law, and foreign investment topics", async (context) => {

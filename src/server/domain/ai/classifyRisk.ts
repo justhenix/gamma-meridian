@@ -3,17 +3,12 @@ import "server-only";
 import { z } from "zod";
 import type { DeterministicRiskResult } from "./types";
 
-export const RISK_RULESET_VERSION = "id-tax-risk-v1";
+export const RISK_RULESET_VERSION = "id-tax-risk-v2";
 
 const hardRiskRules: Array<{ code: string; classification: "complex" | "high_risk"; pattern: RegExp }> = [
-  { code: "cross_border_or_treaty", classification: "complex", pattern: /\b(cross[- ]border|lintas batas|tax treaty|perjanjian pajak|p3b)\b/i },
-  { code: "permanent_establishment", classification: "complex", pattern: /\b(permanent establishment|bentuk usaha tetap|but)\b/i },
-  { code: "transfer_pricing", classification: "high_risk", pattern: /\b(transfer pricing|harga transfer|local file|master file|cbcr)\b/i },
-  { code: "beneficial_ownership", classification: "high_risk", pattern: /\b(beneficial owner|beneficial ownership|pemilik manfaat)\b/i },
-  { code: "cfc", classification: "high_risk", pattern: /\b(cfc|controlled foreign corporation)\b/i },
   { code: "multi_jurisdiction", classification: "complex", pattern: /\b(multi[- ]jurisdiction|lebih dari satu negara|beberapa negara)\b/i },
   { code: "audit_or_dispute", classification: "high_risk", pattern: /\b(sp2dk|audit|pemeriksaan|sengketa|keberatan|banding|appeal|objection|tax court|pengadilan pajak)\b/i },
-  { code: "sanction_or_deadline", classification: "high_risk", pattern: /\b(sanksi|sanction|denda|penalty|deadline|jatuh tempo|batas waktu)\b/i },
+  { code: "sanction_or_deadline", classification: "high_risk", pattern: /\b(sanksi|sanction|denda|penalty|late filing|terlambat)\b/i },
   { code: "restructuring_or_ma", classification: "high_risk", pattern: /\b(restrukturisasi|restructuring|merger|akuisisi|acquisition|spin[- ]off|m&a)\b/i },
   { code: "formal_opinion", classification: "high_risk", pattern: /\b(formal opinion|opini resmi|legal opinion|pendapat hukum)\b/i },
   {
@@ -22,6 +17,44 @@ const hardRiskRules: Array<{ code: string; classification: "complex" | "high_ris
     pattern: /\b(file|submit|prepare|sign|represent)\s+(it|this|for me|on my behalf)|\b(bantu\s+lapor|laporkan\s+untuk|tanda\s+tangan|mewakili|bertindak\s+sebagai\s+kuasa)\b/i,
   },
   { code: "material_transaction", classification: "high_risk", pattern: /\b(material transaction|transaksi material|nilai sangat besar|jumlah besar)\b/i },
+];
+
+const contextualRiskRules: Array<{
+  code: string;
+  classification: "complex" | "high_risk";
+  topicPattern: RegExp;
+  advicePattern: RegExp;
+}> = [
+  {
+    code: "transfer_pricing",
+    classification: "high_risk",
+    topicPattern: /\b(transfer pricing|harga transfer|local file|master file|cbcr)\b/i,
+    advicePattern: /\b(intercompany|related[- ]party|afiliasi|royalt(?:y|ies|i)|management fee|benchmark|arm['’]?s length|cup|tnmm|profit split|pricing method|metode penentuan|transaction|transaksi)\b/i,
+  },
+  {
+    code: "cross_border_or_treaty",
+    classification: "complex",
+    topicPattern: /\b(cross[- ]border|lintas batas|tax treaty|perjanjian pajak|p3b)\b/i,
+    advicePattern: /\b(treaty rate|tarif p3b|form dgt|withholding|pemotongan|royalt(?:y|ies|i)|service fee|dividend|foreign tax credit|tax residence|residency|permanent establishment|bentuk usaha tetap|transaction|transaksi)\b/i,
+  },
+  {
+    code: "permanent_establishment",
+    classification: "complex",
+    topicPattern: /\b(permanent establishment|bentuk usaha tetap|but)\b/i,
+    advicePattern: /\b(does|would|could|trigger|constitute|create|our|kami|kita|apakah|menimbulkan|membentuk|termasuk)\b/i,
+  },
+  {
+    code: "beneficial_ownership",
+    classification: "high_risk",
+    topicPattern: /\b(beneficial owner|beneficial ownership|pemilik manfaat)\b/i,
+    advicePattern: /\b(qualif|eligible|our|kami|kita|apakah|memenuhi|status|claim|klaim)\w*/i,
+  },
+  {
+    code: "cfc",
+    classification: "high_risk",
+    topicPattern: /\b(cfc|controlled foreign corporation)\b/i,
+    advicePattern: /\b(apply|trigger|our|kami|kita|apakah|berlaku|terutang|income|penghasilan)\b/i,
+  },
 ];
 
 const humanRequestPattern = /\b(speak|talk|connect|hubungkan|bicara|konsultan|consultant|expert|ahli|manusia|human|person)\b/i;
@@ -50,6 +83,13 @@ export function classifyRisk(input: unknown): DeterministicRiskResult {
   }
   for (const rule of hardRiskRules) {
     if (!rule.pattern.test(data.question)) continue;
+    reasonCodes.push(rule.code);
+    if (rule.classification === "high_risk" || classification === "simple") {
+      classification = rule.classification;
+    }
+  }
+  for (const rule of contextualRiskRules) {
+    if (!rule.topicPattern.test(data.question) || !rule.advicePattern.test(data.question)) continue;
     reasonCodes.push(rule.code);
     if (rule.classification === "high_risk" || classification === "simple") {
       classification = rule.classification;
