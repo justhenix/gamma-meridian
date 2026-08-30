@@ -1,7 +1,4 @@
 import * as React from "react";
-import { headers } from "next/headers";
-import { type Locale } from "@/paraglide/runtime.js";
-import { LocaleProvider } from "@/components/locale-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ChatContainer } from "@/components/assistant/chat-container";

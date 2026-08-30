@@ -77,7 +77,7 @@ export default function LoginPage() {
 
     setClientSession(clientUser);
     setTimeout(() => {
-      window.location.href = "/helpdesk/case-001";
+      router.push("/helpdesk/case-001");
     }, 200);
   };
 

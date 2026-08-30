@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowRight, BookOpen, Calendar, Tag } from "lucide-react";
+import { ArrowRight, Calendar, Tag } from "lucide-react";
 import * as m from "@/paraglide/messages.js";
 import { useLocalizedMessage } from "@/components/locale-provider";
 

@@ -1,51 +1,41 @@
 "use client";
 
 import * as React from "react";
-import type { Citation } from "@/lib/assistant/types";
 
 interface StreamingTextProps {
   content: string;
   isStreaming?: boolean;
-  citations?: Citation[];
-  onCitationClick?: (citation: Citation) => void;
   onStreamComplete?: () => void;
 }
 
 export function StreamingText({
   content,
   isStreaming = false,
-  citations = [],
-  onCitationClick,
   onStreamComplete,
 }: StreamingTextProps) {
-  const [displayedLength, setDisplayedLength] = React.useState(
-    isStreaming ? 0 : content.length
-  );
+  const [streamProgress, setStreamProgress] = React.useState(0);
 
   React.useEffect(() => {
-    if (!isStreaming) {
-      setDisplayedLength(content.length);
-      return;
-    }
+    if (!isStreaming) return;
 
-    setDisplayedLength(0);
     let current = 0;
     const interval = setInterval(() => {
       // Chunk tokens for natural pacing
       const step = Math.floor(Math.random() * 6) + 4;
       current += step;
       if (current >= content.length) {
-        current = content.length;
-        setDisplayedLength(content.length);
+        setStreamProgress(content.length);
         clearInterval(interval);
         onStreamComplete?.();
       } else {
-        setDisplayedLength(current);
+        setStreamProgress(current);
       }
     }, 24);
 
     return () => clearInterval(interval);
   }, [content, isStreaming, onStreamComplete]);
+
+  const displayedLength = isStreaming ? streamProgress : content.length;
 
   const rawText = content.slice(0, displayedLength);
 

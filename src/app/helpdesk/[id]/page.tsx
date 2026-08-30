@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useParams, notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 import * as m from "@/paraglide/messages.js";
 import { useLocalizedMessage } from "@/components/locale-provider";
 import { StaffNavbar } from "@/components/helpdesk/staff-navbar";

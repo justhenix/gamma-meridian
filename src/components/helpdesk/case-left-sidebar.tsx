@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Building2, User, Mail, MapPin, Briefcase, Calendar, ShieldCheck, PanelLeftClose } from "lucide-react";
+import { User, Mail, MapPin, Briefcase, ShieldCheck, PanelLeftClose } from "lucide-react";
 import * as m from "@/paraglide/messages.js";
 import { useLocalizedMessage } from "@/components/locale-provider";
 import type { HelpdeskCase } from "@/lib/assistant/types";

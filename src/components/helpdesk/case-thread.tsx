@@ -139,7 +139,6 @@ export function CaseThread({
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
         {messages.map((msg) => {
           const isClient = msg.sender === "client";
-          const isConsultant = msg.sender === "consultant";
           const isAI = msg.sender === "ai";
 
           if (isClient) {

@@ -14,19 +14,17 @@ export function StaffNavbar() {
   const { locale: currentLocale, setLocale: changeLocale } = useAppLocale();
   const t = useLocalizedMessage();
 
-  const [currentUser, setCurrentUser] = React.useState<AuthUser>(PRESET_USERS.partner);
+  const [currentUser] = React.useState<AuthUser>(() => {
+    if (typeof window !== "undefined") {
+      return getClientSession() ?? PRESET_USERS.partner;
+    }
+    return PRESET_USERS.partner;
+  });
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
   const [userMenuOpen, setUserMenuOpen] = React.useState(false);
 
   const menuRef = React.useRef<HTMLDivElement>(null);
   const userMenuRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const session = getClientSession();
-    if (session) {
-      setCurrentUser(session);
-    }
-  }, []);
 
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

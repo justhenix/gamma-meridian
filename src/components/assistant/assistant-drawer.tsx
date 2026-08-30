@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Sparkles, MessageSquare } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useAppLocale } from "@/components/locale-provider";
 import { ChatContainer } from "./chat-container";
 

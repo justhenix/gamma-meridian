@@ -4,7 +4,6 @@ import * as React from "react";
 import {
   Sparkles,
   AlertTriangle,
-  FileQuestion,
   BookOpen,
   CheckCircle2,
   AlertCircle,

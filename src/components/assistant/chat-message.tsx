@@ -25,7 +25,6 @@ export function ChatMessage({
 }: ChatMessageProps) {
   const isClient = message.sender === "client";
   const isConsultant = message.sender === "consultant";
-  const isAI = message.sender === "ai";
 
   if (isClient) {
     return (
@@ -97,8 +96,6 @@ export function ChatMessage({
           <StreamingText
             content={message.body}
             isStreaming={message.isStreaming}
-            citations={message.citations}
-            onCitationClick={onCitationClick}
             onStreamComplete={onStreamComplete}
           />
 

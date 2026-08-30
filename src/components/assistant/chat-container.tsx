@@ -1,13 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { Sparkles, Shield, ArrowRight, BookOpen, AlertCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { ChatMessage as ChatMessageType, Citation, ClientConversationState } from "@/lib/assistant/types";
 import { generateAssistantResponse } from "@/lib/assistant/chat-engine";
 import { ChatMessage } from "./chat-message";
 import { LoadingProcessState } from "./loading-process-state";
 import { PromptBar } from "./prompt-bar";
 import { CitationModal } from "./citation-modal";
+import { useAppLocale } from "@/components/locale-provider";
 import { AssistantHeader } from "./assistant-header";
 
 interface ChatContainerProps {
@@ -56,8 +57,6 @@ const STARTER_PROMPTS_EN = [
   },
 ];
 
-import { useAppLocale } from "@/components/locale-provider";
-
 export function ChatContainer({
   isEnglish,
   onClose,
@@ -67,7 +66,18 @@ export function ChatContainer({
 }: ChatContainerProps) {
   const { locale } = useAppLocale();
   const effectiveIsEnglish = isEnglish !== undefined ? isEnglish : locale === "en";
-  const [messages, setMessages] = React.useState<ChatMessageType[]>([]);
+  const [messages, setMessages] = React.useState<ChatMessageType[]>(() => [
+    {
+      id: "welcome-msg",
+      sender: "ai",
+      body:
+        (isEnglish !== undefined ? isEnglish : locale === "en")
+          ? "Welcome to **Meridian Assistant**.\n\nAsk about your tax or business situation in Indonesia, or choose a common topic to get started."
+          : "Selamat datang di **Meridian Assistant**.\n\nTanyakan mengenai situasi perpajakan atau bisnis Anda di Indonesia, atau pilih topik umum untuk memulai.",
+      timestamp: "2026-08-30T00:00:00.000Z",
+      isStreaming: false,
+    },
+  ]);
   const [conversationState, setConversationState] =
     React.useState<ClientConversationState>("ai_assistant");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -75,23 +85,6 @@ export function ChatContainer({
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const starters = effectiveIsEnglish ? STARTER_PROMPTS_EN : STARTER_PROMPTS_ID;
-
-  // Initial welcome message
-  React.useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([
-        {
-          id: "welcome-msg",
-          sender: "ai",
-          body: effectiveIsEnglish
-            ? "Welcome to **Meridian Assistant**.\n\nAsk about your tax or business situation in Indonesia, or choose a common topic to get started."
-            : "Selamat datang di **Meridian Assistant**.\n\nTanyakan mengenai situasi perpajakan atau bisnis Anda di Indonesia, atau pilih topik umum untuk memulai.",
-          timestamp: new Date().toISOString(),
-          isStreaming: false,
-        },
-      ]);
-    }
-  }, [effectiveIsEnglish, messages.length]);
 
   // Auto-scroll on new messages
   React.useEffect(() => {
@@ -106,11 +99,14 @@ export function ChatContainer({
   const handleSendMessage = (text: string) => {
     if (!text.trim() || isLoading) return;
 
+    const messageId = `user-${crypto.randomUUID()}`;
+    const isoTimestamp = new Date().toISOString();
+
     const userMessage: ChatMessageType = {
-      id: `user-${Date.now()}`,
+      id: messageId,
       sender: "client",
       body: text,
-      timestamp: new Date().toISOString(),
+      timestamp: isoTimestamp,
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -119,7 +115,7 @@ export function ChatContainer({
     setTimeout(() => {
       const generated = generateAssistantResponse(text, effectiveIsEnglish);
       const aiResponseMsg: ChatMessageType = {
-        id: `ai-${Date.now()}`,
+        id: `ai-${crypto.randomUUID()}`,
         sender: "ai",
         body: generated.body,
         timestamp: new Date().toISOString(),

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CheckCircle2, ShieldCheck, ArrowRight, Building2 } from "lucide-react";
+import { ShieldCheck, Building2 } from "lucide-react";
 import * as m from "@/paraglide/messages.js";
 import { useLocalizedMessage } from "@/components/locale-provider";
 

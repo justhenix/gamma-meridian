@@ -20,21 +20,18 @@ export function LocaleProvider({
   children: React.ReactNode;
   initialLocale?: Locale;
 }) {
-  const [currentLocale, setCurrentLocale] = React.useState<Locale>(initialLocale);
-
-  React.useEffect(() => {
-    setCurrentLocale(initialLocale);
-  }, [initialLocale]);
+  const [selectedLocale, setSelectedLocale] = React.useState<Locale | null>(null);
+  const locale = selectedLocale ?? initialLocale;
 
   const handleSetLocale = React.useCallback((newLocale: Locale) => {
-    setCurrentLocale(newLocale);
+    setSelectedLocale(newLocale);
     if (newLocale !== initialLocale) {
       void paraglideSetLocale(newLocale);
     }
   }, [initialLocale]);
 
   return (
-    <LocaleContext.Provider value={{ locale: currentLocale, setLocale: handleSetLocale }}>
+    <LocaleContext.Provider value={{ locale, setLocale: handleSetLocale }}>
       {children}
     </LocaleContext.Provider>
   );

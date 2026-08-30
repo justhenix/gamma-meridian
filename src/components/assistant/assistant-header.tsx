@@ -1,9 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Sparkles, UserCheck, RefreshCw, X, Maximize2, Minimize2 } from "lucide-react";
+import { UserCheck, RefreshCw, X, Maximize2, Minimize2 } from "lucide-react";
 import type { ClientConversationState } from "@/lib/assistant/types";
-import { Button } from "@/components/ui/button";
 
 interface AssistantHeaderProps {
   state: ClientConversationState;

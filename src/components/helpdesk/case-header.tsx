@@ -24,18 +24,15 @@ export function CaseHeader({
   onToggleLeft,
 }: CaseHeaderProps) {
   const t = useLocalizedMessage();
-  const [isSaving, setIsSaving] = React.useState(false);
   const [savedSuccess, setSavedSuccess] = React.useState(false);
 
   const handleSelectStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value as HelpdeskCaseStatus;
     onStatusChange(val);
-    setIsSaving(true);
     setTimeout(() => {
-      setIsSaving(false);
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 2000);
-    }, 400);
+    }, 200);
   };
 
   return (

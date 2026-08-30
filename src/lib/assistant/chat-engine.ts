@@ -1,4 +1,4 @@
-import type { ChatMessage, Citation } from "./types";
+import type { Citation } from "./types";
 import { findMatchingRegulations, APPROVED_REGULATIONS } from "./regulatory-corpus";
 
 export interface AIResponsePayload {
